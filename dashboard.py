@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 from datetime import UTC, date, datetime, timedelta
+from typing import Any
 
 import pandas as pd
 import plotly.express as px
@@ -46,7 +47,7 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
     html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     /* Executive Metric Cards */
@@ -210,22 +211,40 @@ if os.path.exists(KEY_PATH):
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = KEY_PATH
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_load_gold_dataframe(table_name: str) -> pd.DataFrame:
+    """Cached loader for BigQuery / DuckDB Gold and Silver tables."""
+    return load_gold_dataframe(table_name)
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_byok_conversion_funnel() -> dict[str, Any]:
+    """Cached aggregate of 6-stage BYOK funnel metrics."""
+    return get_byok_conversion_funnel()
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_referral_viral_loop() -> dict[str, Any]:
+    """Cached aggregate of 5-stage referral loop metrics."""
+    return get_referral_viral_loop()
+
+
+@st.cache_data(ttl=600)
 def load_cockpit_datasets() -> dict[str, pd.DataFrame]:
     """Load Gold marts and traffic facts for cockpit testing and analytics."""
     data = load_lakehouse_data("gold")
-    data["traffic"] = load_gold_dataframe("fct_daily_traffic")
+    data["traffic"] = cached_load_gold_dataframe("fct_daily_traffic")
     return data
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=600)
 def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
     """Load tables for Gold, Silver, or Bronze layers seamlessly."""
     if layer == "gold":
-        df_kpi = load_gold_dataframe("gold_daily_growth_kpi")
-        df_f = load_gold_dataframe("gold_feature_adoption")
-        df_byok = load_gold_dataframe("gold_byok_funnel")
-        df_ref = load_gold_dataframe("gold_referral_loop")
+        df_kpi = cached_load_gold_dataframe("gold_daily_growth_kpi")
+        df_f = cached_load_gold_dataframe("gold_feature_adoption")
+        df_byok = cached_load_gold_dataframe("gold_byok_funnel")
+        df_ref = cached_load_gold_dataframe("gold_referral_loop")
         if "event_date" in df_kpi.columns:
             df_kpi["event_date"] = pd.to_datetime(df_kpi["event_date"])
         if "event_date" in df_byok.columns:
@@ -234,9 +253,9 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
             df_ref["event_date"] = pd.to_datetime(df_ref["event_date"])
         return {"kpi": df_kpi, "features": df_f, "byok": df_byok, "referral": df_ref}
     elif layer == "silver":
-        df_traffic = load_gold_dataframe("fct_daily_traffic")
-        df_f_events = load_gold_dataframe("fct_feature_events")
-        df_catalog = load_gold_dataframe("dim_feature_catalog")
+        df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
+        df_f_events = cached_load_gold_dataframe("fct_feature_events")
+        df_catalog = cached_load_gold_dataframe("dim_feature_catalog")
         return {"traffic": df_traffic, "feature_events": df_f_events, "catalog": df_catalog}
     else:  # bronze
         from ingestion.sources.ga4_adapter import GA4TelemetryConfig, ReadCallGA4Adapter
@@ -379,9 +398,9 @@ def main():
         st.subheader("📐 " + ("dbt Semantic Metrics" if is_en else "dbt 語意層指標監控"))
         st.caption("Live Metric Calculations & Targets for Data Analysts" if is_en else "提供給資料分析師 (DA) 的真實指標數值與達標監控")
 
-        byok_funnel_calc = get_byok_conversion_funnel()
-        ref_loop_calc = get_referral_viral_loop()
-        gold_kpi_calc = load_gold_dataframe("gold_daily_growth_kpi")
+        byok_funnel_calc = cached_byok_conversion_funnel()
+        ref_loop_calc = cached_referral_viral_loop()
+        gold_kpi_calc = cached_load_gold_dataframe("gold_daily_growth_kpi")
 
         tot_dau_num = int(gold_kpi_calc["dau"].sum()) if not gold_kpi_calc.empty else 1
         tot_aha_num = int(gold_kpi_calc["aha_users"].sum()) if not gold_kpi_calc.empty else 0
@@ -509,7 +528,7 @@ def main():
             total_sessions = int(df_kpi_active["total_sessions"].sum()) if "total_sessions" in df_kpi_active.columns else 0
             avg_eng_rate = float(df_kpi_active["engagement_rate"].mean() * 100.0) if "engagement_rate" in df_kpi_active.columns else 74.4
             avg_aha_rate = float(df_kpi_active["aha_activation_rate"].mean() * 100.0) if "aha_activation_rate" in df_kpi_active.columns else 71.6
-            byok_totals = get_byok_conversion_funnel()
+            byok_totals = cached_byok_conversion_funnel()
             saved_keys = byok_totals["step_6_byok_key_saved"]
             byok_conv = byok_totals["step_6_byok_key_saved"] / max(byok_totals["step_3_trial_limit_hit"], 1) * 100.0
 
@@ -620,7 +639,7 @@ def main():
                     st.plotly_chart(fig_trend, use_container_width=True)
 
                 col_t1, col_t2 = st.columns(2)
-                df_traffic = load_gold_dataframe("fct_daily_traffic")
+                df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
                 with col_t1:
                     st.markdown("##### " + ("Acquisition Channel Mix" if is_en else "流量獲取渠道分佈"))
                     if not df_traffic.empty and "channel_group" in df_traffic.columns:
@@ -711,8 +730,8 @@ def main():
             # TAB 3: BYOK FUNNEL & REFERRAL LOOP
             with tab3:
                 st.subheader("6-Stage BYOK Gemini Key Funnel & 5-Stage Viral Referral Loop" if is_en else "6 階 BYOK 金鑰轉換漏斗與 5 階推薦裂變迴路")
-                byok_s = get_byok_conversion_funnel()
-                ref_s = get_referral_viral_loop()
+                byok_s = cached_byok_conversion_funnel()
+                ref_s = cached_referral_viral_loop()
 
                 col_b1, col_b2 = st.columns(2)
                 with col_b1:
