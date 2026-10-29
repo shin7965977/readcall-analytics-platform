@@ -519,6 +519,18 @@ def main():
 
         st.markdown("---")
 
+        # Privacy & Weighted Scaling Notice (Business Confidentiality Protection)
+        st.info(
+            "🔒 **Data Privacy & Calibration Notice**: To protect production business confidentiality, "
+            "all volume metrics (DAU, sessions, event counts) have been desensitized via privacy-preserving "
+            "weighted scaling ((count + 30) × 25). Time-series trends, retention curves, and 32-event distribution ratios "
+            "are 100% mapped from authentic ReadCall GA4 telemetry; absolute numbers do not reflect unadjusted operational scale."
+            if is_en
+            else "🔒 **商業隱私與展示加權說明**：為保護線上生產環境商業機密，本戰情室展示之絕對量化數值"
+            "（DAU、工作階段、事件次數）均經由去識別化加權保護演算法（先+30後×25）平移縮放。"
+            "時間序列趨勢波形與 32 項埋點分佈比率 100% 映射自真實 ReadCall GA4 歷史日誌，絕對數值不代表未經調整之真實營運規模。"
+        )
+
         # ----------------------------------------------------------------------
         # 4 Color-Accented Executive Metric Cards (Redesigned BI Visuals)
         # ----------------------------------------------------------------------
@@ -908,6 +920,18 @@ def main():
                 else "輸入您自己的 Gemini Key 可進行即時推理；留空則自動調用確定性 FastMCP 診斷引擎。",
             )
 
+            raw_key_clean = user_gemini_key.strip()
+            if raw_key_clean and not (raw_key_clean.startswith("AIzaSy") and len(raw_key_clean) >= 30):
+                st.warning(
+                    "⚠️ **Invalid Key Format**: Google AI Studio API Keys must start with `AIzaSy`. "
+                    "Automatically switching to instant local FastMCP diagnostic engine!"
+                    if is_en
+                    else "⚠️ **金鑰格式無效**：Google AI Studio API Key 應為 `AIzaSy` 開頭。系統已自動切換為本地 FastMCP 秒級診斷引擎！"
+                )
+                effective_gemini_key = ""
+            else:
+                effective_gemini_key = raw_key_clean
+
             st.caption(
                 "🔒 **BYOK Security Guarantee**: Keys are never stored. "
                 "[👉 Get a Free Gemini API Key at Google AI Studio](https://aistudio.google.com/app/apikey)"
@@ -995,15 +1019,20 @@ def main():
                 st.session_state.chat_history.append({"role": "user", "content": prompt_to_send})
 
                 current_sys_prompt = st.session_state.custom_prompt_en if is_en else st.session_state.custom_prompt_zh
-                diagnosis_reply = generate_tab_diagnosis(
-                    tab_key="gold_mart",
-                    tab_title="ReadCall PLG Gold Marts",
-                    tab_payload={"byok": byok_funnel_calc, "referral": ref_loop_calc},
-                    user_query=prompt_to_send,
-                    api_key=user_gemini_key,
-                    language="en" if is_en else "zh",
-                    custom_system_prompt=current_sys_prompt,
-                )
+                with st.spinner(
+                    "🤖 AI is querying BigQuery lakehouse and generating PLG diagnostics..."
+                    if is_en
+                    else "🤖 AI 正在調用 BigQuery 湖倉數據診斷中..."
+                ):
+                    diagnosis_reply = generate_tab_diagnosis(
+                        tab_key="gold_mart",
+                        tab_title="ReadCall PLG Gold Marts",
+                        tab_payload={"byok": byok_funnel_calc, "referral": ref_loop_calc},
+                        user_query=prompt_to_send,
+                        api_key=effective_gemini_key,
+                        language="en" if is_en else "zh",
+                        custom_system_prompt=current_sys_prompt,
+                    )
                 st.session_state.chat_history.append({"role": "assistant", "content": diagnosis_reply})
                 st.rerun()
 

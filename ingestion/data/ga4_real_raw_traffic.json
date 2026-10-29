@@ -1,0 +1,5887 @@
+{
+  "dimension_headers": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "sessionDefaultChannelGroup"
+    },
+    {
+      "name": "deviceCategory"
+    },
+    {
+      "name": "country"
+    }
+  ],
+  "metric_headers": [
+    {
+      "name": "sessions",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "activeUsers",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "newUsers",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "engagedSessions",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "averageSessionDuration",
+      "type_": "TYPE_SECONDS"
+    },
+    {
+      "name": "eventCount",
+      "type_": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "37"
+        },
+        {
+          "value": "31"
+        },
+        {
+          "value": "30"
+        },
+        {
+          "value": "20"
+        },
+        {
+          "value": "171.24184748648651"
+        },
+        {
+          "value": "310"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "35"
+        },
+        {
+          "value": "29"
+        },
+        {
+          "value": "29"
+        },
+        {
+          "value": "15"
+        },
+        {
+          "value": "128.48428142857142"
+        },
+        {
+          "value": "205"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "15"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "523.87048606666667"
+        },
+        {
+          "value": "170"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "494.14675192857146"
+        },
+        {
+          "value": "153"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "30.231316461538462"
+        },
+        {
+          "value": "90"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "6.7665580000000007"
+        },
+        {
+          "value": "39"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "9.23507925"
+        },
+        {
+          "value": "51"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "340.54595363636366"
+        },
+        {
+          "value": "62"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "110.55783645454545"
+        },
+        {
+          "value": "92"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Paid Search"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "33"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "215.99260754545458"
+        },
+        {
+          "value": "68"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "1042.4130147777778"
+        },
+        {
+          "value": "131"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "15.89749111111111"
+        },
+        {
+          "value": "56"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "280.88609722222219"
+        },
+        {
+          "value": "97"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2.7720512222222222"
+        },
+        {
+          "value": "28"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "378.3371491111111"
+        },
+        {
+          "value": "97"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "29.014994333333334"
+        },
+        {
+          "value": "45"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "83.7193055"
+        },
+        {
+          "value": "52"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2.24459"
+        },
+        {
+          "value": "23"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "19.700484142857139"
+        },
+        {
+          "value": "37"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0.22871928571428571"
+        },
+        {
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "544.50746557142861"
+        },
+        {
+          "value": "51"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "1136.6021911428572"
+        },
+        {
+          "value": "196"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Netherlands"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Netherlands"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "France"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "3777.1503603333331"
+        },
+        {
+          "value": "1234"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "6.4763561666666662"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "France"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "478.42107816666663"
+        },
+        {
+          "value": "179"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1.9622827999999999"
+        },
+        {
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2.7988936"
+        },
+        {
+          "value": "24"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "1437.7086238"
+        },
+        {
+          "value": "180"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "40.344108600000006"
+        },
+        {
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "453.9523978"
+        },
+        {
+          "value": "309"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "France"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "736.359482"
+        },
+        {
+          "value": "29"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "68.54620225"
+        },
+        {
+          "value": "47"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "728.14286125"
+        },
+        {
+          "value": "51"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "88.548674"
+        },
+        {
+          "value": "38"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "5.1799275"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "62.1272415"
+        },
+        {
+          "value": "44"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "978.70886975"
+        },
+        {
+          "value": "120"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "8.8564365000000009"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "65.684747333333334"
+        },
+        {
+          "value": "23"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "France"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0.34665833333333335"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "462.38273233333331"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "197.25415599999997"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Organic Search"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "36.441918333333334"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "203.88899133333334"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "43.63146033333333"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "115.82287766666667"
+        },
+        {
+          "value": "71"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "26.949649333333337"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Sweden"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "29.596032"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Switzerland"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.999681"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.676469"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Organic Search"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1812.930327"
+        },
+        {
+          "value": "68"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.611959"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2.4470685"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "4678.8944855"
+        },
+        {
+          "value": "193"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2451.882559"
+        },
+        {
+          "value": "177"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.9525585"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "10.756658"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3859.3716945"
+        },
+        {
+          "value": "165"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1227.0238885"
+        },
+        {
+          "value": "56"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "189.949508"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Morocco"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "153.994316"
+        },
+        {
+          "value": "21"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "54.9350375"
+        },
+        {
+          "value": "11"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Ireland"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "30.0085265"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "78.815858"
+        },
+        {
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "150.8994635"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0.769393"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "111.6789875"
+        },
+        {
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "235.883645"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "169.370069"
+        },
+        {
+          "value": "44"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Japan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "17.477498"
+        },
+        {
+          "value": "14"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "12.1355135"
+        },
+        {
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "15.2186545"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "6.262296"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "288.5504075"
+        },
+        {
+          "value": "31"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1826.562261"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United Kingdom"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "13.241174"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "3647.996157"
+        },
+        {
+          "value": "36"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.248684"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Finland"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "India"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Italy"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "98.584873"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Latvia"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "599.536576"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5.748571"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "19.27971"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Organic Search"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1052.019821"
+        },
+        {
+          "value": "46"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "29.803"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.714558"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "292.620626"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Iran"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.756417"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "121.156925"
+        },
+        {
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.706726"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Czechia"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Japan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "15.650306"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "5069.081623"
+        },
+        {
+          "value": "151"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "20.156355"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1845.144158"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Australia"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "361.267099"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "91.251405"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Iran"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "120.861869"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "India"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5.368167"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "15.353976"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0.078679"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.24836"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Japan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.337732"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5.546615"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.000276"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "China"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "21.023311"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Iran"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2.457257"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "14.264595"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "8.955998"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Iran"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "South Korea"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2.536623"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "14.625863"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Netherlands"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "197.028071"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "United States"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5.115027"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "132.020247"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Egypt"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "14.636397"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Iraq"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "76.343977"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Israel"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "68.378744"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Organic Search"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Austria"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.93162"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "34.19523"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Canada"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "5.37257"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "286.231254"
+        },
+        {
+          "value": "41"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "47.587823"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "T\u00fcrkiye"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "26.486853"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "65.102927"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2.794105"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Japan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "28.71109"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Direct"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "9.213235"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Organic Search"
+        },
+        {
+          "value": "tablet"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3.995752"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Ireland"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "28.740276"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Organic Social"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.780303"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Indonesia"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Referral"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Japan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "4.532944"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "3421.197328"
+        },
+        {
+          "value": "76"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "10.08174"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "mobile"
+        },
+        {
+          "value": "Taiwan"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "24.947696"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "Unassigned"
+        },
+        {
+          "value": "desktop"
+        },
+        {
+          "value": "Germany"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "1973.659053"
+        },
+        {
+          "value": "35"
+        }
+      ]
+    }
+  ],
+  "row_count": 162,
+  "metadata": {
+    "currency_code": "TWD",
+    "time_zone": "Asia/Taipei",
+    "data_loss_from_other_row": false,
+    "sampling_metadatas": []
+  },
+  "kind": "analyticsData#runReport",
+  "totals": [],
+  "maximums": [],
+  "minimums": []
+}

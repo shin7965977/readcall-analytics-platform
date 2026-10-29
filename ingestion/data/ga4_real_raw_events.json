@@ -1,0 +1,3471 @@
+{
+  "dimension_headers": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "eventName"
+    }
+  ],
+  "metric_headers": [
+    {
+      "name": "eventCount",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "totalUsers",
+      "type_": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "reader_text_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "910"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "404"
+        },
+        {
+          "value": "65"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "342"
+        },
+        {
+          "value": "114"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "224"
+        },
+        {
+          "value": "68"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "reader_text_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "199"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "reader_text_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "196"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "185"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "181"
+        },
+        {
+          "value": "26"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "174"
+        },
+        {
+          "value": "39"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "163"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "144"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "141"
+        },
+        {
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "141"
+        },
+        {
+          "value": "34"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "133"
+        },
+        {
+          "value": "114"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "125"
+        },
+        {
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "123"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "113"
+        },
+        {
+          "value": "113"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "98"
+        },
+        {
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "91"
+        },
+        {
+          "value": "52"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "90"
+        },
+        {
+          "value": "58"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "86"
+        },
+        {
+          "value": "33"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "82"
+        },
+        {
+          "value": "65"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "82"
+        },
+        {
+          "value": "68"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "74"
+        },
+        {
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "72"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "70"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "67"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "66"
+        },
+        {
+          "value": "66"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "60"
+        },
+        {
+          "value": "26"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "60"
+        },
+        {
+          "value": "60"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "55"
+        },
+        {
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "55"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "48"
+        },
+        {
+          "value": "39"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "46"
+        },
+        {
+          "value": "29"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "43"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "43"
+        },
+        {
+          "value": "29"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "42"
+        },
+        {
+          "value": "35"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "41"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "37"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "37"
+        },
+        {
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "37"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "36"
+        },
+        {
+          "value": "33"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "35"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "35"
+        },
+        {
+          "value": "35"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "34"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "33"
+        },
+        {
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "33"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "31"
+        },
+        {
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "30"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "28"
+        },
+        {
+          "value": "28"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "26"
+        },
+        {
+          "value": "16"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "25"
+        },
+        {
+          "value": "25"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "23"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "22"
+        },
+        {
+          "value": "14"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "21"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "20"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "20"
+        },
+        {
+          "value": "14"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "19"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "19"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "19"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "18"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "reader_explain_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "17"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "17"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "16"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "15"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "favorite_button_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "15"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "reader_explain_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "referral_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "reader_text_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "reader_explain_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "document_uploaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "tutor_question_sent"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "reader_text_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "referral_link_copied"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "trial_exhausted_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "dictionary_searched"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "page_view"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "trial_exhausted_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "document_uploaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "favorite_button_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "reader_explain_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "session_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "favorite_button_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "feedback_submitted"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "reader_explain_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "trial_exhausted_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "vocab_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "document_uploaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "view_search_results"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "vocab_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "referral_unlock_success"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "vocab_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "form_start"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "referral_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "byok_modal_opened"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "sample_story_loaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "byok_manual_paste_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "sample_story_loaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "starter_doc_loaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "vocab_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "byok_key_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "document_uploaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "trial_exhausted_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "byok_get_key_click"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "dictionary_word_selected"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "first_visit"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "scroll"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "byok_verify_failed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "byok_manual_paste_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "byok_verify_failed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "custom_prompt_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "referral_link_visited"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "trial_exhausted_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "document_uploaded"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "favorite_button_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "trial_banner_cta_clicked"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "verb_conjugation_viewed"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "vocab_saved"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "user_engagement"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "row_count": 191,
+  "metadata": {
+    "currency_code": "TWD",
+    "time_zone": "Asia/Taipei",
+    "data_loss_from_other_row": false,
+    "sampling_metadatas": []
+  },
+  "kind": "analyticsData#runReport",
+  "totals": [],
+  "maximums": [],
+  "minimums": []
+}

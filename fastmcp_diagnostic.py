@@ -205,6 +205,7 @@ def generate_tab_diagnosis(
     eff_lang = (lang or language or "zh").lower()
     is_zh = eff_lang.startswith("zh")
     clean_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
+    is_valid_format = clean_key.startswith("AIzaSy") and len(clean_key) >= 30
 
     base_prompt = custom_system_prompt or (
         DEFAULT_SYSTEM_PROMPT_ZH if is_zh else DEFAULT_SYSTEM_PROMPT_EN
@@ -226,10 +227,11 @@ def generate_tab_diagnosis(
         f"```json\n{json.dumps(all_tabs_payload or {}, ensure_ascii=False, indent=2, default=str)}\n```"
     )
 
-    if clean_key:
+    if clean_key and is_valid_format:
         try:
             from google import genai
             from google.genai import types
+            from google.genai.errors import ClientError
 
             from mcp_server.server import (
                 get_byok_funnel,
@@ -261,6 +263,9 @@ def generate_tab_diagnosis(
                     )
                     if resp and resp.text:
                         return resp.text
+                except ClientError:
+                    # Invalid key or unauthorized: fail-fast and avoid waiting on multiple model retries
+                    break
                 except Exception:  # noqa: BLE001, S112
                     continue
         except Exception:  # noqa: BLE001, S110

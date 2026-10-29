@@ -34,7 +34,7 @@ def create_readcall_ga4_source(
     def readcall_source():
         @dlt.resource(
             name="raw_ga4_daily_traffic",
-            write_disposition="merge",
+            write_disposition="replace",
             primary_key="traffic_record_id",
         )
         def daily_traffic():
@@ -42,7 +42,7 @@ def create_readcall_ga4_source(
 
         @dlt.resource(
             name="raw_ga4_events",
-            write_disposition="merge",
+            write_disposition="replace",
             primary_key="event_record_id",
         )
         def ga4_events():
