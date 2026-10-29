@@ -307,7 +307,7 @@ def main():
         lang_options = ["English", "繁體中文"]
         curr_idx = 0 if is_en else 1
         selected_lang_str = st.radio(
-            "🌐 Language / 語言",
+            "🌐 Language" if is_en else "🌐 語言切換",
             options=lang_options,
             index=curr_idx,
             horizontal=True,
@@ -317,6 +317,8 @@ def main():
         if new_lang_code != st.session_state["lang"]:
             st.session_state["lang"] = new_lang_code
             st.query_params["lang"] = new_lang_code
+            if len(st.session_state.get("chat_history", [])) <= 1:
+                st.session_state.chat_history = []
             st.rerun()
 
         # Re-evaluate language flag
@@ -340,7 +342,7 @@ def main():
             key="selected_lakehouse_layer",
         )
         data_source_str = f"Google Cloud BigQuery ({PROJECT_ID}.readcall_{selected_layer})"
-        st.caption(f"🔒 {'Connected' if is_en else '連線資料庫'}：`{data_source_str}`")
+        st.caption(f"🔒 {'Connected: ' if is_en else '連線資料庫：'}`{data_source_str}`")
 
         # Load layer data
         data_dict = load_lakehouse_data(selected_layer)
@@ -458,7 +460,7 @@ def main():
                 <div class="da-metric-box">
                     <span class="{badge_cls}">{badge_txt}</span>
                     <div class="da-metric-title">{m['name']}</div>
-                    <div class="da-metric-num">{m['val_str']} <span style="font-size:0.75rem;color:#64748b;font-weight:600;">(Target: {m['target']})</span></div>
+                    <div class="da-metric-num">{m['val_str']} <span style="font-size:0.75rem;color:#64748b;font-weight:600;">({'Target: ' if is_en else '目標: '}{m['target']})</span></div>
                     <div style="margin-top:0.25rem;">
                         <span class="formula-tag">{m['formula']}</span>
                     </div>
@@ -489,7 +491,7 @@ def main():
         with header_col1:
             st.title("ReadCall Product Analytics Lakehouse" if is_en else "ReadCall 產品分析與 PLG 數據戰情室")
             st.markdown(
-                f"**{'Current Layer' if is_en else '當前湖倉層級'}**：{layer_display_titles.get(selected_layer)} · "
+                f"**{'Current Layer: ' if is_en else '當前湖倉層級：'}**{layer_display_titles.get(selected_layer)} · "
                 f"**GA4 Property 559361789 + dlt + GCP BigQuery + dbt-core**"
             )
         with header_col2:
@@ -521,14 +523,14 @@ def main():
 
         # Privacy & Weighted Scaling Notice (Business Confidentiality Protection)
         st.info(
-            "🔒 **Data Privacy & Calibration Notice**: To protect production business confidentiality, "
-            "all volume metrics (DAU, sessions, event counts) have been desensitized via privacy-preserving "
-            "weighted scaling ((count + 30) × 25). Time-series trends, retention curves, and 32-event distribution ratios "
-            "are 100% mapped from authentic ReadCall GA4 telemetry; absolute numbers do not reflect unadjusted operational scale."
+            "🔒 **Data Privacy & Calibration Notice**: To safeguard production business confidentiality, "
+            "all volume metrics (DAU, sessions, event counts) displayed in this public demonstration cockpit "
+            "have been desensitized via proprietary weighting calibrations. Time-series trends, retention curves, "
+            "and 32-event distribution ratios reflect genuine ReadCall GA4 telemetry patterns; absolute numbers do not reflect unadjusted operational scale."
             if is_en
-            else "🔒 **商業隱私與展示加權說明**：為保護線上生產環境商業機密，本戰情室展示之絕對量化數值"
-            "（DAU、工作階段、事件次數）均經由去識別化加權保護演算法（先+30後×25）平移縮放。"
-            "時間序列趨勢波形與 32 項埋點分佈比率 100% 映射自真實 ReadCall GA4 歷史日誌，絕對數值不代表未經調整之真實營運規模。"
+            else "🔒 **商業隱私與展示加權說明**：為維護線上生產環境商業機密，本公開展示戰情室呈現之絕對規模數值"
+            "（DAU、工作階段、事件次數）均已完成去識別化商業加權校準，僅供架構展示，不代表未經調整之原始營運數字。"
+            "時間序列趨勢波形、相對留存曲線與 32 項埋點行為特徵則真實反映 ReadCall GA4 歷史遙測數據。"
         )
 
         # ----------------------------------------------------------------------
@@ -960,9 +962,9 @@ def main():
 
             # PROMINENT SYSTEM PROMPT PLAYGROUND (User Feature Request #2)
             expander_title = (
-                "🛠️ View / Edit System Prompt (檢視 / 修改系統 Prompt)"
+                "🛠️ View / Edit System Prompt"
                 if is_en
-                else "🛠️ 檢視 / 修改系統 Prompt (Edit System Prompt)"
+                else "🛠️ 檢視 / 修改系統 Prompt"
             )
             with st.expander(expander_title, expanded=False):
                 st.caption(
