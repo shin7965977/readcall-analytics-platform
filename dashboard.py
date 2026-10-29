@@ -760,6 +760,14 @@ if ai_sidebar_col is not None:
             else "輸入您自己的 Gemini Key 可進行即時推理；留空則自動調用確定性 FastMCP 診斷引擎。",
         )
 
+        st.caption(
+            "🔒 **BYOK Security Guarantee**: Keys are never stored. "
+            "[👉 Get a Free Gemini API Key at Google AI Studio](https://aistudio.google.com/app/apikey)"
+            if is_en
+            else "🔒 **安全保障（BYOK 模式）**：系統絕不儲存金鑰，連線結束即釋放。"
+            "[👉 點此前往 Google AI Studio 免費獲取 API Key](https://aistudio.google.com/app/apikey)"
+        )
+
         # QUICK RECOMMENDATION PILLS (Mirroring Original Style)
         st.markdown("##### ⚡ " + ("One-Click Diagnostics" if is_en else "一鍵快捷診斷推薦"))
         q1, q2 = st.columns(2)
