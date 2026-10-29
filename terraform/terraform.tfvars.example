@@ -1,0 +1,4 @@
+project_id      = "de-consulting-508822"
+region          = "us-central1"
+ga4_property_id = "559361789"
+environment     = "prod"

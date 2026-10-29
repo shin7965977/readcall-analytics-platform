@@ -1,0 +1,241 @@
+version: 2
+
+semantic_models:
+  - name: daily_growth_telemetry
+    description: "ReadCall daily active users, sessions, engagement rate, and Aha! core feature activation semantic model"
+    model: ref('gold_daily_growth_kpi')
+    defaults:
+      agg_time_dimension: event_date
+    entities:
+      - name: metric_day
+        type: primary
+        expr: event_date
+    dimensions:
+      - name: event_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: total_dau
+        agg: sum
+        expr: dau
+        create_metric: true
+        description: "Daily Active Users (DAU)"
+      - name: total_aha_users
+        agg: sum
+        expr: aha_users
+        create_metric: true
+        description: "Users triggering German reader text selection or bilingual dictionary search"
+      - name: total_sessions
+        agg: sum
+        expr: total_sessions
+        create_metric: true
+      - name: total_engaged_sessions
+        agg: sum
+        expr: engaged_sessions
+        create_metric: true
+      - name: total_ai_inference_events
+        agg: sum
+        expr: ai_inference_events
+        create_metric: true
+      - name: total_core_reader_events
+        agg: sum
+        expr: core_reader_events
+        create_metric: true
+
+  - name: byok_conversion_funnel
+    description: "ReadCall 6-stage free-trial-to-BYOK Gemini API key activation funnel semantic model"
+    model: ref('gold_byok_funnel')
+    defaults:
+      agg_time_dimension: event_date
+    entities:
+      - name: funnel_day
+        type: primary
+        expr: event_date
+    dimensions:
+      - name: event_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: trial_wall_hits
+        agg: sum
+        expr: step_3_trial_limit_hit
+        create_metric: true
+        description: "Total trial_exhausted_viewed + trial_banner_cta_clicked triggers"
+      - name: byok_modals_opened
+        agg: sum
+        expr: step_4_byok_modal_opened
+        create_metric: true
+        description: "Total ByokModal.tsx opens"
+      - name: byok_keys_saved
+        agg: sum
+        expr: step_6_byok_key_saved
+        create_metric: true
+        description: "Total verified and saved Gemini API keys (1,500 free daily requests unlocked)"
+      - name: byok_verify_failures
+        agg: sum
+        expr: byok_verify_failed
+        create_metric: true
+        description: "Total API key verification failures in ByokModal.tsx"
+      - name: byok_total_verify_attempts
+        agg: sum
+        expr: "step_6_byok_key_saved + byok_verify_failed"
+        create_metric: true
+        description: "Total BYOK verification attempts (saved + failed)"
+
+  - name: referral_viral_funnel
+    description: "ReadCall 5-stage viral referral and Custom AI Tutor Prompt unlock loop semantic model"
+    model: ref('gold_referral_loop')
+    defaults:
+      agg_time_dimension: event_date
+    entities:
+      - name: referral_day
+        type: primary
+        expr: event_date
+    dimensions:
+      - name: event_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: referral_modals_opened
+        agg: sum
+        expr: step_1_referral_modal_opened
+        create_metric: true
+      - name: referral_links_copied
+        agg: sum
+        expr: step_2_referral_link_copied
+        create_metric: true
+      - name: referral_unlocks_succeeded
+        agg: sum
+        expr: step_4_referral_unlock_success
+        create_metric: true
+
+  - name: feature_catalog_adoption
+    description: "ReadCall 32 telemetry events mapped to 5 product modules, AARRR stages, and React source components"
+    model: ref('gold_feature_adoption')
+    defaults:
+      agg_time_dimension: last_active_date
+    entities:
+      - name: feature_event
+        type: primary
+        expr: event_name
+    dimensions:
+      - name: last_active_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: module_category
+        type: categorical
+      - name: aarrr_stage
+        type: categorical
+      - name: source_component
+        type: categorical
+      - name: is_aha_moment
+        type: categorical
+    measures:
+      - name: feature_interactions
+        agg: sum
+        expr: total_event_count
+        create_metric: true
+
+metrics:
+  - name: aha_activation_rate
+    label: "Aha! 核心功能啟用率 (Aha! Activation Rate)"
+    description: "Ratio of active users who triggered German text selection or dictionary lookup"
+    type: ratio
+    type_params:
+      numerator: total_aha_users
+      denominator: total_dau
+    meta:
+      formula: "SUM(aha_users) / SUM(dau)"
+      owner: "Product Analytics"
+      source_components:
+        - "src/app/reader/[id]/page.tsx"
+        - "src/app/dictionary/page.tsx"
+      healthy_threshold: 0.60
+      warning_threshold: 0.40
+      recommended_action: "Optimize Starter Document and Sample Story auto-load onboarding to drive immediate word selection."
+
+  - name: ai_morphological_depth
+    label: "AI 形態學深度解析率 (AI Morphological Depth Ratio)"
+    description: "Ratio of AI morphological breakdown and tutor interactions to core reader events"
+    type: ratio
+    type_params:
+      numerator: total_ai_inference_events
+      denominator: total_core_reader_events
+    meta:
+      formula: "SUM(ai_inference_events) / SUM(core_reader_events)"
+      owner: "Core Reader Product"
+      source_components:
+        - "src/components/reader/LinguisticInspectorContent.tsx"
+      healthy_threshold: 0.05
+      warning_threshold: 0.03
+      recommended_action: "Surface one-click AI grammar breakdown and 6-tense verb pills directly inside the text selection popover."
+
+  - name: byok_conversion_rate
+    label: "試用牆至 BYOK 綁定轉換率 (Trial-to-BYOK Conversion Rate)"
+    description: "Ratio of saved Gemini API keys to free-trial limit wall hits"
+    type: ratio
+    type_params:
+      numerator: byok_keys_saved
+      denominator: trial_wall_hits
+    meta:
+      formula: "SUM(byok_key_saved) / SUM(trial_exhausted_viewed + trial_banner_cta_clicked)"
+      owner: "PLG Growth"
+      source_components:
+        - "src/components/ByokModal.tsx"
+        - "src/components/reader/LinguisticInspectorContent.tsx"
+      healthy_threshold: 0.45
+      warning_threshold: 0.30
+      recommended_action: "Streamline CTA microcopy when trial quota is exhausted and emphasize 1,500 free daily requests."
+
+  - name: byok_modal_completion_rate
+    label: "ByokModal 視窗完成率 (ByokModal Completion Rate)"
+    description: "Ratio of saved Gemini API keys to ByokModal opens"
+    type: ratio
+    type_params:
+      numerator: byok_keys_saved
+      denominator: byok_modals_opened
+    meta:
+      formula: "SUM(byok_key_saved) / SUM(byok_modal_opened)"
+      owner: "PLG Growth & CRO"
+      source_components:
+        - "src/components/ByokModal.tsx"
+      healthy_threshold: 0.30
+      warning_threshold: 0.20
+      recommended_action: "Add 2-step visual guide for Google AI Studio key creation and auto-focus clipboard paste in ByokModal.tsx."
+
+  - name: byok_verify_failure_rate
+    label: "API 金鑰驗證失敗摩擦率 (BYOK Key Verification Failure Rate)"
+    description: "Ratio of failed API key verification attempts to total verification attempts"
+    type: ratio
+    type_params:
+      numerator: byok_verify_failures
+      denominator: byok_total_verify_attempts
+    meta:
+      formula: "SUM(byok_verify_failed) / SUM(byok_key_saved + byok_verify_failed)"
+      owner: "Frontend Engineering"
+      source_components:
+        - "src/components/ByokModal.tsx"
+      healthy_threshold: 0.08
+      warning_threshold: 0.15
+      recommended_action: "Auto-trim whitespace and validate AIzaSy prefix before firing test verification request in ByokModal.tsx."
+
+  - name: viral_k_factor
+    label: "推薦裂變解鎖係數 (Referral Viral K-Factor Proxy)"
+    description: "Ratio of successful referral unlocks to referral modal opens"
+    type: ratio
+    type_params:
+      numerator: referral_unlocks_succeeded
+      denominator: referral_modals_opened
+    meta:
+      formula: "SUM(referral_unlock_success) / SUM(referral_modal_opened)"
+      owner: "Growth Loops"
+      source_components:
+        - "src/components/reader/TutorCustomPromptModal.tsx"
+        - "src/components/ReferralWelcomeBanner.tsx"
+      healthy_threshold: 0.12
+      warning_threshold: 0.06
+      recommended_action: "Preview sample Custom AI Tutor Prompts inside TutorCustomPromptModal.tsx before the referral gate to boost share intent."

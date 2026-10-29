@@ -1,0 +1,30 @@
+# Data Ingestion & Pipeline
+dlt[bigquery]>=1.6.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+google-cloud-bigquery>=3.20.0
+google-cloud-bigquery-storage>=2.24.0
+duckdb>=1.0.0
+pyyaml>=6.0.1
+
+# Transformations (dbt)
+dbt-core>=1.8.0
+dbt-bigquery>=1.8.0
+dbt-duckdb>=1.8.0
+
+# AI & MCP Integration
+fastmcp>=0.1.0
+google-genai>=0.1.0
+
+# BI & Dashboard Visualization
+streamlit>=1.35.0
+plotly>=5.20.0
+pygwalker>=0.4.0
+tornado>=6.4.0
+
+# Testing & Code Quality
+pytest>=8.0.0
+ruff>=0.5.0
+sqlfluff>=3.0.0
+google-cloud-storage>=2.14.0
+elementary-data>=0.14.0

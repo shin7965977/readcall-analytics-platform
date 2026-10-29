@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: readcall_bronze
+    description: "ReadCall GA4 Bronze Layer (Zero-PII daily traffic & 32 allowlisted product events)"
+    schema: "{{ env_var('DLT_DATASET_NAME', 'readcall_bronze') }}"
+    tables:
+      - name: raw_ga4_daily_traffic
+        description: "Daily GA4 session & user metrics segmented by channel group, source/medium, device category, and country"
+      - name: raw_ga4_events
+        description: "Daily GA4 event counts and unique users across ReadCall's 32 allowlisted product events"

@@ -1,0 +1,140 @@
+version: 2
+
+models:
+  - name: metricflow_time_spine
+    description: "Time spine model required by dbt Semantic Layer (MetricFlow)"
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        description: "Daily time spine grain"
+        granularity: day
+
+  - name: dim_channels
+    description: "Normalized acquisition channel dimension table"
+    columns:
+      - name: channel_key
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_devices_geo
+    description: "Normalized device and country dimension table with DACH region flag"
+    columns:
+      - name: device_geo_key
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: is_dach_region
+        description: "Whether the country is in the DACH German-speaking region"
+        tests:
+          - not_null
+
+  - name: dim_feature_catalog
+    description: "ReadCall 32 product telemetry events mapped to modules, AARRR stages, and React source components"
+    columns:
+      - name: event_name
+        description: "Primary key (allowlisted GA4 event name)"
+        tests:
+          - unique
+          - not_null
+      - name: module_category
+        description: "Product module pillar"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - '1_Acquisition_Onboarding'
+                  - '2_Core_Reader_Morphology'
+                  - '3_Dictionary_Vocab_Quiz'
+                  - '4_BYOK_Monetization'
+                  - '5_Referral_Viral_Loop'
+      - name: source_component
+        description: "Source React component file in shin7965977/readcall"
+        tests:
+          - not_null
+
+  - name: fct_daily_traffic
+    description: "Daily traffic and session engagement fact table"
+    columns:
+      - name: traffic_record_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: channel_key
+        description: "Foreign key to dim_channels"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_channels')
+                field: channel_key
+      - name: device_geo_key
+        description: "Foreign key to dim_devices_geo"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_devices_geo')
+                field: device_geo_key
+
+  - name: fct_feature_events
+    description: "Daily ReadCall product event triggers fact table"
+    columns:
+      - name: event_record_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: event_name
+        description: "Foreign key to dim_feature_catalog"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_feature_catalog')
+                field: event_name
+
+  - name: gold_daily_growth_kpi
+    description: "Daily ReadCall SaaS growth, engagement, and Aha! activation KPIs"
+    columns:
+      - name: event_date
+        description: "Metric date"
+        tests:
+          - unique
+          - not_null
+      - name: dau
+        description: "Daily Active Users"
+        tests:
+          - not_null
+
+  - name: gold_feature_adoption
+    description: "Product feature adoption leaderboard and 80/20 Pareto metrics"
+    columns:
+      - name: event_name
+        description: "Feature event identifier"
+        tests:
+          - unique
+          - not_null
+
+  - name: gold_byok_funnel
+    description: "Daily 6-stage BYOK Gemini API key conversion and verification friction funnel"
+    columns:
+      - name: event_date
+        description: "Funnel date"
+        tests:
+          - unique
+          - not_null
+
+  - name: gold_referral_loop
+    description: "Daily 5-stage viral referral and Custom AI Tutor Prompt unlock loop"
+    columns:
+      - name: event_date
+        description: "Referral date"
+        tests:
+          - unique
+          - not_null

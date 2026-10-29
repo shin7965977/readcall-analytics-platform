@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataOps Principles & Engineering Practice Guide | Modern Data Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(99, 102, 241, 0.45);
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.2);
+      --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.2);
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6, 182, 212, 0.2);
+      --rose: #f43f5e;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-sub: #6b7280;
+      --code-bg: #0d1117;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+      line-height: 1.6;
+    }
+
+    /* Sticky Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .brand-logo svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-light);
+    }
+
+    .nav-link.active {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      flex: 1;
+    }
+
+    /* Hero Banner */
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 70%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 820px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-metrics-strip {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .metric-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .metric-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary-light);
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: left;
+      line-height: 1.2;
+    }
+
+    /* Section Styles */
+    section {
+      margin-bottom: 5.5rem;
+      scroll-margin-top: 5rem;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .icon-indigo { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); }
+    .icon-emerald { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+    .icon-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+    .icon-cyan { background: rgba(6, 182, 212, 0.15); color: var(--cyan); }
+    .icon-rose { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
+
+    .section-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Cards & Layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .card-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-primary { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-cyan { background: rgba(6, 182, 212, 0.15); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+    .badge-rose { background: rgba(244, 63, 94, 0.15); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .card h3 {
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: var(--text-main);
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .card-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .spec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .spec-tag {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      background: rgba(6, 182, 212, 0.08);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .spec-val {
+      color: #cbd5e1;
+      font-size: 0.85rem;
+    }
+
+    /* Concrete Real-World Example Box (Vivid Case Callout) */
+    .case-box {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px dashed rgba(99, 102, 241, 0.35);
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      margin: 0.9rem 0;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .case-title {
+      font-weight: 700;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .case-desc {
+      color: #cbd5e1;
+    }
+
+    .case-before {
+      color: #fb7185;
+      font-weight: 600;
+    }
+
+    .case-after {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Manifesto Filter & Search */
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--primary);
+      color: var(--text-main);
+    }
+
+    .search-box {
+      margin-left: auto;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 240px;
+    }
+
+    .search-box:focus {
+      border-color: var(--primary-light);
+    }
+
+    /* Deep Code / Callout Block */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    .code-comment { color: #64748b; }
+    .code-keyword { color: #f43f5e; font-weight: 600; }
+    .code-str { color: #10b981; }
+    .code-fn { color: #38bdf8; }
+
+    /* Comparison Table */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      margin-top: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.9);
+      padding: 1rem 1.25rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Highlight Banner */
+    .callout {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.08));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .callout-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .callout-content h4 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .callout-content p {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    /* Case Showcase Ribbon */
+    .case-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .showcase-card {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .showcase-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      background: rgba(10, 15, 26, 0.9);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-light);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 0.85rem 1rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .hero h1 {
+        font-size: 2.1rem;
+      }
+      main {
+        padding: 2rem 1rem 4rem;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <a href="portal.html" class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">DataOps Blueprint</div>
+        <div class="brand-subtitle">Platzi E-Commerce Data Pipeline</div>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a href="#manifesto" class="nav-link">18 Principles</a>
+      <a href="#pillars" class="nav-link">4 Pillars & Axioms</a>
+      <a href="#ci-gates" class="nav-link">5 CI Golden Gates</a>
+      <a href="#metrics" class="nav-link">4 DataOps Metrics</a>
+      <a href="portal.html" class="nav-link">Back to Portal ↗</a>
+    </nav>
+    <a href="../../technical/zh/dataops_principles_guide.html" class="lang-btn">
+      🌐 切換至繁體中文
+    </a>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-badge">DATAOPS & MODERN DATA STACK ENGINEERING GUIDE</div>
+      <h1>From Agile Philosophy to Production<br>The Complete DataOps Blueprint</h1>
+      <p>
+        A comprehensive breakdown of the official 18 DataOps Manifesto principles, Modern Data Stack (MDS) 4 operational pillars & foundational mathematical axioms (Idempotency / Reproducibility), GitHub Actions 5 CI gates, and 4 DORA-aligned pipeline performance metrics. <strong>Enriched with real-world e-commerce disaster & recovery case studies.</strong>
+      </p>
+
+      <div class="hero-metrics-strip">
+        <div class="metric-badge">
+          <div class="metric-num">18</div>
+          <div class="metric-label">Manifesto<br>Principles</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-num">4+2</div>
+          <div class="metric-label">MDS Pillars &<br>System Axioms</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-num">5</div>
+          <div class="metric-label">CI/CD Automated<br>Quality Gates</div>
+        </div>
+        <div class="metric-badge">
+          <div class="metric-num">4</div>
+          <div class="metric-label">DORA-Style<br>DataOps Metrics</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: 18 PRINCIPLES OF DATAOPS MANIFESTO -->
+    <section id="manifesto">
+      <div class="section-header">
+        <div>
+          <div class="section-title-wrap">
+            <div class="section-icon icon-indigo">📜</div>
+            <h2 class="section-title">1. The 18 Principles of the DataOps Manifesto with Real Scenarios</h2>
+          </div>
+          <p class="section-desc">Initiated by Christopher Bergh (DataKitchen) in 2017, synthesizing Agile, DevOps, and Lean Manufacturing to eliminate firefighting heroics.</p>
+        </div>
+      </div>
+
+      <!-- Real World Spotlight Showcase -->
+      <div class="case-showcase">
+        <div class="showcase-card" style="border-left: 3px solid var(--rose);">
+          <div class="showcase-header" style="color: var(--rose);">
+            <span>🚨 Real Disaster: The Missing $3 Million Mystery</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #cbd5e1;">
+            <strong>Scenario:</strong> Post-Black Friday, the CFO questioned: "Why does the sales tax report exported on Nov 12 disagree with today's report on Nov 15 by $3,000,000?" Without historical snapshots, engineers were defenseless.<br>
+            <strong>DataOps Solution (P4):</strong> dbt Snapshot SCD Type 2 + Git commit locking reproduced the Nov 12 ledger in 30 seconds, proving that $3M in legitimate customer returns occurred on Nov 13.
+          </p>
+        </div>
+
+        <div class="showcase-card" style="border-left: 3px solid var(--amber);">
+          <div class="showcase-header" style="color: var(--amber);">
+            <span>💥 Real Disaster: Shared Dev Database Cascade Crash</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #cbd5e1;">
+            <strong>Scenario:</strong> A junior engineer tested schema alterations on a shared <code>dev</code> database, accidentally dropping an order column and crashing active queries for 6 other analysts right before leadership reporting.<br>
+            <strong>DataOps Solution (P5):</strong> GitHub Actions dynamically provisions isolated ephemeral <code>pr_42_schema</code> per PR. Zero developer collision; automatically destroyed upon merge.
+          </p>
+        </div>
+
+        <div class="showcase-card" style="border-left: 3px solid var(--cyan);">
+          <div class="showcase-header" style="color: var(--cyan);">
+            <span>🦸‍♂️ Real Disaster: The Senior Engineer Vacation Panic</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #cbd5e1;">
+            <strong>Scenario:</strong> The only senior engineer who understood the 800-line settlement SQL took wedding leave. At 3:00 AM, the pipeline failed; nobody dared touch the code, leaving executives blind at the morning standup.<br>
+            <strong>DataOps Solution (P16):</strong> Deconstructed heroics into modular dbt models verified by CI. With actionable Runbooks, interns resolve issues within 10 minutes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterManifesto('all')">All Principles (18)</button>
+        <button class="filter-btn" onclick="filterManifesto('customer')">Customer Value & Delivery</button>
+        <button class="filter-btn" onclick="filterManifesto('code')">Code & Environments</button>
+        <button class="filter-btn" onclick="filterManifesto('quality')">Quality & Observability</button>
+        <button class="filter-btn" onclick="filterManifesto('culture')">Culture & Lean Mindset</button>
+        <input type="text" id="manifestoSearch" class="search-box" placeholder="Filter by keyword (e.g., reproducibility)..." oninput="searchManifesto()">
+      </div>
+
+      <!-- 18 Principles Grid -->
+      <div class="grid-3" id="manifestoGrid">
+        
+        <!-- P1 -->
+        <div class="card manifesto-item" data-cat="customer">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 01</span>
+              <span style="font-size: 1.2rem;">🎯</span>
+            </div>
+            <h3>Continual Customer Satisfaction</h3>
+            <p>Our highest priority is to satisfy the customer through the early and continuous delivery of valuable analytic insights from a few minutes to a few days.</p>
+            
+            <div class="case-box">
+              <div class="case-title">💡 Case: Weekly Batches to 30-Min Telemetry</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Marketing waited 2 weeks for promotion conversion metrics.<br>
+                <span class="case-after">After:</span> Incremental dbt pipelines refresh every 30 minutes, enabling real-time ad budget adjustments.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">dbt Core + Incremental Models</span></div>
+          </div>
+        </div>
+
+        <!-- P2 -->
+        <div class="card manifesto-item" data-cat="code">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 02</span>
+              <span style="font-size: 1.2rem;">💻</span>
+            </div>
+            <h3>Analytics is Code</h3>
+            <p>Analytic assets are software code (SQL, Python, configurations) and must be versioned, peer-reviewed, tested, and deployed with software engineering rigor.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Eliminating Manual DDL Incidents</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Analysts executed direct `DROP COLUMN` in DBeaver, breaking live dashboards.<br>
+                <span class="case-after">After:</span> Database DDL rights revoked; all modifications gated by Git PRs and peer code review.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Git, dbt SQL, SQLFluff, Ruff</span></div>
+          </div>
+        </div>
+
+        <!-- P3 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 03</span>
+              <span style="font-size: 1.2rem;">🤝</span>
+            </div>
+            <h3>Analytics is a Team Sport</h3>
+            <p>Analytics teams have diverse skill sets. Effective collaboration requires breaking silos and agreeing upon a single semantic source of truth.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Resolving Conflicting GMV Definitions</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Marketing GMV included shipping; Finance deducted refunds; monthly reviews stalled.<br>
+                <span class="case-after">After:</span> Centralized definition in Semantic Layer code establishes an unshakeable Single Source of Truth.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Semantic Layer (Cube / dbt Semantic)</span></div>
+          </div>
+        </div>
+
+        <!-- P4 -->
+        <div class="card manifesto-item" data-cat="code">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-emerald">Principle 04</span>
+              <span style="font-size: 1.2rem;">🔁</span>
+            </div>
+            <h3>Reproducibility</h3>
+            <p>Any historical calculation, forecast, or dashboard figure must be 100% reproducible when given the exact same code commit and raw input dataset.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Auditor Historical Examination</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> External auditors requested March 15 user tiers; overwritten tables prevented audit.<br>
+                <span class="case-after">After:</span> `git checkout v2.3.1` + dbt Snapshot restored historical truth in 30 seconds.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Git SHA, dbt Snapshot, Iceberg/Delta Lake</span></div>
+          </div>
+        </div>
+
+        <!-- P5 -->
+        <div class="card manifesto-item" data-cat="code">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-emerald">Principle 05</span>
+              <span style="font-size: 1.2rem;">📦</span>
+            </div>
+            <h3>Disposable Environments</h3>
+            <p>Engineers must not experiment in shared production warehouses. Every developer and CI pipeline must have isolated, zero-cost throwaway sandboxes.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Ephemeral PR Sandbox Databases</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Shared `dev` warehouse led to team members overwriting each other's test data.<br>
+                <span class="case-after">After:</span> GitHub Actions creates `pr_88_duckdb`, tests in isolation, and tears down cleanly upon merge.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">DuckDB In-Memory, Snowflake Zero-Copy Clone</span></div>
+          </div>
+        </div>
+
+        <!-- P6 -->
+        <div class="card manifesto-item" data-cat="customer">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 06</span>
+              <span style="font-size: 1.2rem;">⚡</span>
+            </div>
+            <h3>Reflect Customer Needs</h3>
+            <p>Business landscapes evolve rapidly. Data architectures must be agile enough to pivot, rather than using rigid schema design as an excuse to reject new requests.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Upstream Adds New Coupon Field</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> ERP added `coupon_code`; legacy ETL crashed and took 3 days to fix.<br>
+                <span class="case-after">After:</span> dlt automated schema evolution mapped and exposed the coupon field within 30 minutes.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">dbt Staging / Marts Layered Architecture</span></div>
+          </div>
+        </div>
+
+        <!-- P7 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Principle 07</span>
+              <span style="font-size: 1.2rem;">🧘</span>
+            </div>
+            <h3>Simplicity</h3>
+            <p>Simplicity—the art of maximizing the amount of work not done—is essential. Avoid over-engineering architectures before the business scale demands it.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Rejecting Premature Big Data Spending</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Processing 50k rows/day on a 5-node Spark EMR cluster wasted $3,000/mo.<br>
+                <span class="case-after">After:</span> Switched to DuckDB + BigQuery on-demand; monthly operational cost plummeted to < $10.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">DuckDB + dbt (Lightweight Embedded Stack)</span></div>
+          </div>
+        </div>
+
+        <!-- P8 -->
+        <div class="card manifesto-item" data-cat="code">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 08</span>
+              <span style="font-size: 1.2rem;">🎼</span>
+            </div>
+            <h3>Analytics Pipeline Orchestration</h3>
+            <p>Data extraction, transformation, testing, and delivery must be orchestrated as automated Directed Acyclic Graphs (DAGs), eliminating manual script triggers.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Eliminating Fragile 2 AM Crontabs</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Crontab ran at 2:00 AM; upstream delay caused downstream scripts to aggregate blank tables.<br>
+                <span class="case-after">After:</span> Cloud Workflows / Airflow sensors trigger transformations only after upstream data lands.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Apache Airflow, Dagster, Prefect</span></div>
+          </div>
+        </div>
+
+        <!-- P9 -->
+        <div class="card manifesto-item" data-cat="quality">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-rose">Principle 09</span>
+              <span style="font-size: 1.2rem;">🛡️</span>
+            </div>
+            <h3>Quality is Paramount</h3>
+            <p>Inaccurate data is worse than no data. Quality checks must be baked into every step of the pipeline before data reaches production consumption layers.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Intercepting Negative Order Amounts</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> A bug generated -$50 orders; CEO discovered it in the board meeting.<br>
+                <span class="case-after">After:</span> Automated `pytest` and `dbt test` intercept boundaries before data reaches Marts.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">dbt test, Great Expectations, Soda Core</span></div>
+          </div>
+        </div>
+
+        <!-- P10 -->
+        <div class="card manifesto-item" data-cat="quality">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-rose">Principle 10</span>
+              <span style="font-size: 1.2rem;">📡</span>
+            </div>
+            <h3>Monitor Quality & Operational Performance</h3>
+            <p>Continuously monitor data freshness, anomaly deviations, schema drifts, and job runtimes to flag failures proactively before stakeholders report them.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Black Friday Gateway Plunge</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Payment gateway stalled; order volume plunged from 1,000/hr to 0; noticed 5 hours late.<br>
+                <span class="case-after">After:</span> Elementary flagged anomaly beyond 3σ, notifying on-call Slack channel within 10 minutes.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Elementary Data, Monte Carlo, dbt freshness</span></div>
+          </div>
+        </div>
+
+        <!-- P11 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Principle 11</span>
+              <span style="font-size: 1.2rem;">🔄</span>
+            </div>
+            <h3>Reuse</h3>
+            <p>Eliminate redundant copy-pasted SQL blocks. Encapsulate business logic into reusable macros, packages, and modular transformations.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Centralized Timezone Macro</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> 15 dashboards duplicated `DATEADD(hour, 8, ...)`; daylight saving broke reports.<br>
+                <span class="case-after">After:</span> Abstracted into `convert_timezone()` Jinja macro, centrally maintained across all models.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">dbt Macros, Jinja Templates, dbt Packages</span></div>
+          </div>
+        </div>
+
+        <!-- P12 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Principle 12</span>
+              <span style="font-size: 1.2rem;">📈</span>
+            </div>
+            <h3>Continuous Improvement</h3>
+            <p>Cultivate a blameless post-mortem culture where incidents lead to tangible automated regression tests and architectural hardening.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Zero Repeated Outages</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Engineers manually retried jobs; identical pipeline bugs recurring monthly.<br>
+                <span class="case-after">After:</span> Every post-mortem requires appending an automated regression test in CI before closing the ticket.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">GitHub Issues, Incident Post-Mortems</span></div>
+          </div>
+        </div>
+
+        <!-- P13 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Principle 13</span>
+              <span style="font-size: 1.2rem;">♻️</span>
+            </div>
+            <h3>Eliminate Waste</h3>
+            <p>Adhere to Lean principles: eliminate manual handoffs, unneeded approvals, and redundant cloud compute spending.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Slim CI Slashes 80% Compute Bills</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Modifying one column comment triggered a 40-minute rebuild of all 200 tables.<br>
+                <span class="case-after">After:</span> `dbt build --select state:modified+` only rebuilds modified models, completing in 90 seconds.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">dbt Slim CI (state:modified+)</span></div>
+          </div>
+        </div>
+
+        <!-- P14 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-cyan">Principle 14</span>
+              <span style="font-size: 1.2rem;">🏛️</span>
+            </div>
+            <h3>DataOps is a Cultural Movement</h3>
+            <p>Tools are enablers; culture is paramount. Foster psychological safety, collective accountability, and systematic problem solving.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Blameless Post-Mortem Reviews</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Managers asked "Who wrote this SQL?", incentivizing teams to hide bugs.<br>
+                <span class="case-after">After:</span> Teams ask "Why didn't our CI gate catch this?", fortifying automated pipelines.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Blameless Post-Mortem Protocols</span></div>
+          </div>
+        </div>
+
+        <!-- P15 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-cyan">Principle 15</span>
+              <span style="font-size: 1.2rem;">🧩</span>
+            </div>
+            <h3>Cross-Functional Ownership</h3>
+            <p>Data products are owned end-to-end by cross-functional teams spanning software engineers, data engineers, analysts, and business operators.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Upstream Microservice Schema Collaboration</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Backend changed `user_id` from INT to UUID without notice, crashing analytics.<br>
+                <span class="case-after">After:</span> Data Contracts trigger downstream integration checks directly inside the backend team's PR.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">Data Contracts Specification</span></div>
+          </div>
+        </div>
+
+        <!-- P16 -->
+        <div class="card manifesto-item" data-cat="culture">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-rose">Principle 16</span>
+              <span style="font-size: 1.2rem;">🦸‍♂️❌</span>
+            </div>
+            <h3>Reduce Heroism</h3>
+            <p>Eliminate reliance on midnight firefighting heroes. Build resilient, observable systems with clear documentation and automated recovery.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Farewell to Weekend Firefighting</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Only the Tech Lead could debug pipelines, carrying a laptop everywhere on weekends.<br>
+                <span class="case-after">After:</span> Comprehensive CI gates and explicit Markdown Runbooks allow rotating on-call engineers to resolve issues calmly.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">CI Quality Gates + Actionable Runbooks</span></div>
+          </div>
+        </div>
+
+        <!-- P17 -->
+        <div class="card manifesto-item" data-cat="customer">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 17</span>
+              <span style="font-size: 1.2rem;">🚀</span>
+            </div>
+            <h3>Continuous Deployment</h3>
+            <p>Deconstruct analytical changes into small increments and deploy frequently to minimize release risk and blast radius.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Shipping 4 Times Daily</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> Quarterly mega-releases forced all-night deployment panics.<br>
+                <span class="case-after">After:</span> Multiple micro-releases merged daily; issues can be rolled back in under 60 seconds.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">GitHub Actions CI/CD Workflows</span></div>
+          </div>
+        </div>
+
+        <!-- P18 -->
+        <div class="card manifesto-item" data-cat="customer">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Principle 18</span>
+              <span style="font-size: 1.2rem;">🔁</span>
+            </div>
+            <h3>Feedback Loops</h3>
+            <p>Establish rapid bi-directional feedback loops between data producers and data consumers to track metric adoption and deprecate obsolete assets.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Deprecating 800 Zombie Tables</div>
+              <div class="case-desc">
+                <span class="case-before">Before:</span> 800 legacy tables idle in warehouse, draining storage fees because nobody dared drop them.<br>
+                <span class="case-after">After:</span> Automated query log telemetry flagged tables with 0 reads over 90 days, enabling safe retirement.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tooling</span><span class="spec-val">BI Query Audit Logs & Metadata</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: 4 PILLARS & FOUNDATIONAL AXIOMS -->
+    <section id="pillars">
+      <div class="section-header">
+        <div>
+          <div class="section-title-wrap">
+            <div class="section-icon icon-emerald">🏛️</div>
+            <h2 class="section-title">2. Modern Data Stack (MDS): 4 Pillars & 2 Foundational Axioms</h2>
+          </div>
+          <p class="section-desc">Translating philosophy into engineering architecture: why MDS revolutionizes pipeline reliability and eliminates legacy ETL bottlenecks.</p>
+        </div>
+      </div>
+
+      <!-- Axioms Callout -->
+      <div class="callout">
+        <div class="callout-icon">🧬</div>
+        <div class="callout-content">
+          <h4>Architectural Insight: Why Idempotency & Reproducibility Are Axioms, Not Merely Pillars</h4>
+          <p>
+            In legacy ETL (Informatica, SSIS), procedural <code>INSERT INTO</code> queries caused duplicate rows upon job retries, forcing engineers to treat idempotency as an active warning. In the Modern Data Stack, <strong>Idempotency and Reproducibility are foundational physical laws</strong>. If a pipeline duplicates records when retried, it does not even qualify for discussion under Everything as Code or CI/CD!
+          </p>
+        </div>
+      </div>
+
+      <!-- 2 Foundational Axioms -->
+      <h3 style="margin-bottom: 1.25rem; font-size: 1.3rem;">The Two Foundational Axioms</h3>
+      <div class="grid-2" style="margin-bottom: 2.5rem;">
+        
+        <div class="card" style="border-left: 4px solid var(--emerald);">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-emerald">Axiom 1: Mathematical Axiom</span>
+              <span style="font-family: 'JetBrains Mono'; font-weight: 700; color: var(--emerald);">f(f(x)) = f(x)</span>
+            </div>
+            <h3>Idempotency</h3>
+            <p>
+              <strong>Definition:</strong> Running a pipeline once, ten times, or retrying after network failure must produce the identical final database state with zero side effects or duplicates.
+            </p>
+
+            <div class="case-box">
+              <div class="case-title">🚨 Real Disaster: Network Timeout Doubled Revenue</div>
+              <div class="case-desc">
+                An e-commerce batch job settling yesterday's GMV timed out at 95%. Airflow triggered an automated retry. Because the legacy script ran procedural <code>INSERT INTO daily_sales ...</code>, the retry <strong>doubled daily revenue to $20,000,000</strong>! Finance overpaid sales commissions by $50,000 before manual SQL cleanup.<br><br>
+                <strong style="color: var(--emerald);">MDS Solution:</strong> Declarative <code>SELECT</code> with <code>unique_key='order_id'</code> compiles into atomic table swaps or <code>MERGE INTO</code>, guaranteeing exact $10M totals regardless of retries.
+              </div>
+            </div>
+
+            <div class="code-block">
+<span class="code-comment">-- Declarative dbt model guarantees idempotency</span>
+<span class="code-comment">-- Compiles into CREATE OR REPLACE TABLE or MERGE INTO</span>
+<span class="code-keyword">SELECT</span> 
+    order_id, 
+    customer_id, 
+    order_date,
+    amount
+<span class="code-keyword">FROM</span> {{ ref(<span class="code-str">'stg_orders'</span>) }}
+<span class="code-keyword">WHERE</span> status = <span class="code-str">'completed'</span>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Legacy Flaw</span><span class="spec-val">Procedural INSERT INTO doubled ledger totals upon failure, demanding manual cleanup.</span></div>
+            <div class="spec-item"><span class="spec-tag">MDS Solution</span><span class="spec-val">Declarative SELECT (Pure functional transformation) + Atomic Warehouse Table Swaps.</span></div>
+          </div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--cyan);">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-cyan">Axiom 2: Historical Audit Axiom</span>
+              <span style="font-family: 'JetBrains Mono'; font-weight: 700; color: var(--cyan);">Immutable & Time-Travel</span>
+            </div>
+            <h3>Reproducibility</h3>
+            <p>
+              <strong>Definition:</strong> At any historical timestamp, the pipeline must be able to reproduce past financial or operational states by tying code commits to data snapshots.
+            </p>
+
+            <div class="case-box">
+              <div class="case-title">🚨 Real Disaster: In-Place Overwrites Broke Tax Audit</div>
+              <div class="case-desc">
+                A customer updated their billing address in December. The legacy relational database updated the row in-place (SCD Type 1). During the annual audit, re-running March cross-state tax calculations using the new address yielded tax mismatches and audit fines.<br><br>
+                <strong style="color: var(--cyan);">MDS Solution:</strong> dbt Snapshot (tracking <code>dbt_valid_from</code> and <code>dbt_valid_to</code> via SCD Type 2) + Git version tags reproduce the exact tax jurisdiction effective in March.
+              </div>
+            </div>
+
+            <div class="code-block">
+<span class="code-comment"># Git Commit SHA + Data Snapshot = 100% Deterministic Reproducibility</span>
+git checkout 631f107c
+dbt snapshot --select snapshot_customer_tier
+<span class="code-comment">-- Query customer membership tier exactly as it stood on May 1st, 2:00 PM</span>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Legacy Flaw</span><span class="spec-val">In-place database overwrites (SCD Type 1) destroyed historical audit trails.</span></div>
+            <div class="spec-item"><span class="spec-tag">MDS Solution</span><span class="spec-val">dbt Snapshots (SCD Type 2) + Git Version Locking + Lakehouse Time Travel.</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4 Engineering Pillars -->
+      <h3 style="margin-bottom: 1.25rem; font-size: 1.3rem;">The 4 Operational Pillars</h3>
+      <div class="grid-4">
+
+        <!-- Pillar 1 -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Pillar 01</span>
+              <span style="font-size: 1.3rem;">📝</span>
+            </div>
+            <h3>Everything as Code</h3>
+            <p>Transformations, data quality tests, schema documentation, infrastructure, and orchestration workflows are maintained as code in Git.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: 15-Second Instant Rollback</div>
+              <div class="case-desc">
+                When a flawed revenue discount logic reached production, engineers did not scramble to restore raw backups; a single <code>git revert</code> deployed a clean fix in 15 seconds.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Stack</span><span class="spec-val">SQL, YAML, Python, Terraform</span></div>
+            <div class="spec-item"><span class="spec-tag">Value</span><span class="spec-val">Version tracking, Peer Review, auditability.</span></div>
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-emerald">Pillar 02</span>
+              <span style="font-size: 1.3rem;">⚡</span>
+            </div>
+            <h3>Isolated CI/CD</h3>
+            <p>No development on shared production databases. Every PR provisions an ephemeral schema; Slim CI compiles only modified DAG branches.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: 45 Minutes Cut to 72 Seconds</div>
+              <div class="case-desc">
+                With 300+ models, full test runs took 45 minutes. Slim CI parsed DAG dependencies, running only modified models and downstream nodes to finish in 72 seconds.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tech</span><span class="spec-val">dbt Slim CI (state:modified+)</span></div>
+            <div class="spec-item"><span class="spec-tag">Value</span><span class="spec-val">Zero-cost isolation, 80% compute savings.</span></div>
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Pillar 03</span>
+              <span style="font-size: 1.3rem;">📡</span>
+            </div>
+            <h3>Data Observability & Lineage</h3>
+            <p>Data pipelines are no longer black boxes. Full lineage tracking monitors freshness, volume variance, and drift before users notice issues.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Calculating Blast Radius</div>
+              <div class="case-desc">
+                An analyst planned to drop `legacy_sku`. A quick inspection of the dbt DAG graph revealed 2 executive financial dashboards still depended on it, averting an outage.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tech</span><span class="spec-val">Elementary, Monte Carlo, dbt Docs</span></div>
+            <div class="spec-item"><span class="spec-tag">Value</span><span class="spec-val">Instant blast-radius calculation.</span></div>
+          </div>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-cyan">Pillar 04</span>
+              <span style="font-size: 1.3rem;">📜</span>
+            </div>
+            <h3>Data Contracts & Governance</h3>
+            <p>Establish strict schema constraints between upstream producers and downstream consumers to prevent unexpected column breaking changes.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Case: Strict Schema Blocks Backend Breakage</div>
+              <div class="case-desc">
+                Checkout service developers changed `customer_id` from INT to VARCHAR; dbt Model Contract checks immediately failed and blocked the PR, protecting downstream reports.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Tech</span><span class="spec-val">dbt Model Contracts, Semantic Layer</span></div>
+            <div class="spec-item"><span class="spec-tag">Value</span><span class="spec-val">Enforced backwards-compatibility & trust.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: 5 CI/CD GATE PRINCIPLES -->
+    <section id="ci-gates">
+      <div class="section-header">
+        <div>
+          <div class="section-title-wrap">
+            <div class="section-icon icon-amber">🛡️</div>
+            <h2 class="section-title">3. The 5 Golden CI/CD Gate Principles & Intercepted Incidents</h2>
+          </div>
+          <p class="section-desc">The five automated quality gates enforced in our GitHub Actions pipeline, ensuring zero broken schemas or leaked credentials.</p>
+        </div>
+      </div>
+
+      <!-- Real Intercepted Case Spotlight -->
+      <div class="callout" style="border-color: rgba(16, 185, 129, 0.4);">
+        <div class="callout-icon">🏆</div>
+        <div class="callout-content">
+          <h4>Live CI Case: How Ruff Intercepted BLE001 in Run #36356023531</h4>
+          <p>
+            During bilingual documentation routing, <code>pipeline_runner.py</code> contained unannotated blind exception catches. <strong>Gate 2 (Ruff Linter) caught the error in 2 seconds (Rule BLE001)</strong>, enforcing standard PEP 8 compliance and explicit exception declarations before merge. Automated CI is a living, active barrier against substandard code reaching production!
+          </p>
+        </div>
+      </div>
+
+      <!-- Workflow Timeline / Process Flow -->
+      <div class="table-container" style="margin-bottom: 2rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Gate Stage</th>
+              <th>Principle Name</th>
+              <th>Inspection Tool</th>
+              <th>Real Intercepted Incident Case Study</th>
+              <th>Project Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="card-badge badge-rose">Gate 1</span></td>
+              <td><strong>Principle 4: Secret Scanning</strong><br><small style="color: var(--text-sub);">Zero Leakage</small></td>
+              <td><code>TruffleHog OSS</code></td>
+              <td><strong>Intercepted:</strong> An engineer debugging BigQuery left <code>service_account.json</code> in the project and executed <code>git add .</code>. TruffleHog blocked the push, <strong>saving an estimated $20,000 GCP cloud bill from crypto-mining theft</strong>.</td>
+              <td><span style="color: var(--emerald); font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-primary">Gate 2</span></td>
+              <td><strong>Principle 1: Code Style & Syntax</strong><br><small style="color: var(--text-sub);">Linter & Formatter</small></td>
+              <td><code>Ruff</code> (Python)<br><code>SQLFluff</code> (dbt SQL)</td>
+              <td><strong>Intercepted:</strong> An analyst submitted SQL with an unaliased Cartesian Join and camelCase identifiers. SQLFluff blocked the commit, averting a query that could have exhausted BigQuery compute slots.</td>
+              <td><span style="color: var(--emerald); font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-amber">Gate 3</span></td>
+              <td><strong>Principle 3: Breaking Changes Gate</strong><br><small style="color: var(--text-sub);">Schema DAG & Lineage</small></td>
+              <td><code>dbt parse</code> / <code>compile</code></td>
+              <td><strong>Intercepted:</strong> A developer renamed <code>orders.amount</code> to <code>orders.order_total_amount</code>. <code>dbt parse</code> resolved the DAG in 3 seconds, discovered 3 downstream Mart models would break, and rejected the merge.</td>
+              <td><span style="color: var(--emerald); font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-emerald">Gate 4</span></td>
+              <td><strong>Principle 2: Business Logic Invariants</strong><br><small style="color: var(--text-sub);">Unit & Boundary Testing</small></td>
+              <td><code>pytest</code></td>
+              <td><strong>Intercepted:</strong> Promotional discount stacking yielded negative checkout totals (-$50). Pytest boundary unit tests failed immediately, preventing real e-commerce revenue leakage.</td>
+              <td><span style="color: var(--emerald); font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-cyan">Gate 5</span></td>
+              <td><strong>Principle 5: Data Contract Checkpoint</strong><br><small style="color: var(--text-sub);">Schema & Data Integrity</small></td>
+              <td><code>dbt test</code><br><code>dbt-expectations</code></td>
+              <td><strong>Intercepted:</strong> A 3rd-party payment webhook returned corrupted payloads with NULL <code>order_id</code>. <code>dbt test (not_null)</code> rejected the dirty batch in the sandbox environment.</td>
+              <td><span style="color: var(--emerald); font-weight: 600;">✅ Passed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Real GitHub Actions Code Snippet -->
+      <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Live CI Workflow Specification (.github/workflows/ci.yml)</h3>
+      <div class="code-block">
+<span class="code-comment"># GitHub Actions: 5 Core DataOps Principles Implementation</span>
+<span class="code-keyword">jobs:</span>
+  <span class="code-keyword">quality-checks:</span>
+    <span class="code-keyword">runs-on:</span> ubuntu-latest
+    <span class="code-keyword">steps:</span>
+      - <span class="code-keyword">uses:</span> actions/checkout@v4
+        <span class="code-keyword">with:</span> { fetch-depth: 0 } <span class="code-comment"># Fetch full Git commit history</span>
+
+      <span class="code-comment"># Gate 1: Security & Secrets (Principle 4)</span>
+      - <span class="code-keyword">name:</span> Principle 4: Secret Scanning (TruffleHog)
+        <span class="code-keyword">uses:</span> trufflesecurity/trufflehog@main
+        <span class="code-keyword">with:</span> { extra_args: --only-verified }
+
+      <span class="code-comment"># Gate 2: Code Style & Syntax (Principle 1)</span>
+      - <span class="code-keyword">name:</span> Principle 1: Code Style - Python (Ruff) & dbt SQL (SQLFluff)
+        <span class="code-keyword">run:</span> |
+          ruff check ingestion/ tests/ mcp_server/ pipeline_runner.py chart_generator.py
+          ruff format --check ingestion/ tests/ mcp_server/ pipeline_runner.py chart_generator.py
+          sqlfluff lint transform_dbt/models/
+
+      <span class="code-comment"># Gate 3: Schema Lineage & Breaking Changes (Principle 3)</span>
+      - <span class="code-keyword">name:</span> Principle 3: Schema DAG & Breaking Changes Check (dbt parse)
+        <span class="code-keyword">run:</span> |
+          dbt deps --project-dir transform_dbt --profiles-dir transform_dbt
+          dbt parse --project-dir transform_dbt --profiles-dir transform_dbt
+
+      <span class="code-comment"># Gate 4 & 5: Business Invariants & Data Contracts (Principle 2 & 5)</span>
+      - <span class="code-keyword">name:</span> Principle 2 & 5: Business Logic Invariants & Data Contracts
+        <span class="code-keyword">run:</span> |
+          pytest tests/ -v
+      </div>
+    </section>
+
+    <!-- SECTION 4: DATAOPS METRICS -->
+    <section id="metrics">
+      <div class="section-header">
+        <div>
+          <div class="section-title-wrap">
+            <div class="section-icon icon-cyan">📊</div>
+            <h2 class="section-title">4. The 4 Core DataOps Performance Metrics</h2>
+          </div>
+          <p class="section-desc">Adapted from DevOps DORA research to Data Reliability Engineering (DRE), holistically evaluating agility, reliability, and cost.</p>
+        </div>
+      </div>
+
+      <!-- Before vs After Real-World Scorecard -->
+      <h3 style="margin-bottom: 1rem; font-size: 1.25rem;">Enterprise E-Commerce DataOps Adoption Scorecard (The 4 Dimensions in Action)</h3>
+      <div class="table-container" style="margin-bottom: 2.5rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Evaluation Dimension</th>
+              <th>Applied Engineering Metric</th>
+              <th>Legacy Maintenance (Before DataOps)</th>
+              <th>MDS Engineering Practice (After DataOps)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="card-badge badge-primary">Dimension 1: Velocity</span></td>
+              <td><strong>Lead Time for Changes</strong></td>
+              <td>14 days (Ticketing, meetings, manual runs)</td>
+              <td><strong>45 minutes</strong> (Automated CI gates & sandboxes)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-primary">Dimension 1: Velocity</span></td>
+              <td><strong>Deployment Frequency</strong></td>
+              <td>1 per month (Stressful nocturnal releases)</td>
+              <td><strong>4–6 per day</strong> (Trunk-based incremental releases)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-rose">Dimension 2: Reliability</span></td>
+              <td><strong>Mean Time to Detect (MTTD)</strong></td>
+              <td>72 hours (Discovered after customer complaints)</td>
+              <td><strong>8 minutes</strong> (Elementary automated 3σ anomaly alerts)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-rose">Dimension 2: Reliability</span></td>
+              <td><strong>Mean Time to Restore (MTTR)</strong></td>
+              <td>8 hours (Trawling raw log files)</td>
+              <td><strong>15 minutes</strong> (Instant git revert or retry)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-rose">Dimension 2: Reliability</span></td>
+              <td><strong>Monthly Data Downtime</strong></td>
+              <td>80 hours / month (Outages, dirty data)</td>
+              <td><strong>&lt; 0.5 hours / month</strong> (High availability)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-emerald">Dimension 3: Quality</span></td>
+              <td><strong>Freshness SLA Attainment</strong></td>
+              <td>88.5% (Morning meetings delayed by raw ingestion lag)</td>
+              <td><strong>99.8%</strong> (Airflow Sensor + incremental guarantees)</td>
+            </tr>
+            <tr>
+              <td><span class="card-badge badge-amber">Dimension 4: Efficiency</span></td>
+              <td><strong>Compute Cost per CI Run</strong></td>
+              <td>$15.00 (Rebuilding full 300 tables)</td>
+              <td><strong>$0.40</strong> (dbt Slim CI state-aware run)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- Metric 1: Velocity -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-primary">Dimension 1: Velocity</span>
+              <span style="font-size: 1.3rem;">⚡</span>
+            </div>
+            <h3>Delivery Velocity & Throughput</h3>
+            <p>Measures how rapidly the engineering team can translate business requirements into trusted production data assets.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Concrete Calculation Walkthrough</div>
+              <div class="case-desc">
+                An analyst opened a PR to add a customer membership tier at 10:00 AM; CI verified tests in 3 minutes; peer review approved at 10:20 AM; deployment completed at 10:35 AM.<br>
+                $\to$ <strong>Lead Time for Changes = 35 minutes</strong> (exceeding the 2-hour benchmark).
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Lead Time</span><span class="spec-val">Time from PR opening to live deployment (<strong>Target: &lt; 2 hours</strong>).</span></div>
+            <div class="spec-item"><span class="spec-tag">Deploy Freq</span><span class="spec-val">Production pipeline release rate (<strong>High Performer: Multiple deployments / day</strong>).</span></div>
+          </div>
+        </div>
+
+        <!-- Metric 2: Reliability & Downtime -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-rose">Dimension 2: Reliability</span>
+              <span style="font-size: 1.3rem;">🛑</span>
+            </div>
+            <h3>Data Downtime & MTTR</h3>
+            <p>Measures the business impact of pipeline outages. The primary goal is minimizing overall Data Downtime across tables.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Concrete Calculation Walkthrough</div>
+              <div class="case-desc">
+                Two incidents occurred this month: Incident 1 API lag (MTTD=5m, MTTR=25m); Incident 2 schema drift (MTTD=10m, MTTR=20m).<br>
+                $\to$ $\text{Data Downtime} = (5+25) + (10+20) = \mathbf{60\text{ minutes}}$ (1 hr/month total).
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">MTTD Target</span><span class="spec-val">Time from anomaly to automated alert (<strong>Target: &lt; 15 mins</strong>).</span></div>
+            <div class="spec-item"><span class="spec-tag">MTTR Target</span><span class="spec-val">Time to triage and restore data availability (<strong>Target: &lt; 1 hour</strong>).</span></div>
+          </div>
+        </div>
+
+        <!-- Metric 3: Quality & Contract -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-emerald">Dimension 3: Quality</span>
+              <span style="font-size: 1.3rem;">💎</span>
+            </div>
+            <h3>Data Quality & SLA Attainment</h3>
+            <p>Quantifies trust in analytical datasets, tracking freshness SLAs, constraint pass rates, and silent data corruption.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Concrete Calculation Walkthrough</div>
+              <div class="case-desc">
+                Executive standup begins at 9:00 AM. Over the past 30 days, pipelines completed by 7:30 AM on 29 days, with 1 day delayed to 9:30 AM due to cloud network latency.<br>
+                $\to$ $\text{Freshness SLA} = 29 / 30 = \mathbf{96.7\%}$ (triggering upstream redundancy review).
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Freshness SLA</span><span class="spec-val">Morning cutoff delivery pass rate (<strong>Target: &gt; 99.5%</strong>).</span></div>
+            <div class="spec-item"><span class="spec-tag">Silent Failure</span><span class="spec-val">Errors that bypass automated checks (<strong>Target: 0%</strong>).</span></div>
+          </div>
+        </div>
+
+        <!-- Metric 4: Efficiency & Cost -->
+        <div class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-badge badge-amber">Dimension 4: Efficiency</span>
+              <span style="font-size: 1.3rem;">💰</span>
+            </div>
+            <h3>Compute & Operational Cost</h3>
+            <p>Measures cloud warehouse resource efficiency, avoiding cost explosions caused by unoptimized SQL scans.</p>
+
+            <div class="case-box">
+              <div class="case-title">💡 Concrete Calculation Walkthrough</div>
+              <div class="case-desc">
+                Optimized full-table scans with date partitioning + dbt incremental materialization, reducing batch scanned bytes from 850 GB to 12 GB.<br>
+                $\to$ <strong>Cost per run dropped from $4.25 to $0.06 (98.5% cost reduction)</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="spec-item"><span class="spec-tag">Cost / Run</span><span class="spec-val">Warehouse slot / credit consumption per batch.</span></div>
+            <div class="spec-item"><span class="spec-tag">Slim CI Savings</span><span class="spec-val">Compute saved vs. full rebuilds (<strong>70%+ compute savings achieved</strong>).</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- How to Implement Metrics -->
+      <div class="callout" style="margin-top: 2rem;">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+          <h4>How to Collect and Automate DataOps Metrics in Practice</h4>
+          <p>
+            1. <strong>Run Results Ingestion</strong>: Parse dbt's <code>run_results.json</code> and <code>manifest.json</code> into an analytics database to track execution time and test pass rates.<br>
+            2. <strong>Automated Telemetry</strong>: Track incident MTTD/MTTR via Elementary Data or Monte Carlo webhooks directly connected to Slack and PagerDuty.<br>
+            3. <strong>Executive Dashboard</strong>: Build an automated "DataOps Health Dashboard" in Looker Studio or Metabase to monitor weekly trends for engineering leads.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="portal.html">Unified Portal</a>
+      <a href="pipeline_architecture.html">Pipeline Architecture</a>
+      <a href="looker_studio_guide.html">Looker Studio Guide</a>
+      <a href="https://dataopsmanifesto.org" target="_blank" rel="noopener">Official DataOps Manifesto ↗</a>
+    </div>
+    <p>© 2026 Platzi E-Commerce Data Pipeline Consulting Project | Engineered with MBB Consulting Rigor & DataOps Standards</p>
+  </footer>
+
+  <script>
+    // Manifesto Filter Function
+    function filterManifesto(category) {
+      const items = document.querySelectorAll('.manifesto-item');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      items.forEach(item => {
+        if (category === 'all' || item.getAttribute('data-cat') === category) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Manifesto Search Function
+    function searchManifesto() {
+      const query = document.getElementById('manifestoSearch').value.toLowerCase();
+      const items = document.querySelectorAll('.manifesto-item');
+
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

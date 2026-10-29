@@ -1,0 +1,56 @@
+name: CI Pipeline Quality Gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-checks:
+    name: Code & Transformation Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Principle 4: Secret Scanning (TruffleHog)'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 'Principle 1: Code Style & Syntax - Python (Ruff)'
+        run: |
+          ruff check ingestion/ tests/ mcp_server/ pipeline_runner.py chart_generator.py
+          ruff format --check ingestion/ tests/ mcp_server/ pipeline_runner.py chart_generator.py
+
+      - name: 'Principle 1: Code Style & Syntax - dbt SQL (SQLFluff)'
+        run: |
+          sqlfluff lint transform_dbt/models/
+
+      - name: 'Principle 3: Schema DAG & Breaking Changes Check (dbt parse)'
+        env:
+          DBT_TARGET: duckdb
+        run: |
+          dbt deps --project-dir transform_dbt --profiles-dir transform_dbt
+          dbt parse --project-dir transform_dbt --profiles-dir transform_dbt
+
+      - name: 'Principle 2 & 5: Business Logic Invariants & Data Contracts (Pytest & dbt test)'
+        env:
+          DBT_TARGET: duckdb
+        run: |
+          pytest tests/ -v
