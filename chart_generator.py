@@ -257,9 +257,14 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
             color="module_category" if "module_category" in sub.columns else None,
             orientation="h",
             title=title,
-            template="plotly_dark",
+            template="plotly_white",
         )
-        fig.update_layout(yaxis={"categoryorder": "total ascending"}, height=400)
+        fig.update_layout(
+            yaxis={"categoryorder": "total ascending"},
+            height=420,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+        )
         return fig
 
     x_col = config.get("x", "event_date")
@@ -272,7 +277,7 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
 
     sub = df.sort_values(x_col).copy()
     fig = go.Figure()
-    colors = ["#38bdf8", "#10b981", "#f59e0b", "#ef4444"]
+    colors = ["#2563eb", "#10b981", "#f59e0b", "#ef4444"]
     for idx, col in enumerate(avail_y):
         if ctype == "bar":
             fig.add_trace(go.Bar(x=sub[x_col], y=sub[col], name=col, marker_color=colors[idx % len(colors)]))
@@ -283,8 +288,16 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
                     y=sub[col],
                     mode="lines+markers",
                     name=col,
-                    line={"color": colors[idx % len(colors)], "width": 2.4},
+                    line={"color": colors[idx % len(colors)], "width": 2.5, "shape": "spline"},
                 )
             )
-    fig.update_layout(title=title, template="plotly_dark", height=390)
+    fig.update_layout(
+        title=title,
+        template="plotly_white",
+        height=390,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        hovermode="x unified",
+        legend={"orientation": "h", "y": 1.1},
+    )
     return fig
