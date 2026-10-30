@@ -1,0 +1,1365 @@
+{
+  "dimension_headers": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "sessionSourceMedium"
+    }
+  ],
+  "metric_headers": [
+    {
+      "name": "activeUsers",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "sessions",
+      "type_": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "74"
+        },
+        {
+          "value": "80"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "53"
+        },
+        {
+          "value": "57"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "45"
+        },
+        {
+          "value": "57"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "29"
+        },
+        {
+          "value": "33"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "18"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "18"
+        },
+        {
+          "value": "23"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "16"
+        },
+        {
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "15"
+        },
+        {
+          "value": "20"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "22"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "google / cpc"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "11"
+        },
+        {
+          "value": "11"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "11"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "lm.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "discord / resources"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "l.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "lm.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "(direct) / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "weixin110.qq.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "l.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "l.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "l.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "lm.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "manual_submit / "
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "manual_submit / "
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "porkbun.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "google / organic"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "lm.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "porkbun.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "trial_badge / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "google / organic"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "l.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "porkbun.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "trial_badge / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "porkbun.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "reader_bubble / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "drawer_inspector / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "google / organic"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "l.threads.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "reader_bubble / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "drawer_inspector / (none)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "drawer_inspector / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "drawer_inspector / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "drawer_inspector / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "m.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "discord / resources"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "google / organic"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "manual_submit / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "trial_badge / (not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "keep.google.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "drawer_inspector / "
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "exhausted_card / "
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "google / organic"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "lm.facebook.com / referral"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "drawer_inspector / "
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "row_count": 74,
+  "metadata": {
+    "currency_code": "TWD",
+    "time_zone": "Asia/Taipei",
+    "data_loss_from_other_row": false,
+    "sampling_metadatas": []
+  },
+  "kind": "analyticsData#runReport",
+  "totals": [],
+  "maximums": [],
+  "minimums": []
+}

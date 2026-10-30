@@ -1,0 +1,1149 @@
+{
+  "dimension_headers": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "pagePath"
+    }
+  ],
+  "metric_headers": [
+    {
+      "name": "screenPageViews",
+      "type_": "TYPE_INTEGER"
+    },
+    {
+      "name": "activeUsers",
+      "type_": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "217"
+        },
+        {
+          "value": "28"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "187"
+        },
+        {
+          "value": "63"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "183"
+        },
+        {
+          "value": "43"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "151"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "119"
+        },
+        {
+          "value": "31"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "116"
+        },
+        {
+          "value": "27"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "82"
+        },
+        {
+          "value": "21"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "79"
+        },
+        {
+          "value": "51"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "79"
+        },
+        {
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "68"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "67"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "66"
+        },
+        {
+          "value": "44"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "47"
+        },
+        {
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "44"
+        },
+        {
+          "value": "32"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "36"
+        },
+        {
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/0ce103cc-ed33-42fa-8d62-64386f6248de"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "29"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "27"
+        },
+        {
+          "value": "18"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "25"
+        },
+        {
+          "value": "13"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "15"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "14"
+        },
+        {
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "13"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261026"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "10"
+        },
+        {
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "/dictionary"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "9"
+        },
+        {
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "8"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "7"
+        },
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/reader/4f7ca768-609d-47dc-8495-91ff4efd9cfb"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/4f7ca768-609d-47dc-8495-91ff4efd9cfb"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/sample-cafe-munich"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/starter-hans-im-glueck-a1"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261024"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "6"
+        },
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "/reader/4f7ca768-609d-47dc-8495-91ff4efd9cfb"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "/reader/9f9558a7-3bae-486d-9dc7-dc17b57a7e32"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "5"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/reader/2a587bde-2f52-4b68-b51f-867aee212b30"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/3f4b3f7c-ff6b-4ea1-ad3c-bbe1b9e4dcf6"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/7041890c-aab0-4cf9-bf8c-535804c0a4e2"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261023"
+        },
+        {
+          "value": "/reader/65c52e68-55ba-4585-915a-9a7456436bcf"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/5f1f8297-7d7f-4423-9550-9a8295bd5a5a"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261021"
+        },
+        {
+          "value": "/reader/28bf6c2a-67b0-44d9-811e-7a39ecb1972b"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "3"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/reader/9e3906c3-0a19-4cc0-a786-2b9e45fd8fea"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261020"
+        },
+        {
+          "value": "/reader/0ce103cc-ed33-42fa-8d62-64386f6248de"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261029"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "2"
+        },
+        {
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261017"
+        },
+        {
+          "value": "/reader/4f7ca768-609d-47dc-8495-91ff4efd9cfb"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/reader/4e3999c7-854f-4a4a-9225-72bcaf9ab510"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261018"
+        },
+        {
+          "value": "/reader/sample-cafe-munich"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/21767ea5-766a-4721-afc3-55795267c9be"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/690412f7-0fb3-4949-a4de-796a396cd5a1"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261019"
+        },
+        {
+          "value": "/reader/b0f011aa-bfe6-463d-914f-ad12987e21e5"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261022"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261025"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261027"
+        },
+        {
+          "value": "/dictionary/tisch"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261028"
+        },
+        {
+          "value": "/reader/362dc114-8012-4850-af47-65deb2d625ab"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "/"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimension_values": [
+        {
+          "value": "20261030"
+        },
+        {
+          "value": "/library"
+        }
+      ],
+      "metric_values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "row_count": 62,
+  "metadata": {
+    "currency_code": "TWD",
+    "time_zone": "Asia/Taipei",
+    "data_loss_from_other_row": false,
+    "sampling_metadatas": []
+  },
+  "kind": "analyticsData#runReport",
+  "totals": [],
+  "maximums": [],
+  "minimums": []
+}

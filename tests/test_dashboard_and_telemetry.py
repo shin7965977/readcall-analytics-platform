@@ -72,7 +72,7 @@ def test_dashboard_files_include_system_prompt_playground_and_have_no_visible_re
     zh_code = (REPO_ROOT / "dashboard.py").read_text(encoding="utf-8")
     en_code = (REPO_ROOT / "dashboard_en.py").read_text(encoding="utf-8")
 
-    assert "🛠️ 檢視 / 修改系統 Prompt (Edit System Prompt)" in zh_code
+    assert "🛠️ 檢視 / 修改系統 Prompt" in zh_code
     assert "💾 套用自訂 Prompt" in zh_code
     assert "🔄 還原預設值" in zh_code
 

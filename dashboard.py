@@ -197,6 +197,30 @@ st.markdown(
         display: inline-block;
         margin-top: 0.25rem;
     }
+
+    /* Clean, compact Chat message typography (Prevent oversized headers) */
+    [data-testid="stChatMessage"] h1,
+    [data-testid="stChatMessage"] h2,
+    [data-testid="stChatMessage"] h3,
+    [data-testid="stChatMessage"] h4 {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        margin-top: 0.55rem !important;
+        margin-bottom: 0.25rem !important;
+        line-height: 1.35 !important;
+        color: var(--text-color, #0f172a) !important;
+    }
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] li {
+        font-size: 0.86rem !important;
+        line-height: 1.55 !important;
+        color: var(--text-color, #1e293b) !important;
+    }
+    [data-testid="stChatMessage"] ul {
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.45rem !important;
+        padding-left: 1.15rem !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -289,13 +313,12 @@ def main():
         st.session_state.custom_prompt_zh = DEFAULT_SYSTEM_PROMPT_ZH
     if "chat_history" not in st.session_state:
         initial_msg = (
-            "Hello! I am your **ReadCall SaaS Head of Growth & Staff Product Data Scientist**.\n\n"
-            "I am connected to the `readcall_gold` lakehouse layer. You can click **`🛠️ View / Edit System Prompt`** above "
-            "to inspect or customize my underlying reasoning guidelines, or ask me to diagnose **Aha! Activation**, **BYOK conversion friction**, or **Feature Pareto distribution**."
+            "Hello! I am your **ReadCall GA4 Product Analytics Assistant**.\n\n"
+            "I am connected to authentic GA4 telemetry and the BigQuery lakehouse. "
+            "Ask me about daily traffic (e.g. *What was the traffic on 10/29?*), page views, BYOK API Key conversions, or acquisition channels!"
             if is_en
-            else "您好！我是 **ReadCall 產品成長負責人與首席資料科學家**。\n\n"
-            "我已即時連線至 `readcall_gold` 湖倉層。您可以點擊上方 **「🛠️ 檢視 / 修改系統 Prompt」** 自由查閱或修改我的分析指令，"
-            "或點擊快速按鈕診斷 **Aha! 啟用率**、**BYOK 金鑰轉換漏斗** 或 **32 項埋點黏著度**。"
+            else "您好！我是 **ReadCall GA4 產品數據助理**。\n\n"
+            "我已連線至真實 GA4 遙測日誌與 BigQuery 湖倉。您可以隨時詢問我每日人流（例如：*10/29 有多少人流？*）、熱門頁面、BYOK 金鑰轉換情況或訪客來源管道！"
         )
         st.session_state.chat_history = [{"role": "assistant", "content": initial_msg}]
 
@@ -902,11 +925,11 @@ def main():
                 f"""
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
                     <div style="font-weight:800; font-size:1.15rem; color:var(--text-color, #0f172a);">
-                        🤖 {'AI Growth Copilot' if is_en else 'AI 決策顧問'}
+                        📊 {'GA4 Analytics Copilot' if is_en else 'GA4 產品數據助理'}
                     </div>
                     <div style="display:flex; gap:0.35rem;">
                         <span style="font-size:0.7rem; font-weight:700; background:rgba(99,102,241,0.15); color:#6366f1; padding:0.15rem 0.45rem; border-radius:4px;">FAST MCP</span>
-                        <span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">PLG AI</span>
+                        <span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GA4 DATA</span>
                     </div>
                 </div>
                 """,
@@ -943,21 +966,21 @@ def main():
             )
 
             # QUICK RECOMMENDATION PILLS
-            st.markdown("##### ⚡ " + ("One-Click Diagnostics" if is_en else "一鍵快捷診斷推薦"))
+            st.markdown("##### ⚡ " + ("One-Click Data Queries" if is_en else "一鍵數據快捷查詢"))
             q1, q2 = st.columns(2)
             with q1:
-                if st.button("🔍 " + ("BYOK Funnel" if is_en else "診斷轉換瓶頸"), use_container_width=True, key="quick_q1"):
+                if st.button("📊 " + ("10/29 Traffic Report" if is_en else "10/29 人流報告"), use_container_width=True, key="quick_q_traffic"):
                     st.session_state.quick_ai_prompt = (
-                        "Please diagnose the BYOK key conversion funnel drop-off points."
+                        "What was the traffic on 10/29?"
                         if is_en
-                        else "請針對 BYOK 試用牆到金鑰儲存的流失瓶頸進行深入診斷。"
+                        else "10/29 有多少人流？請提供完整流量與轉換報告"
                     )
             with q2:
-                if st.button("🧩 " + ("Aha! Activation" if is_en else "Aha! 留存錨點"), use_container_width=True, key="quick_q2"):
+                if st.button("🔍 " + ("BYOK Funnel" if is_en else "BYOK 金鑰轉換"), use_container_width=True, key="quick_q1"):
                     st.session_state.quick_ai_prompt = (
-                        "Please analyze Aha! activation rate and reader stickiness."
+                        "Please analyze the BYOK key conversion funnel and friction points."
                         if is_en
-                        else "請分析當前 Aha! 核心啟用率與德語閱讀器的留存黏著度。"
+                        else "請分析 BYOK 金鑰轉換漏斗各階轉化率與驗證摩擦。"
                     )
 
             # PROMINENT SYSTEM PROMPT PLAYGROUND (User Feature Request #2)
@@ -968,9 +991,9 @@ def main():
             )
             with st.expander(expander_title, expanded=False):
                 st.caption(
-                    "Inspect or live-edit the underlying system instructions for the SaaS Head of Growth & Staff Product DS:"
+                    "Inspect or live-edit the underlying system instructions for the GA4 Product Data Analyst:"
                     if is_en
-                    else "檢視或即時手動修改底層 SaaS 成長負責人與首席資料科學家 System Prompt："
+                    else "檢視或即時手動修改底層 GA4 產品數據助理 System Prompt："
                 )
                 active_prompt_val = st.session_state.custom_prompt_en if is_en else st.session_state.custom_prompt_zh
                 edited_prompt = st.text_area(
@@ -1009,9 +1032,9 @@ def main():
 
             # Chat Input
             user_input = st.chat_input(
-                "Ask about BYOK funnel, Aha! activation, or retention..."
+                "Ask about 10/29 traffic, page views, BYOK conversion..."
                 if is_en
-                else "詢問 BYOK 轉換率、Aha! 啟用率或功能留存處方...",
+                else "詢問 10/29 人流、熱門頁面、BYOK 轉換或來源管道...",
                 key="chat_input_box",
             )
             prompt_to_send = user_input or st.session_state.pop("quick_ai_prompt", None)
