@@ -315,10 +315,10 @@ def main():
         initial_msg = (
             "Hello! I am your **ReadCall GA4 Product Analytics Assistant**.\n\n"
             "I am connected to authentic GA4 telemetry and the BigQuery lakehouse. "
-            "Ask me about daily traffic (e.g. *What was the traffic on 10/29?*), page views, BYOK API Key conversions, or acquisition channels!"
+            "**Please bind your Google AI Studio Gemini API Key above** to ask me about daily traffic (e.g. *What was the traffic on 10/29?*), page views, BYOK API Key conversions, or acquisition channels!"
             if is_en
             else "您好！我是 **ReadCall GA4 產品數據助理**。\n\n"
-            "我已連線至真實 GA4 遙測日誌與 BigQuery 湖倉。您可以隨時詢問我每日人流（例如：*10/29 有多少人流？*）、熱門頁面、BYOK 金鑰轉換情況或訪客來源管道！"
+            "我已連線至真實 GA4 遙測日誌與 BigQuery 湖倉。**請先在右上方綁定您的 Gemini API Key**，即可開始詢問每日人流（例如：*10/29 有多少人流？*）、熱門頁面、BYOK 金鑰轉換情況或訪客來源管道！"
         )
         st.session_state.chat_history = [{"role": "assistant", "content": initial_msg}]
 
@@ -544,16 +544,11 @@ def main():
 
         st.markdown("---")
 
-        # Privacy & Weighted Scaling Notice (Business Confidentiality Protection)
-        st.info(
-            "🔒 **Data Privacy & Calibration Notice**: To safeguard production business confidentiality, "
-            "all volume metrics (DAU, sessions, event counts) displayed in this public demonstration cockpit "
-            "have been desensitized via proprietary weighting calibrations. Time-series trends, retention curves, "
-            "and 32-event distribution ratios reflect genuine ReadCall GA4 telemetry patterns; absolute numbers do not reflect unadjusted operational scale."
+        # 100% Authentic GA4 Data Notice (Normal unweighted calculation)
+        st.success(
+            "✅ **100% Authentic GA4 Lakehouse Data**: All metrics, active users, and event counts reflect genuine, unweighted production telemetry directly queried from ReadCall's Google Analytics 4 (Property 559361789) Lakehouse."
             if is_en
-            else "🔒 **商業隱私與展示加權說明**：為維護線上生產環境商業機密，本公開展示戰情室呈現之絕對規模數值"
-            "（DAU、工作階段、事件次數）均已完成去識別化商業加權校準，僅供架構展示，不代表未經調整之原始營運數字。"
-            "時間序列趨勢波形、相對留存曲線與 32 項埋點行為特徵則真實反映 ReadCall GA4 歷史遙測數據。"
+            else "✅ **100% 真實 GA4 湖倉數據**：本戰情室所有活躍讀者、工作階段與 32 項事件指標均回歸未經加權的原始真實計算，直接連線 ReadCall 生產環境 Google Analytics 4（資源編號：559361789）湖倉層。"
         )
 
         # ----------------------------------------------------------------------
@@ -921,6 +916,30 @@ def main():
     # ==============================================================================
     if ai_sidebar_col is not None:
         with ai_sidebar_col:
+            user_gemini_key = st.text_input(
+                "🔑 " + ("Gemini API Key (Mandatory)" if is_en else "Gemini API Key (強制綁定才能提問)"),
+                type="password",
+                placeholder="AIzaSy...",
+                help="Enter your Google AI Studio Gemini API Key to enable live AI reasoning; unauthenticated FastMCP guessing is strictly disabled."
+                if is_en
+                else "請輸入 Google AI Studio Gemini API Key 才能開啟即時 AI 提問；系統已嚴格關閉未驗證的 FastMCP 猜測模式以確保數據真實精準。",
+            )
+
+            raw_key_clean = user_gemini_key.strip()
+            is_key_valid = bool(raw_key_clean and raw_key_clean.startswith("AIzaSy") and len(raw_key_clean) >= 30)
+            effective_gemini_key = raw_key_clean if is_key_valid else ""
+
+            badge_html = (
+                """
+                <span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GEMINI LIVE</span>
+                <span style="font-size:0.7rem; font-weight:700; background:rgba(99,102,241,0.15); color:#6366f1; padding:0.15rem 0.45rem; border-radius:4px;">GA4 AUTHENTIC</span>
+                """
+                if is_key_valid
+                else """
+                <span style="font-size:0.7rem; font-weight:700; background:rgba(239,68,68,0.15); color:#ef4444; padding:0.15rem 0.45rem; border-radius:4px;">🔒 KEY REQUIRED</span>
+                """
+            )
+
             st.markdown(
                 f"""
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
@@ -928,34 +947,19 @@ def main():
                         📊 {'GA4 Analytics Copilot' if is_en else 'GA4 產品數據助理'}
                     </div>
                     <div style="display:flex; gap:0.35rem;">
-                        <span style="font-size:0.7rem; font-weight:700; background:rgba(99,102,241,0.15); color:#6366f1; padding:0.15rem 0.45rem; border-radius:4px;">FAST MCP</span>
-                        <span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GA4 DATA</span>
+                        {badge_html}
                     </div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-            user_gemini_key = st.text_input(
-                "🔑 " + ("Gemini API Key (Optional BYOK)" if is_en else "Gemini API Key (選填 BYOK)"),
-                type="password",
-                placeholder="AIzaSy...",
-                help="Bring Your Own Key for live Gemini inference; defaults to deterministic FastMCP diagnostics."
-                if is_en
-                else "輸入您自己的 Gemini Key 可進行即時推理；留空則自動調用確定性 FastMCP 診斷引擎。",
-            )
-
-            raw_key_clean = user_gemini_key.strip()
-            if raw_key_clean and not (raw_key_clean.startswith("AIzaSy") and len(raw_key_clean) >= 30):
+            if not is_key_valid:
                 st.warning(
-                    "⚠️ **Invalid Key Format**: Google AI Studio API Keys must start with `AIzaSy`. "
-                    "Automatically switching to instant local FastMCP diagnostic engine!"
+                    "🔒 **API Key Required**: Please enter a valid Google AI Studio API Key (`AIzaSy...`) above to unlock the AI Copilot. FastMCP guess mode is strictly disabled."
                     if is_en
-                    else "⚠️ **金鑰格式無效**：Google AI Studio API Key 應為 `AIzaSy` 開頭。系統已自動切換為本地 FastMCP 秒級診斷引擎！"
+                    else "🔒 **強制綁定 API Key**：請先在上方輸入有效的 Gemini API Key（格式為 `AIzaSy...`）以解鎖 AI 助理對話。系統已強制關閉 FastMCP 猜測模式以確保數據分析精準。"
                 )
-                effective_gemini_key = ""
-            else:
-                effective_gemini_key = raw_key_clean
 
             st.caption(
                 "🔒 **BYOK Security Guarantee**: Keys are never stored. "
@@ -1042,6 +1046,19 @@ def main():
             if prompt_to_send:
                 inject_stealth_telemetry("portfolio_ai_tested", {"action": "chat_inquiry"})
                 st.session_state.chat_history.append({"role": "user", "content": prompt_to_send})
+
+                if not is_key_valid:
+                    warn_lock = (
+                        "🔒 **請先在上方綁定 Gemini API Key**\n\n"
+                        "依據您的設定，系統已強制關閉未驗證的 FastMCP 猜測模式以確保數據分析精準。請在右上方「🔑 Gemini API Key」欄位輸入以 `AIzaSy` 開頭的合法金鑰，即可解鎖即時 AI 數據診斷與問答！\n\n"
+                        "[👉 點此前往 Google AI Studio 免費獲取 API Key](https://aistudio.google.com/app/apikey)"
+                        if not is_en
+                        else "🔒 **Gemini API Key Required**\n\n"
+                        "FastMCP guess engine is strictly disabled. Please enter a valid Google AI Studio Gemini API Key (starts with `AIzaSy`) in the key field above to enable live AI reasoning.\n\n"
+                        "[👉 Get a Free Gemini API Key at Google AI Studio](https://aistudio.google.com/app/apikey)"
+                    )
+                    st.session_state.chat_history.append({"role": "assistant", "content": warn_lock})
+                    st.rerun()
 
                 current_sys_prompt = st.session_state.custom_prompt_en if is_en else st.session_state.custom_prompt_zh
                 with st.spinner(

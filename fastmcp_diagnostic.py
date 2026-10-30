@@ -349,18 +349,28 @@ def generate_chart_diagnosis(
     preferred_model: str = "auto",
     custom_system_prompt: str | None = None,
 ) -> str:
-    """Generate GA4 product analytics diagnosis for a specific chart."""
+    """Generate GA4 product analytics diagnosis for a specific chart using Gemini API (No FastMCP fallback)."""
     eff_lang = (lang or language or "zh").lower()
     is_zh = eff_lang.startswith("zh")
     clean_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
+    is_valid_format = clean_key.startswith("AIzaSy") and len(clean_key) >= 30
+
+    if not (clean_key and is_valid_format):
+        if is_zh:
+            return (
+                "🔒 **請先在右上方綁定 Gemini API Key**\n\n"
+                "依據您的設定，系統已強制關閉未驗證的 FastMCP 猜測模式以確保數據分析精準。請於右側「🔑 Gemini API Key」欄位輸入您的 Google AI Studio API Key（格式須為 `AIzaSy` 開頭），即可啟動真正的 AI 智能診斷與即時問答！\n\n"
+                "[👉 點此前往 Google AI Studio 免費獲取 API Key](https://aistudio.google.com/app/apikey)"
+            )
+        return (
+            "🔒 **Gemini API Key Required**\n\n"
+            "Fallback FastMCP guess engine is strictly disabled. Please enter a valid Google AI Studio Gemini API Key (starts with `AIzaSy`) in the key field on the right to unlock live AI analytics and conversational reasoning.\n\n"
+            "[👉 Get a Free Gemini API Key at Google AI Studio](https://aistudio.google.com/app/apikey)"
+        )
+
     sys_prompt = custom_system_prompt or (
         DEFAULT_SYSTEM_PROMPT_ZH if is_zh else DEFAULT_SYSTEM_PROMPT_EN
     )
-
-    # Route date or traffic queries immediately
-    intent_lower = prompt_intent.lower()
-    if any(k in intent_lower for k in ["10/29", "10-29", "10月29", "人流", "流量", "訪客", "traffic", "users"]):
-        return get_daily_ga4_report("20261029", lang=eff_lang)
 
     summary_payload: Any = df_summary
     if hasattr(df_extra, "head") and callable(df_extra.head):
@@ -371,51 +381,39 @@ def generate_chart_diagnosis(
     elif hasattr(df_summary, "head") and callable(df_summary.head):
         summary_payload = df_summary.head(5).to_dict(orient="records")
 
-    if clean_key and clean_key.startswith("AIzaSy") and len(clean_key) >= 30:
-        try:
-            from google import genai
-            from google.genai import types
+    try:
+        from google import genai
+        from google.genai import types
 
-            client = genai.Client(api_key=clean_key)
-            candidates = get_gemini_candidate_models(client, preferred_model)
-            user_prompt = (
-                f"請針對圖表【{chart_title}】（分析意圖：{prompt_intent or chart_title}）進行 ReadCall GA4 產品數據簡報（無客套話、禁止使用巨大標題）：\n"
-                f"```json\n{json.dumps(summary_payload, ensure_ascii=False, default=str)}\n```"
-                if is_zh
-                else f"Analyze ReadCall chart [{chart_title}] (intent: {prompt_intent or chart_title}) with factual numbers and compact formatting:\n"
-                f"```json\n{json.dumps(summary_payload, ensure_ascii=False, default=str)}\n```"
-            )
-            for candidate in candidates:
-                try:
-                    resp = client.models.generate_content(
-                        model=candidate,
-                        contents=user_prompt,
-                        config=types.GenerateContentConfig(
-                            system_instruction=sys_prompt,
-                            temperature=0.2,
-                        ),
-                    )
-                    if resp and resp.text:
-                        return resp.text
-                except Exception:  # noqa: BLE001, S112
-                    continue
-        except Exception:  # noqa: BLE001, S110
-            pass
-
-    if is_zh:
-        return (
-            f"**【GA4 產品數據洞察】**：{chart_title} 顯示核心閱讀選字與查字典（Aha! Moment）動能強勁。\n\n"
-            "* **核心功能互動**：`reader_text_selected` 與 `dictionary_searched` 佔全站核心互動超過 **65%**，證實德語詞性色彩與即時拆解為明確的黏著錨點。\n"
-            "* **BYOK 轉換漏斗**：用戶在觸發試用上限後開啟 `ByokModal.tsx`，在領取 Google AI Studio 金鑰到回填儲存之間存在摩擦（伴隨 `byok_verify_failed` 驗證失敗）。"
-            "建議在 `ByokModal.tsx` 輸入框加入自動去空白（`trim()`）以消除格式錯誤。\n"
-            "* **推薦裂變迴圈**：`TutorCustomPromptModal.tsx` 的分享複製率維持約 **35%**，具備自然社群傳播基礎。"
+        client = genai.Client(api_key=clean_key)
+        candidates = get_gemini_candidate_models(client, preferred_model)
+        user_prompt = (
+            f"今天是 2026-10-30。請針對圖表【{chart_title}】（分析意圖：{prompt_intent or chart_title}）進行 ReadCall GA4 產品數據簡報：\n"
+            f"```json\n{json.dumps(summary_payload, ensure_ascii=False, default=str)}\n```\n"
+            "規則：以簡潔粗體小標與條列呈現，嚴禁使用巨大標題 (# / ##)，嚴禁 MBB 管顧假大空套話。"
+            if is_zh
+            else f"Today is 2026-10-30. Analyze ReadCall chart [{chart_title}] (intent: {prompt_intent or chart_title}) with factual numbers and compact formatting:\n"
+            f"```json\n{json.dumps(summary_payload, ensure_ascii=False, default=str)}\n```\n"
+            "Rules: compact typography, no giant headers, no management consulting fluff."
         )
-    return (
-        f"**[GA4 Product Analytics Summary]**: {chart_title} confirms solid engagement across German Reader & Dictionary interactions.\n\n"
-        "* **Core Engagement**: `reader_text_selected` and `dictionary_searched` drive >65% of product events, validating morphological tooltips as the primary Aha! anchor.\n"
-        "* **BYOK Funnel**: `ByokModal.tsx` drop-off occurs between modal open and key save. Auto-trimming whitespace in `ByokModal.tsx` eliminates formatting friction (`byok_verify_failed`).\n"
-        "* **Referral Loop**: `TutorCustomPromptModal.tsx` shows steady referral link sharing intent (~35%)."
-    )
+        for candidate in candidates:
+            try:
+                resp = client.models.generate_content(
+                    model=candidate,
+                    contents=user_prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=sys_prompt,
+                        temperature=0.2,
+                    ),
+                )
+                if resp and resp.text:
+                    return resp.text
+            except Exception:  # noqa: BLE001, S112
+                continue
+    except Exception as e:
+        return f"⚠️ Gemini API 調用異常: {e}"
+
+    return "⚠️ 無法連線至 Gemini 模型，請檢查 API Key 是否有效。"
 
 
 def generate_tab_diagnosis(
@@ -430,7 +428,7 @@ def generate_tab_diagnosis(
     all_tabs_payload: dict[str, Any] | None = None,
     custom_system_prompt: str | None = None,
 ) -> str:
-    """Generate holistic GA4 product analytics diagnosis for active dashboard tab and user question."""
+    """Generate live GA4 product analytics diagnosis strictly requiring Gemini API Key (Zero FastMCP guessing)."""
     if isinstance(tab_title, dict) and tab_payload is None:
         tab_payload = tab_title
         tab_title = tab_key
@@ -440,63 +438,61 @@ def generate_tab_diagnosis(
     clean_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
     is_valid_format = clean_key.startswith("AIzaSy") and len(clean_key) >= 30
 
-    query_lower = user_query.lower()
-
-    # Route 1: Traffic, Users, Date inquiries -> Output the exact structured GA4 Daily Report!
-    if any(k in query_lower for k in ["10/29", "10-29", "10月29", "人流", "流量", "訪客", "人數", "昨天", "今天", "today", "yesterday", "traffic", "users", "visitors"]):
-        target_d = "20261029"
-        m_date = re.search(r"10[/\-_.]?(\d{2})", user_query)
-        if m_date:
-            target_d = f"202610{m_date.group(1)}"
-        return get_daily_ga4_report(target_d, lang=eff_lang)
-
-    # Route 2: BYOK conversion funnel inquiries
-    if any(k in query_lower for k in ["byok", "金鑰", "轉換", "key", "funnel", "漏斗"]):
-        return get_byok_funnel_report(lang=eff_lang)
-
-    # Route 3: Aha! activation & reader stickiness inquiries
-    if any(k in query_lower for k in ["aha", "啟用", "字典", "留存", "activation", "stickiness", "reader"]):
-        return get_aha_activation_report(lang=eff_lang)
-
-    # Route 4: If valid Gemini key, run Live Gemini inference with GA4 data
-    if clean_key and is_valid_format:
-        try:
-            from google import genai
-            from google.genai import types
-
-            client = genai.Client(api_key=clean_key)
-            candidates = get_gemini_candidate_models(client, preferred_model)
-            base_prompt = custom_system_prompt or (
-                DEFAULT_SYSTEM_PROMPT_ZH if is_zh else DEFAULT_SYSTEM_PROMPT_EN
+    # Requirement 1: Enforce API Key Binding! DO NOT ANSWER without API Key!
+    if not (clean_key and is_valid_format):
+        if is_zh:
+            return (
+                "🔒 **請先在右上方綁定 Gemini API Key**\n\n"
+                "依據您的設定，系統已強制關閉未驗證的 FastMCP 猜測模式以確保數據分析精準。請於右側「🔑 Gemini API Key」欄位輸入您的 Google AI Studio API Key（格式須為 `AIzaSy` 開頭），即可啟動真正的 AI 智能診斷與即時問答！\n\n"
+                "[👉 點此前往 Google AI Studio 免費獲取 API Key](https://aistudio.google.com/app/apikey)"
             )
-            full_prompt = (
-                f"{base_prompt}\n\n"
-                f"【使用者問題】：{user_query}\n"
-                f"【當前指標摘要】：\n```json\n{json.dumps(tab_payload, ensure_ascii=False, indent=2, default=str)}\n```\n"
-                "請以簡潔條列格式與具體數值回答，絕不使用 # / ## 巨大標題，絕不輸出 MBB 諮詢模板。"
-            )
-            for candidate in candidates:
-                try:
-                    resp = client.models.generate_content(
-                        model=candidate,
-                        contents=full_prompt,
-                        config=types.GenerateContentConfig(
-                            temperature=0.2,
-                        ),
-                    )
-                    if resp and resp.text:
-                        return resp.text
-                except Exception:  # noqa: BLE001, S112
-                    continue
-        except Exception:  # noqa: BLE001, S110
-            pass
+        return (
+            "🔒 **Gemini API Key Required**\n\n"
+            "Fallback FastMCP guess engine is strictly disabled. Please enter a valid Google AI Studio Gemini API Key (starts with `AIzaSy`) in the key field on the right to unlock live AI analytics and conversational reasoning.\n\n"
+            "[👉 Get a Free Gemini API Key at Google AI Studio](https://aistudio.google.com/app/apikey)"
+        )
 
-    # Default fallback
-    return generate_chart_diagnosis(
-        chart_title=tab_title,
-        df_summary=tab_payload,
-        api_key="",
-        language=language,
-        prompt_intent=user_query,
-        custom_system_prompt=custom_system_prompt,
-    )
+    # When valid key is provided, query Gemini live with authentic GA4 data context!
+    try:
+        from google import genai
+        from google.genai import types
+
+        client = genai.Client(api_key=clean_key)
+        candidates = get_gemini_candidate_models(client, preferred_model)
+        base_prompt = custom_system_prompt or (
+            DEFAULT_SYSTEM_PROMPT_ZH if is_zh else DEFAULT_SYSTEM_PROMPT_EN
+        )
+
+        # Include real GA4 reports samples so Gemini has full factual knowledge of 10/17 - 10/30
+        ref_report_sample = get_daily_ga4_report("20261029", lang=eff_lang)
+
+        full_prompt = (
+            f"{base_prompt}\n\n"
+            f"【當前系統時空背景】：\n"
+            f"- 今日日期為 2026 年 10 月 30 日（2026-10-30）。\n"
+            f"- 現有收錄之真實 GA4 數據區間為 2026-10-17 至 2026-10-30。\n"
+            f"- 若使用者詢問未來日期（例如 11/1、11 月），請明確告知 11/1 為未來日期，目前無資料。\n"
+            f"- 請務必使用使用者提問時所使用的語言回答（提問用中文就回中文，用英文就回英文）。\n"
+            f"- 嚴禁使用 # 或 ## 等巨型標題，請使用粗體小標與條列清單。\n\n"
+            f"【以 10/29 為例的真實 GA4 歷史基準】：\n{ref_report_sample}\n\n"
+            f"【當前視覺分頁指標摘要】：\n```json\n{json.dumps(tab_payload, ensure_ascii=False, indent=2, default=str)}\n```\n\n"
+            f"【使用者提問】：{user_query}"
+        )
+
+        for candidate in candidates:
+            try:
+                resp = client.models.generate_content(
+                    model=candidate,
+                    contents=full_prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=0.2,
+                    ),
+                )
+                if resp and resp.text:
+                    return resp.text
+            except Exception:  # noqa: BLE001, S112
+                continue
+    except Exception as e:
+        return f"⚠️ Gemini API 連線異常: {e}"
+
+    return "⚠️ 無法連線至 Gemini 模型，請檢查 API Key 是否有效。"

@@ -66,7 +66,7 @@ def test_default_system_prompt_uses_plg_persona_and_custom_prompt_override():
     assert "ByokModal.tsx" in DEFAULT_SYSTEM_PROMPT_EN
     assert "McKinsey" not in DEFAULT_SYSTEM_PROMPT_EN
 
-    # Verify fallback diagnostic works without API key and respects custom_system_prompt parameter
+    # Verify that without API key, generation is strictly locked and prompts to bind key
     diag_zh = generate_tab_diagnosis(
         tab_key="byok",
         tab_title="BYOK 漏斗與推薦裂變",
@@ -76,8 +76,8 @@ def test_default_system_prompt_uses_plg_persona_and_custom_prompt_override():
         language="zh",
         custom_system_prompt="自訂提示詞測試",
     )
-    assert "BYOK" in diag_zh
-    assert "ByokModal.tsx" in diag_zh
+    assert "Gemini API Key" in diag_zh
+    assert "FastMCP" in diag_zh
 
     chart_diag = generate_chart_diagnosis(
         chart_title="BYOK Funnel",
@@ -85,4 +85,4 @@ def test_default_system_prompt_uses_plg_persona_and_custom_prompt_override():
         api_key="",
         language="en",
     )
-    assert "BYOK" in chart_diag
+    assert "Gemini API Key" in chart_diag

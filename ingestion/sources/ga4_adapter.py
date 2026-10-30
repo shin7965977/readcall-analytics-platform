@@ -88,12 +88,12 @@ COUNTRY_SEGMENTS: list[tuple[str, float]] = [
 
 @dataclass
 class GA4TelemetryConfig:
-    """Configuration for ReadCall GA4 extraction and privacy-preserving calibration."""
+    """Configuration for ReadCall GA4 extraction with 100% authentic unweighted metrics."""
 
     property_id: str = "559361789"
     days: int = 90
-    raw_mode: bool = False
-    scale_multiplier: float = 4.5
+    raw_mode: bool = True
+    scale_multiplier: float = 1.0
     since_timestamp: datetime | None = None
     seed: int = 42
 
@@ -102,7 +102,7 @@ class ReadCallGA4Adapter:
     """Pluggable adapter for ReadCall Google Analytics 4 telemetry."""
 
     def __init__(self, config: GA4TelemetryConfig | None = None):
-        env_raw = os.getenv("READCALL_RAW_MODE", "false").strip().lower() in (
+        env_raw = os.getenv("READCALL_RAW_MODE", "true").strip().lower() in (
             "1",
             "true",
             "yes",
@@ -205,21 +205,17 @@ class ReadCallGA4Adapter:
 
     @staticmethod
     def _obfuscate_count(n: int | float | str) -> int:
-        """Apply privacy-preserving weighted scaling: (raw_count + 30) * 25.
-
-        Protects production business confidentiality while maintaining 100% genuine
-        empirical event distribution, channel mixes, and day-to-day conversion dynamics.
-        """
+        """Return raw integer count without any artificial weighting or scaling."""
         try:
             val = float(n)
         except (ValueError, TypeError):
             val = 0.0
-        return max(int(round((val + 30.0) * 25.0)), 0)
+        return max(int(round(val)), 0)
 
     def extract_telemetry(
         self, config: GA4TelemetryConfig | None = None
     ) -> dict[str, list[dict[str, Any]]]:
-        """Extract genuine ReadCall GA4 telemetry desensitized with privacy scaling (+30 * 25)."""
+        """Extract genuine ReadCall GA4 telemetry without any artificial weighting."""
         cfg = config or self.config
         now_iso = datetime.now(UTC).isoformat()
 
@@ -251,18 +247,11 @@ class ReadCallGA4Adapter:
                 else:
                     date_str = raw_date
 
-                if cfg.raw_mode:
-                    sessions = max(int(float(mets[0])), 0)
-                    active_u = max(int(float(mets[1])), 1)
-                    new_u = max(int(float(mets[2])), 0)
-                    engaged = max(int(float(mets[3])), 0)
-                    ev_cnt = max(int(float(mets[5])), sessions)
-                else:
-                    sessions = self._obfuscate_count(mets[0])
-                    active_u = self._obfuscate_count(mets[1])
-                    new_u = self._obfuscate_count(mets[2])
-                    engaged = self._obfuscate_count(mets[3])
-                    ev_cnt = self._obfuscate_count(mets[5])
+                sessions = max(int(float(mets[0])), 0)
+                active_u = max(int(float(mets[1])), 1)
+                new_u = max(int(float(mets[2])), 0)
+                engaged = max(int(float(mets[3])), 0)
+                ev_cnt = max(int(float(mets[5])), sessions)
 
                 try:
                     dur = round(float(mets[4]), 2)
@@ -299,12 +288,8 @@ class ReadCallGA4Adapter:
                 else:
                     date_str = raw_date
 
-                if cfg.raw_mode:
-                    ev_cnt = max(int(float(mets[0])), 0)
-                    tot_u = max(int(float(mets[1])), 1)
-                else:
-                    ev_cnt = self._obfuscate_count(mets[0])
-                    tot_u = self._obfuscate_count(mets[1])
+                ev_cnt = max(int(float(mets[0])), 0)
+                tot_u = max(int(float(mets[1])), 1)
 
                 events_raw.append(
                     {
