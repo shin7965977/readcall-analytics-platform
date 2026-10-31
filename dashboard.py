@@ -525,7 +525,7 @@ class DashboardScope:
         trial_wall = int(df.get("step_3_trial_limit_hit", pd.Series([0])).sum())
         failed = int(df.get("byok_verify_failed", pd.Series([0])).sum())
         return {
-            "step_1_first_visit": max(s1, s2),
+            "step_1_first_visit": s1,
             "step_2_aha_interaction": s2,
             "step_3_byok_modal_opened": s3,
             "step_4_byok_get_key_clicked": s4,
@@ -533,7 +533,7 @@ class DashboardScope:
             "trial_wall_hits": trial_wall,
             "byok_verify_failed": failed,
             # Backwards compatibility keys
-            "step_1_reader_opened": max(s1, s2),
+            "step_1_reader_opened": s1,
             "step_2_ai_trial_inquiry": s2,
             "step_3_trial_limit_hit": trial_wall,
             "step_4_byok_modal_opened": s3,
@@ -953,19 +953,17 @@ def main():
             tab_names = (
                 [
                     "📈 AARRR Growth & Traffic",
-                    "🧩 32-Event Feature Pareto (80/20)",
                     "🔑 BYOK Funnel & Referral Loop",
                     "✨ AI Natural Language Chart",
                 ]
                 if is_en
                 else [
                     "📈 營收與活躍趨勢 (AARRR)",
-                    "🧩 德語閱讀器 32 埋點黏著度 (80/20)",
                     "🔑 BYOK 金鑰轉換漏斗 & 推薦裂變",
                     "✨ 自然語言 AI 智慧圖表 (NL2Chart)",
                 ]
             )
-            tab1, tab2, tab3, tab4 = st.tabs(tab_names)
+            tab1, tab2, tab3 = st.tabs(tab_names)
 
             # TAB 1: AARRR & TRAFFIC
             with tab1:
@@ -1048,55 +1046,8 @@ def main():
                         )
                         st.plotly_chart(fig_geo, use_container_width=True)
 
-            # TAB 2: FEATURE ADOPTION PARETO
+            # TAB 2: BYOK FUNNEL & REFERRAL LOOP
             with tab2:
-                st.subheader("32 Telemetry Events 80/20 Pareto Distribution" if is_en else "32 項產品埋點事件 80/20 帕累托分析")
-                df_f = scope.features
-                if not df_f.empty:
-                    df_f_sorted = df_f.sort_values("total_event_count", ascending=False).copy()
-                    df_f_sorted["cum_pct"] = (df_f_sorted["total_event_count"].cumsum() / df_f_sorted["total_event_count"].sum() * 100.0)
-
-                    fig_p = go.Figure()
-                    fig_p.add_trace(
-                        go.Bar(
-                            x=df_f_sorted["event_name"],
-                            y=df_f_sorted["total_event_count"],
-                            name="Event Count" if is_en else "事件觸發次數",
-                            marker={"color": "#3b82f6", "cornerradius": 4},
-                        )
-                    )
-                    fig_p.add_trace(
-                        go.Scatter(
-                            x=df_f_sorted["event_name"],
-                            y=df_f_sorted["cum_pct"],
-                            name="Cumulative %" if is_en else "累積佔比 (%)",
-                            yaxis="y2",
-                            mode="lines+markers",
-                            line={"color": "#f59e0b", "width": 2.6, "shape": "spline"},
-                            marker={"size": 6, "color": "#f59e0b"},
-                        )
-                    )
-                    fig_p.update_layout(
-                        template="plotly_white",
-                        height=420,
-                        paper_bgcolor="rgba(0,0,0,0)",
-                        plot_bgcolor="rgba(0,0,0,0)",
-                        yaxis2={"overlaying": "y", "side": "right", "range": [0, 105], "gridcolor": "rgba(0,0,0,0)"},
-                        yaxis={"gridcolor": "#f1f5f9"},
-                        margin={"l": 20, "r": 20, "t": 35, "b": 95},
-                        legend={"orientation": "h", "y": 1.12},
-                    )
-                    st.plotly_chart(fig_p, use_container_width=True)
-
-                    st.markdown("##### " + ("Full Feature Telemetry Catalog" if is_en else "完整產品功能埋點目錄明細"))
-                    st.dataframe(
-                        df_f_sorted[["event_name", "module_category", "aarrr_stage", "total_event_count", "event_share_pct"]],
-                        use_container_width=True,
-                        height=260,
-                    )
-
-            # TAB 3: BYOK FUNNEL & REFERRAL LOOP
-            with tab3:
                 st.subheader("Monotonic BYOK Conversion Funnel & Viral Referral Loop" if is_en else "單調遞減 BYOK 轉換漏斗與推薦裂變迴路")
                 byok_s = scope.byok_funnel
                 ref_s = scope.referral_loop
@@ -1228,8 +1179,8 @@ def main():
                     )
                     st.plotly_chart(fig_fric, use_container_width=True)
 
-            # TAB 4: NL2CHART GENERATOR
-            with tab4:
+            # TAB 3: NL2CHART GENERATOR
+            with tab3:
                 st.subheader("Natural Language AI Chart Generator" if is_en else "雙語自然語言 AI 智慧圖表生成")
                 default_nl_q = "Show top 12 product features by event count" if is_en else "顯示前 12 大產品功能埋點排行"
                 if "nl2chart_query_box" not in st.session_state:

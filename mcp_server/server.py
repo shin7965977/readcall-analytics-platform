@@ -521,6 +521,11 @@ def load_gold_dataframe(table_name: str):
 
     # Daily pivot for KPI, BYOK, and Referral
     piv = df_events_raw.pivot_table(index="event_date", columns="event_name", values="event_count", aggfunc="sum", fill_value=0).reset_index()
+    piv_users = (
+        df_events_raw.pivot_table(index="event_date", columns="event_name", values="total_users", aggfunc="sum", fill_value=0).reset_index()
+        if "total_users" in df_events_raw.columns
+        else pd.DataFrame()
+    )
     t_daily = df_traffic_raw.groupby("event_date", as_index=False).agg(
         dau=("active_users", "sum"),
         new_users=("new_users", "sum"),
@@ -550,7 +555,13 @@ def load_gold_dataframe(table_name: str):
     if table_name == "gold_byok_funnel":
         daily["step_1_first_visit"] = daily.get("first_visit", 0)
         daily["step_1_reader_opened"] = daily["step_1_first_visit"]
-        daily["step_2_aha_interaction"] = daily.get("reader_text_selected", 0) + daily.get("dictionary_searched", 0)
+        if not piv_users.empty and "reader_text_selected" in piv_users.columns and "dictionary_searched" in piv_users.columns:
+            u_daily = piv_users.set_index("event_date")
+            aha_u = (u_daily.get("reader_text_selected", 0) + u_daily.get("dictionary_searched", 0)).reset_index(name="aha_u")
+            daily = pd.merge(daily, aha_u, on="event_date", how="left").fillna({"aha_u": 0})
+            daily["step_2_aha_interaction"] = daily["aha_u"].astype(int)
+        else:
+            daily["step_2_aha_interaction"] = daily.get("aha_users", 0)
         daily["step_2_ai_trial_inquiry"] = daily["step_2_aha_interaction"]
         daily["step_3_trial_limit_hit"] = daily.get("trial_exhausted_viewed", 0) + daily.get("trial_banner_cta_clicked", 0)
         daily["step_4_byok_modal_opened"] = daily.get("byok_modal_opened", 0)
