@@ -1242,10 +1242,16 @@ def main():
 
         elif selected_layer == "silver":
             st.subheader("Silver Star Schema (Cleaned Transactions & Dimensions)" if is_en else "銀牌層星狀模型（清洗事實與維度明細）")
-            s_tab1, s_tab2 = st.tabs(["fct_daily_traffic", "dim_feature_catalog"])
+            s_tab1, s_tab2, s_tab3 = st.tabs([
+                "fct_daily_traffic" if is_en else "fct_daily_traffic (流量事實表)",
+                "fct_feature_events" if is_en else "fct_feature_events (功能事件事實表)",
+                "dim_feature_catalog" if is_en else "dim_feature_catalog (功能維度表)",
+            ])
             with s_tab1:
                 st.dataframe(data_dict["traffic"], use_container_width=True, height=450)
             with s_tab2:
+                st.dataframe(data_dict.get("feature_events", pd.DataFrame()), use_container_width=True, height=450)
+            with s_tab3:
                 st.dataframe(data_dict["catalog"], use_container_width=True, height=450)
 
         else:  # bronze
