@@ -379,7 +379,7 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
             df_ref["event_date"] = pd.to_datetime(df_ref["event_date"])
         return {"kpi": df_kpi, "features": df_f, "byok": df_byok, "referral": df_ref}
     elif layer == "silver":
-        df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
+        df_traffic = scope.traffic
         df_f_events = cached_load_gold_dataframe("fct_feature_events")
         df_catalog = cached_load_gold_dataframe("dim_feature_catalog")
         return {"traffic": df_traffic, "feature_events": df_f_events, "catalog": df_catalog}
@@ -419,6 +419,119 @@ def check_gemini_key_validity(key_to_test: str) -> tuple[bool, str]:
             return False, "rejected"
         return True, "valid"
 
+
+
+class DashboardScope:
+    """Encapsulated single source of truth for all filtered dashboard metrics and visual charts.
+
+    Prevents data binding disconnect by ensuring all UI components (metric cards,
+    time-series trendlines, category distributions, and conversion funnels) draw from
+    the exact same date-bounded datasets.
+    """
+
+    def __init__(
+        self,
+        raw_dict: dict[str, pd.DataFrame],
+        traffic_raw: pd.DataFrame | None = None,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.raw_dict = raw_dict
+
+        # 1. Filter kpi
+        df_kpi = raw_dict.get("kpi", pd.DataFrame())
+        self.kpi = self._filter_date(df_kpi, "event_date", start_date, end_date)
+
+        # 2. Filter traffic
+        df_tr = traffic_raw if traffic_raw is not None else raw_dict.get("traffic", pd.DataFrame())
+        self.traffic = self._filter_date(df_tr, "event_date", start_date, end_date)
+
+        # 3. Filter byok
+        df_byok = raw_dict.get("byok", pd.DataFrame())
+        self.byok = self._filter_date(df_byok, "event_date", start_date, end_date)
+
+        # 4. Filter referral
+        df_ref = raw_dict.get("referral", pd.DataFrame())
+        self.referral = self._filter_date(df_ref, "event_date", start_date, end_date)
+
+        # 5. Features (Pareto aggregate)
+        self.features = raw_dict.get("features", pd.DataFrame())
+
+    @staticmethod
+    def _filter_date(
+        df: pd.DataFrame,
+        date_col: str,
+        s_d: date | None,
+        e_d: date | None,
+    ) -> pd.DataFrame:
+        if df.empty or date_col not in df.columns or s_d is None or e_d is None:
+            return df
+        col = df[date_col]
+        if hasattr(col, "dt"):
+            col_dates = col.dt.date
+        else:
+            col_dates = pd.to_datetime(col).dt.date
+        cond = (col_dates >= s_d) & (col_dates <= e_d)
+        filtered = df.loc[cond].copy()
+        return filtered if not filtered.empty else df
+
+    @property
+    def byok_funnel(self) -> dict[str, int]:
+        df = self.byok
+        if df.empty:
+            return {
+                "step_1_reader_opened": 0,
+                "step_2_ai_trial_inquiry": 0,
+                "step_3_trial_limit_hit": 1,
+                "step_4_byok_modal_opened": 0,
+                "step_5_byok_get_key_clicked": 0,
+                "step_6_byok_key_saved": 0,
+                "byok_verify_failed": 0,
+            }
+        s1 = int(df["step_1_reader_opened"].sum()) if "step_1_reader_opened" in df else int(df.get("step_1_first_visit", pd.Series([0])).sum())
+        s2 = int(df["step_2_ai_trial_inquiry"].sum()) if "step_2_ai_trial_inquiry" in df else int(df.get("step_2_aha_interaction", pd.Series([0])).sum())
+        s3 = int(df.get("step_3_trial_limit_hit", pd.Series([0])).sum())
+        s4 = int(df.get("step_4_byok_modal_opened", pd.Series([0])).sum())
+        s5 = int(df.get("step_5_key_acquisition_attempt", df.get("step_5_byok_get_key_clicked", pd.Series([0]))).sum())
+        s6 = int(df.get("step_6_byok_key_saved", pd.Series([0])).sum())
+        failed = int(df.get("byok_verify_failed", pd.Series([0])).sum())
+        return {
+            "step_1_reader_opened": max(s1, s2),
+            "step_2_ai_trial_inquiry": s2,
+            "step_3_trial_limit_hit": s3,
+            "step_4_byok_modal_opened": s4,
+            "step_5_byok_get_key_clicked": s5,
+            "step_6_byok_key_saved": s6,
+            "byok_verify_failed": failed,
+        }
+
+    @property
+    def referral_loop(self) -> dict[str, Any]:
+        df = self.referral
+        if df.empty:
+            return {
+                "step_1_referral_modal_opened": 0,
+                "step_2_referral_link_copied": 0,
+                "step_3_referral_banner_shown": 0,
+                "step_4_referral_unlock_success": 0,
+                "step_5_custom_prompt_saved": 0,
+                "viral_k_factor_proxy": 0.0,
+            }
+        r1 = int(df.get("step_1_referral_modal_opened", pd.Series([0])).sum())
+        r2 = int(df.get("step_2_referral_link_copied", pd.Series([0])).sum())
+        r3 = int(df.get("step_3_referral_link_visited", df.get("step_3_referral_banner_shown", pd.Series([0]))).sum())
+        r4 = int(df.get("step_4_referral_unlock_success", pd.Series([0])).sum())
+        r5 = int(df.get("step_5_custom_prompt_saved", pd.Series([0])).sum())
+        return {
+            "step_1_referral_modal_opened": r1,
+            "step_2_referral_link_copied": r2,
+            "step_3_referral_banner_shown": r3,
+            "step_4_referral_unlock_success": r4,
+            "step_5_custom_prompt_saved": r5,
+            "viral_k_factor_proxy": round(r4 / max(r1, 1), 4),
+        }
 
 def main():
     if "lang" not in st.session_state:
@@ -526,7 +639,7 @@ def main():
                 st.success("🎉 " + ("ELT Pipeline synchronized with BigQuery!" if is_en else "已成功同步 BigQuery 湖倉數據！"))
 
         # Date Range Filter for Gold Layer
-        filtered_kpi = pd.DataFrame()
+        s_d, e_d = None, None
         if selected_layer == "gold":
             df_kpi = data_dict["kpi"]
             st.markdown("---")
@@ -542,11 +655,15 @@ def main():
                 )
                 if isinstance(selected_dates, (list, tuple)) and len(selected_dates) == 2:
                     s_d, e_d = selected_dates
-                    filtered_kpi = df_kpi.loc[(df_kpi["event_date"].dt.date >= s_d) & (df_kpi["event_date"].dt.date <= e_d)]
-                else:
-                    filtered_kpi = df_kpi
-            else:
-                filtered_kpi = df_kpi
+
+        # Centralized Filtered Scope (Single Source of Truth)
+        traffic_raw_df = cached_load_gold_dataframe("fct_daily_traffic") if selected_layer == "gold" else pd.DataFrame()
+        scope = DashboardScope(
+            raw_dict=data_dict,
+            traffic_raw=traffic_raw_df,
+            start_date=s_d,
+            end_date=e_d,
+        )
 
         # ======================================================================
         # DATA ANALYST (DA) SEMANTIC LAYER LIVE MONITOR (Clean & Actionable)
@@ -555,9 +672,9 @@ def main():
         st.subheader("📐 " + ("dbt Semantic Metrics" if is_en else "dbt 語意層指標監控"))
         st.caption("Live Metric Calculations & Targets for Data Analysts" if is_en else "提供給資料分析師 (DA) 的真實指標數值與達標監控")
 
-        byok_funnel_calc = cached_byok_conversion_funnel()
-        ref_loop_calc = cached_referral_viral_loop()
-        gold_kpi_calc = cached_load_gold_dataframe("gold_daily_growth_kpi")
+        byok_funnel_calc = scope.byok_funnel
+        ref_loop_calc = scope.referral_loop
+        gold_kpi_calc = scope.kpi
 
         tot_dau_num = int(gold_kpi_calc["dau"].sum()) if not gold_kpi_calc.empty else 1
         tot_aha_num = int(gold_kpi_calc["aha_users"].sum()) if not gold_kpi_calc.empty else 0
@@ -731,12 +848,12 @@ def main():
         # 4 Color-Accented Executive Metric Cards (Redesigned BI Visuals)
         # ----------------------------------------------------------------------
         if selected_layer == "gold":
-            df_kpi_active = filtered_kpi if not filtered_kpi.empty else data_dict["kpi"]
+            df_kpi_active = scope.kpi
             total_dau = int(df_kpi_active["dau"].sum()) if "dau" in df_kpi_active.columns else 0
             total_sessions = int(df_kpi_active["total_sessions"].sum()) if "total_sessions" in df_kpi_active.columns else 0
             avg_eng_rate = float(df_kpi_active["engagement_rate"].mean() * 100.0) if "engagement_rate" in df_kpi_active.columns else 74.4
             avg_aha_rate = float(df_kpi_active["aha_activation_rate"].mean() * 100.0) if "aha_activation_rate" in df_kpi_active.columns else 71.6
-            byok_totals = cached_byok_conversion_funnel()
+            byok_totals = scope.byok_funnel
             saved_keys = byok_totals["step_6_byok_key_saved"]
             byok_conv = byok_totals["step_6_byok_key_saved"] / max(byok_totals["step_3_trial_limit_hit"], 1) * 100.0
 
@@ -810,7 +927,7 @@ def main():
             # TAB 1: AARRR & TRAFFIC
             with tab1:
                 st.subheader("Daily Active Users (DAU) & Aha! Activation Trend" if is_en else "每日活躍用戶 (DAU) 與 Aha! 核心功能啟用趨勢")
-                df_trend = data_dict["kpi"].sort_values("event_date") if not data_dict["kpi"].empty else pd.DataFrame()
+                df_trend = scope.kpi.sort_values("event_date") if not scope.kpi.empty else pd.DataFrame()
                 if not df_trend.empty:
                     fig_trend = go.Figure()
                     fig_trend.add_trace(
@@ -847,7 +964,7 @@ def main():
                     st.plotly_chart(fig_trend, use_container_width=True)
 
                 col_t1, col_t2 = st.columns(2)
-                df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
+                df_traffic = scope.traffic
                 with col_t1:
                     st.markdown("##### " + ("Acquisition Channel Mix" if is_en else "流量獲取渠道分佈"))
                     if not df_traffic.empty and "channel_group" in df_traffic.columns:
@@ -891,7 +1008,7 @@ def main():
             # TAB 2: FEATURE ADOPTION PARETO
             with tab2:
                 st.subheader("32 Telemetry Events 80/20 Pareto Distribution" if is_en else "32 項產品埋點事件 80/20 帕累托分析")
-                df_f = data_dict["features"]
+                df_f = scope.features
                 if not df_f.empty:
                     df_f_sorted = df_f.sort_values("total_event_count", ascending=False).copy()
                     df_f_sorted["cum_pct"] = (df_f_sorted["total_event_count"].cumsum() / df_f_sorted["total_event_count"].sum() * 100.0)
@@ -1028,7 +1145,7 @@ def main():
                     st.plotly_chart(fig_r, use_container_width=True)
 
                 # Daily Friction Monitoring
-                df_byok = data_dict["byok"]
+                df_byok = scope.byok
                 if not df_byok.empty:
                     st.markdown("##### " + ("Daily BYOK Key Saves vs. Verification Failures" if is_en else "每日 BYOK 金鑰儲存成功 vs. 驗證失敗摩擦監控"))
                     df_b_sort = df_byok.sort_values("event_date")
@@ -1066,7 +1183,7 @@ def main():
                 )
                 if nl_q:
                     cfg = generate_chart_config(nl_q)
-                    target_df = data_dict["features"] if cfg.get("dataset") == "features" else data_dict["kpi"]
+                    target_df = scope.features if cfg.get("dataset") == "features" else scope.kpi
                     fig_nl = render_dynamic_chart(cfg, target_df)
                     if fig_nl:
                         st.plotly_chart(fig_nl, use_container_width=True)
