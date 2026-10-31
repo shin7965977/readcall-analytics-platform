@@ -372,6 +372,10 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
         df_byok = cached_load_gold_dataframe("gold_byok_funnel")
         df_ref = cached_load_gold_dataframe("gold_referral_loop")
         df_fe = cached_load_gold_dataframe("fct_feature_events")
+        df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
+        df_channels = cached_load_gold_dataframe("dim_channels")
+        df_devices_geo = cached_load_gold_dataframe("dim_devices_geo")
+        df_catalog = cached_load_gold_dataframe("dim_feature_catalog")
         if "event_date" in df_kpi.columns:
             df_kpi["event_date"] = pd.to_datetime(df_kpi["event_date"])
         if "event_date" in df_byok.columns:
@@ -386,12 +390,29 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
             "byok": df_byok,
             "referral": df_ref,
             "feature_events": df_fe,
+            "traffic": df_traffic,
+            "channels": df_channels,
+            "devices_geo": df_devices_geo,
+            "catalog": df_catalog,
         }
     elif layer == "silver":
         df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
         df_f_events = cached_load_gold_dataframe("fct_feature_events")
         df_catalog = cached_load_gold_dataframe("dim_feature_catalog")
-        return {"traffic": df_traffic, "feature_events": df_f_events, "catalog": df_catalog}
+        df_channels = cached_load_gold_dataframe("dim_channels")
+        df_devices_geo = cached_load_gold_dataframe("dim_devices_geo")
+        return {
+            "traffic": df_traffic,
+            "feature_events": df_f_events,
+            "catalog": df_catalog,
+            "channels": df_channels,
+            "devices_geo": df_devices_geo,
+            "fct_daily_traffic": df_traffic,
+            "fct_feature_events": df_f_events,
+            "dim_channels": df_channels,
+            "dim_devices_geo": df_devices_geo,
+            "dim_feature_catalog": df_catalog,
+        }
     else:  # bronze
         from ingestion.sources.ga4_adapter import GA4TelemetryConfig, ReadCallGA4Adapter
 
@@ -960,18 +981,153 @@ def main():
         if selected_layer == "gold":
             tab_names = (
                 [
+                    "🏛️ Star Schema Architecture & Lineage",
                     "📈 AARRR Growth & Traffic",
                     "🔑 BYOK Funnel & Referral Loop",
                     "✨ AI Natural Language Chart",
                 ]
                 if is_en
                 else [
+                    "🏛️ 星型模型架構與血緣關聯 (Star Schema)",
                     "📈 營收與活躍趨勢 (AARRR)",
                     "🔑 BYOK 金鑰轉換漏斗 & 推薦裂變",
                     "✨ 自然語言 AI 智慧圖表 (NL2Chart)",
                 ]
             )
-            tab1, tab2, tab3 = st.tabs(tab_names)
+            tab0, tab1, tab2, tab3 = st.tabs(tab_names)
+
+            # TAB 0: STAR SCHEMA ARCHITECTURE & LINEAGE
+            with tab0:
+                st.subheader("Dimensional Star Schema Architecture & Kimball Lineage" if is_en else "維度星型模型架構全貌與 Kimball 關聯血緣")
+                st.caption(
+                    "Inspect the 2 production Star Schemas powering ReadCall Lakehouse, their underlying Foreign Key joins, and denormalized analytical views."
+                    if is_en
+                    else "檢視驅動 ReadCall 湖倉的 2 組正式星型模型架構（Star Schema）、外鍵關聯設計與解正規化（Denormalized）即時查詢結果。"
+                )
+
+                star_choice = st.radio(
+                    "Select Star Schema to Inspect:" if is_en else "請選擇欲檢視的星型模型：",
+                    [
+                        "🌟 Star Schema 1: Traffic Acquisition & Geo Star (每日流量與獲客渠道模型)",
+                        "🌟 Star Schema 2: Product Engagement & Feature Funnel Star (產品功能事件與漏斗模型)",
+                    ],
+                    horizontal=True,
+                )
+
+                if "Traffic" in star_choice:
+                    st.markdown(
+                        """
+                        <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(59, 130, 246, 0.3); border-radius:12px; padding:1.1rem 1.3rem; margin-bottom:1rem;">
+                            <div style="font-weight:800; font-size:1.05rem; color:#2563eb; margin-bottom:0.35rem;">
+                                📡 Star Schema 1: Traffic Acquisition Star (流量獲客星型模型)
+                            </div>
+                            <div style="font-size:0.875rem; color:#475569; line-height:1.6;">
+                                <b>事實核心（Fact Grain）</b>：<code>fct_daily_traffic</code>（日期 × 渠道 × 媒介 × 裝置 × 國家）<br/>
+                                <b>關聯維度（Dimensions）</b>：
+                                <ul>
+                                    <li>🔗 <code>dim_channels</code>（外鍵 <code>channel_key</code> ⨝ 關聯渠道群組、媒介與獲客類型 <code>acquisition_type</code>）</li>
+                                    <li>🔗 <code>dim_devices_geo</code>（外鍵 <code>device_geo_key</code> ⨝ 關聯裝置類別、國家與 <code>is_dach_region</code> 德語區旗標）</li>
+                                </ul>
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                    col_s1_left, col_s1_right = st.columns([1.1, 0.9])
+                    with col_s1_left:
+                        st.markdown("##### " + ("Denormalized Star Schema Table Preview" if is_en else "星型關聯寬表即時數據預覽 (Enriched Star View)"))
+                        df_tr = data_dict.get("traffic", pd.DataFrame())
+                        df_ch = data_dict.get("channels", pd.DataFrame())
+                        df_geo = data_dict.get("devices_geo", pd.DataFrame())
+
+                        if not df_tr.empty and not df_ch.empty and not df_geo.empty:
+                            df_tr_star = pd.merge(df_tr, df_ch[["channel_key", "acquisition_type"]].drop_duplicates("channel_key"), on="channel_key", how="left")
+                            df_tr_star = pd.merge(df_tr_star, df_geo[["device_geo_key", "is_dach_region"]].drop_duplicates("device_geo_key"), on="device_geo_key", how="left")
+                            disp_cols = [c for c in ["traffic_record_id", "event_date", "acquisition_type", "channel_group", "country", "is_dach_region", "sessions", "active_users", "engagement_rate"] if c in df_tr_star.columns]
+                            st.dataframe(df_tr_star[disp_cols].head(15), use_container_width=True, height=360)
+                        else:
+                            st.dataframe(df_tr.head(15), use_container_width=True, height=360)
+
+                    with col_s1_right:
+                        st.markdown("##### " + ("BigQuery / dbt Production Star SQL" if is_en else "BigQuery / dbt 正式星型 JOIN 語法"))
+                        st.code(
+                            """-- Traffic Acquisition Star Schema Join
+SELECT 
+    t.traffic_record_id,
+    t.event_date,
+    c.acquisition_type,
+    t.channel_group,
+    t.source_medium,
+    g.device_category,
+    g.country,
+    g.is_dach_region,
+    t.sessions,
+    t.engaged_sessions,
+    t.active_users,
+    t.engagement_rate
+FROM `de-consulting-508822.readcall_silver.fct_daily_traffic` t
+LEFT JOIN `de-consulting-508822.readcall_silver.dim_channels` c 
+    ON t.channel_key = c.channel_key
+LEFT JOIN `de-consulting-508822.readcall_silver.dim_devices_geo` g 
+    ON t.device_geo_key = g.device_geo_key
+ORDER BY t.event_date DESC, t.sessions DESC;""",
+                            language="sql",
+                        )
+
+                else:
+                    st.markdown(
+                        """
+                        <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(16, 185, 129, 0.3); border-radius:12px; padding:1.1rem 1.3rem; margin-bottom:1rem;">
+                            <div style="font-weight:800; font-size:1.05rem; color:#059669; margin-bottom:0.35rem;">
+                                🎯 Star Schema 2: Product Engagement & Feature Funnel Star (產品功能事件星型模型)
+                            </div>
+                            <div style="font-size:0.875rem; color:#475569; line-height:1.6;">
+                                <b>事實核心（Fact Grain）</b>：<code>fct_feature_events</code>（單次點擊事件觸發粒度）<br/>
+                                <b>關聯維度（Dimensions）</b>：
+                                <ul>
+                                    <li>🔗 <code>dim_feature_catalog</code>（外鍵 <code>event_name</code> ⨝ 關聯 AARRR 階段、模組類別、前端組件代碼路徑、Aha! 時刻與 AI 推理旗標）</li>
+                                </ul>
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                    col_s2_left, col_s2_right = st.columns([1.1, 0.9])
+                    with col_s2_left:
+                        st.markdown("##### " + ("Denormalized Star Schema Table Preview" if is_en else "星型關聯寬表即時數據預覽 (Enriched Star View)"))
+                        df_fe_raw = data_dict.get("feature_events", pd.DataFrame())
+                        df_cat = data_dict.get("catalog", pd.DataFrame())
+                        if not df_fe_raw.empty and not df_cat.empty:
+                            df_ev_star = pd.merge(df_fe_raw, df_cat[["event_name", "module_category", "aarrr_stage", "source_component", "is_aha_moment", "is_ai_inference_event"]].drop_duplicates("event_name"), on="event_name", how="left")
+                            disp_cols = [c for c in ["event_record_id", "event_date", "event_name", "aarrr_stage", "module_category", "is_aha_moment", "event_count", "total_users", "events_per_user"] if c in df_ev_star.columns]
+                            st.dataframe(df_ev_star[disp_cols].head(15), use_container_width=True, height=360)
+                        else:
+                            st.dataframe(df_fe_raw.head(15), use_container_width=True, height=360)
+
+                    with col_s2_right:
+                        st.markdown("##### " + ("BigQuery / dbt Production Star SQL" if is_en else "BigQuery / dbt 正式星型 JOIN 語法"))
+                        st.code(
+                            """-- Product Feature Events Star Schema Join
+SELECT 
+    e.event_record_id,
+    e.event_date,
+    e.event_name,
+    c.aarrr_stage,
+    c.module_category,
+    c.source_component,
+    c.is_aha_moment,
+    c.is_ai_inference_event,
+    e.event_count,
+    e.total_users,
+    e.events_per_user
+FROM `de-consulting-508822.readcall_silver.fct_feature_events` e
+LEFT JOIN `de-consulting-508822.readcall_silver.dim_feature_catalog` c 
+    ON e.event_name = c.event_name
+ORDER BY e.event_date DESC, e.event_count DESC;""",
+                            language="sql",
+                        )
 
             # TAB 1: AARRR & TRAFFIC
             with tab1:
@@ -1010,7 +1166,33 @@ def main():
                         yaxis={"gridcolor": "#f1f5f9"},
                         xaxis={"gridcolor": "#f1f5f9"},
                     )
-                    st.plotly_chart(fig_trend, use_container_width=True)
+                    col_dau_chart, col_dau_meta = st.columns([1.15, 0.85])
+                    with col_dau_chart:
+                        st.plotly_chart(fig_trend, use_container_width=True)
+                    with col_dau_meta:
+                        st.markdown(
+                            """
+                            <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:10px; padding:0.65rem 0.9rem; margin-bottom:0.4rem;">
+                                <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">Source Mart Table / 來源業務集市表</div>
+                                <div style="font-size:0.86rem; font-weight:700; color:#2563eb; font-family:monospace;">readcall_gold.gold_daily_growth_kpi</div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                        st.caption("🔍 **dbt Mart Query SQL**" if is_en else "🔍 **dbt 金層集市查詢 SQL**")
+                        st.code(
+                            """SELECT 
+    event_date,
+    dau,
+    aha_users,
+    round(aha_users * 100.0 / nullif(dau, 0), 2) AS aha_rate_pct
+FROM `de-consulting-508822.readcall_gold.gold_daily_growth_kpi`
+ORDER BY event_date ASC;""",
+                            language="sql",
+                        )
+                        st.caption("📊 **Table Data Snippet (Recent 5 Days)**" if is_en else "📊 **圖表數據切片 (近期 5 日抽樣)**")
+                        disp_kpi_cols = [c for c in ["event_date", "dau", "aha_users", "activation_rate_pct"] if c in df_trend.columns]
+                        st.dataframe(df_trend[disp_kpi_cols].tail(5), use_container_width=True, height=130)
 
                 col_t1, col_t2 = st.columns(2)
                 df_traffic = scope.traffic
@@ -1032,6 +1214,16 @@ def main():
                             paper_bgcolor="rgba(0,0,0,0)",
                         )
                         st.plotly_chart(fig_ch, use_container_width=True)
+                        with st.expander("📋 " + ("Source Table & dbt SQL" if is_en else "查看底層來源表與 SQL 語法"), expanded=False):
+                            st.markdown("**來源表**：`readcall_silver.fct_daily_traffic` ⨝ `dim_channels`")
+                            st.code("""SELECT 
+    c.acquisition_type,
+    t.channel_group,
+    SUM(t.active_users) AS active_users
+FROM `readcall_silver.fct_daily_traffic` t
+JOIN `readcall_silver.dim_channels` c ON t.channel_key = c.channel_key
+GROUP BY 1, 2 ORDER BY 3 DESC;""", language="sql")
+                            st.dataframe(ch_agg, use_container_width=True, height=140)
                 with col_t2:
                     st.markdown("##### " + ("DACH vs. Global Learners" if is_en else "DACH 德語區 vs. 全球學習者分佈"))
                     if not df_traffic.empty and "country" in df_traffic.columns:
@@ -1053,6 +1245,16 @@ def main():
                             yaxis={"gridcolor": "#f1f5f9"},
                         )
                         st.plotly_chart(fig_geo, use_container_width=True)
+                        with st.expander("📋 " + ("Source Table & dbt SQL" if is_en else "查看底層來源表與 SQL 語法"), expanded=False):
+                            st.markdown("**來源表**：`readcall_silver.fct_daily_traffic` ⨝ `dim_devices_geo`")
+                            st.code("""SELECT 
+    g.country,
+    g.is_dach_region,
+    SUM(t.active_users) AS active_users
+FROM `readcall_silver.fct_daily_traffic` t
+JOIN `readcall_silver.dim_devices_geo` g ON t.device_geo_key = g.device_geo_key
+GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 5;""", language="sql")
+                            st.dataframe(geo_agg, use_container_width=True, height=140)
 
             # TAB 2: BYOK FUNNEL & REFERRAL LOOP
             with tab2:
@@ -1128,6 +1330,26 @@ def main():
                         margin={"l": 20, "r": 20, "t": 30, "b": 20},
                     )
                     st.plotly_chart(fig_b, use_container_width=True)
+                    with st.expander("📋 " + ("Source Table & Funnel SQL" if is_en else "查看漏斗資料表與 SQL 語法"), expanded=False):
+                        st.markdown("**來源表**：`readcall_gold.gold_byok_funnel`")
+                        st.code("""SELECT 
+    step_1_first_visit,
+    step_2_aha_interaction,
+    step_3_byok_modal_opened,
+    step_4_byok_get_key_clicked,
+    step_5_byok_key_saved
+FROM `de-consulting-508822.readcall_gold.gold_byok_funnel`;""", language="sql")
+                        df_byok_prev = pd.DataFrame({
+                            "Funnel Stage": stages_byok,
+                            "Users": [
+                                byok_s["step_1_first_visit"],
+                                byok_s["step_2_aha_interaction"],
+                                byok_s["step_3_byok_modal_opened"],
+                                byok_s["step_4_byok_get_key_clicked"],
+                                byok_s["step_5_byok_key_saved"],
+                            ]
+                        })
+                        st.dataframe(df_byok_prev, use_container_width=True, height=150)
 
                 with col_b2:
                     stages_ref = (
@@ -1166,6 +1388,25 @@ def main():
                         margin={"l": 20, "r": 20, "t": 30, "b": 20},
                     )
                     st.plotly_chart(fig_r, use_container_width=True)
+                    with st.expander("📋 " + ("Source Table & Referral SQL" if is_en else "查看推薦裂變資料表與 SQL 語法"), expanded=False):
+                        st.markdown("**來源表**：`readcall_gold.gold_referral_loop`")
+                        st.code("""SELECT 
+    step_1_referral_modal_opened,
+    step_2_referral_link_copied,
+    step_4_referral_unlock_success,
+    step_5_custom_prompt_saved,
+    viral_k_factor_proxy
+FROM `de-consulting-508822.readcall_gold.gold_referral_loop`;""", language="sql")
+                        df_ref_prev = pd.DataFrame({
+                            "Referral Stage": stages_ref,
+                            "Count": [
+                                ref_s["step_1_referral_modal_opened"],
+                                ref_s["step_2_referral_link_copied"],
+                                ref_s["step_4_referral_unlock_success"],
+                                ref_s["step_5_custom_prompt_saved"],
+                            ]
+                        })
+                        st.dataframe(df_ref_prev, use_container_width=True, height=150)
 
                 # Daily Friction Monitoring
                 df_byok = scope.byok
@@ -1185,7 +1426,33 @@ def main():
                         legend={"orientation": "h", "y": 1.15},
                         yaxis={"gridcolor": "#f1f5f9"},
                     )
-                    st.plotly_chart(fig_fric, use_container_width=True)
+                    c_fric_chart, c_fric_meta = st.columns([1.15, 0.85])
+                    with c_fric_chart:
+                        st.plotly_chart(fig_fric, use_container_width=True)
+                    with c_fric_meta:
+                        st.markdown(
+                            """
+                            <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:10px; padding:0.65rem 0.9rem; margin-bottom:0.4rem;">
+                                <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">Source Mart Table / 來源業務集市表</div>
+                                <div style="font-size:0.86rem; font-weight:700; color:#d97706; font-family:monospace;">readcall_gold.gold_byok_funnel (Daily Grain)</div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                        st.caption("🔍 **Friction Monitoring SQL**" if is_en else "🔍 **摩擦率監控 SQL 語法**")
+                        st.code(
+                            """SELECT 
+    event_date,
+    step_6_byok_key_saved,
+    byok_verify_failed,
+    round(byok_verify_failed * 100.0 / nullif(step_6_byok_key_saved + byok_verify_failed, 0), 2) AS friction_pct
+FROM `de-consulting-508822.readcall_gold.gold_byok_funnel`
+ORDER BY event_date ASC;""",
+                            language="sql",
+                        )
+                        st.caption("📊 **Table Data Snippet (Recent 5 Days)**" if is_en else "📊 **圖表數據切片 (近期 5 日抽樣)**")
+                        fric_cols = [c for c in ["event_date", "step_6_byok_key_saved", "byok_verify_failed"] if c in df_b_sort.columns]
+                        st.dataframe(df_b_sort[fric_cols].tail(5), use_container_width=True, height=130)
 
             # TAB 3: NL2CHART GENERATOR
             with tab3:
@@ -1241,18 +1508,95 @@ def main():
                         st.info("ℹ️ " + ("No data available for chart request: " if is_en else "目前無對應圖表數據：") + str(cfg.get('title', nl_q)))
 
         elif selected_layer == "silver":
-            st.subheader("Silver Star Schema (Cleaned Transactions & Dimensions)" if is_en else "銀牌層星狀模型（清洗事實與維度明細）")
-            s_tab1, s_tab2, s_tab3 = st.tabs([
-                "fct_daily_traffic" if is_en else "fct_daily_traffic (流量事實表)",
+            st.subheader("Silver Layer: Normalized Dimensional Models (2 Facts, 3 Dimensions)" if is_en else "銀牌層：標準化維度模型（2 張事實表與 3 張維度表）")
+            s_tab1, s_tab2, s_tab3, s_tab4, s_tab5 = st.tabs([
+                "fct_daily_traffic" if is_en else "fct_daily_traffic (每日流量事實表)",
                 "fct_feature_events" if is_en else "fct_feature_events (功能事件事實表)",
-                "dim_feature_catalog" if is_en else "dim_feature_catalog (功能維度表)",
+                "dim_channels" if is_en else "dim_channels (獲客渠道維度表)",
+                "dim_devices_geo" if is_en else "dim_devices_geo (裝置與地域維度表)",
+                "dim_feature_catalog" if is_en else "dim_feature_catalog (產品功能維度表)",
             ])
             with s_tab1:
-                st.dataframe(data_dict["traffic"], use_container_width=True, height=450)
+                st.dataframe(data_dict.get("fct_daily_traffic", data_dict.get("traffic", pd.DataFrame())), use_container_width=True, height=400)
             with s_tab2:
-                st.dataframe(data_dict.get("feature_events", pd.DataFrame()), use_container_width=True, height=450)
+                st.dataframe(data_dict.get("fct_feature_events", data_dict.get("feature_events", pd.DataFrame())), use_container_width=True, height=400)
             with s_tab3:
-                st.dataframe(data_dict["catalog"], use_container_width=True, height=450)
+                st.dataframe(data_dict.get("dim_channels", data_dict.get("channels", pd.DataFrame())), use_container_width=True, height=400)
+            with s_tab4:
+                st.dataframe(data_dict.get("dim_devices_geo", data_dict.get("devices_geo", pd.DataFrame())), use_container_width=True, height=400)
+            with s_tab5:
+                st.dataframe(data_dict.get("dim_feature_catalog", data_dict.get("catalog", pd.DataFrame())), use_container_width=True, height=400)
+
+            st.markdown("---")
+            st.markdown("### 📐 " + ("Dimensional Modeling Rationale & Architectural Decisions" if is_en else "銀層維度建模設計決策與架構原理 (Kimball Modeling Rationale)"))
+
+            c_mod1, c_mod2 = st.columns(2)
+            with c_mod1:
+                st.markdown(
+                    """
+                    <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:12px; padding:1.2rem; height:100%;">
+                        <div style="font-weight:700; font-size:1.05rem; color:#2563eb; margin-bottom:0.6rem;">
+                            1️⃣ 為什麼拆成 2 張 Facts（流量事實 vs 事件事實）？
+                        </div>
+                        <p style="font-size:0.9rem; line-height:1.6; color:#475569; margin-bottom:0.5rem;">
+                            <b>不同數據粒度（Different Grains）的物理隔離：</b>
+                        </p>
+                        <ul style="font-size:0.875rem; line-height:1.6; color:#475569; padding-left:1.2rem;">
+                            <li><b><code>fct_daily_traffic</code>（工作階段彙總粒度）</b>：粒度為 <i>Date × Channel × Device × Country</i>，記錄 Sessions、DAU 與參與度，適合衡量<b>獲客宏觀漏斗</b>。</li>
+                            <li><b><code>fct_feature_events</code>（原子級事件觸發粒度）</b>：粒度為 <i>單次點擊/交互</i>，記錄具體 <code>event_name</code>、使用者識別碼與時間戳記，適合追蹤<b>產品內部功能使用微觀行為</b>。</li>
+                            <li><b>防範笛卡爾積膨脹（Fan-Out Prevention）</b>：若將兩者合併，單日上千次按鈕事件會造成流量指標被重複放大乘算（Double Counting），因此依據 Kimball 原則必須物理分流。</li>
+                        </ul>
+                    </div>
+                    """ if not is_en else """
+                    <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:12px; padding:1.2rem; height:100%;">
+                        <div style="font-weight:700; font-size:1.05rem; color:#2563eb; margin-bottom:0.6rem;">
+                            1️⃣ Why 2 Distinct Fact Tables? (Traffic vs. Events)
+                        </div>
+                        <p style="font-size:0.9rem; line-height:1.6; color:#475569; margin-bottom:0.5rem;">
+                            <b>Physical Isolation of Different Grains:</b>
+                        </p>
+                        <ul style="font-size:0.875rem; line-height:1.6; color:#475569; padding-left:1.2rem;">
+                            <li><b><code>fct_daily_traffic</code> (Session Aggregate Grain)</b>: Grain is <i>Date × Channel × Device × Country</i>, capturing sessions, active users, and engagement rate for macro acquisition analysis.</li>
+                            <li><b><code>fct_feature_events</code> (Atomic Event Grain)</b>: Grain is <i>Single Event Interaction</i>, capturing discrete clicks, feature triggers, and user pseudo IDs for micro product engagement.</li>
+                            <li><b>Fan-Out & Cartesian Duplication Prevention</b>: Joining event logs directly onto session aggregates causes catastrophic double-counting. Physical separation ensures metric integrity.</li>
+                        </ul>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            with c_mod2:
+                st.markdown(
+                    """
+                    <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:12px; padding:1.2rem; height:100%;">
+                        <div style="font-weight:700; font-size:1.05rem; color:#059669; margin-bottom:0.6rem;">
+                            2️⃣ 為什麼需要 3 張 Dimensions（一致性維度）？
+                        </div>
+                        <p style="font-size:0.9rem; line-height:1.6; color:#475569; margin-bottom:0.5rem;">
+                            <b>維度正規化與可複用一致性（Conformed Dimensions）：</b>
+                        </p>
+                        <ul style="font-size:0.875rem; line-height:1.6; color:#475569; padding-left:1.2rem;">
+                            <li><b><code>dim_channels</code></b>：將雜亂的 UTM 與媒介標準化為 <code>acquisition_type</code>（如 Viral Referral、pSEO、Social），統一獲客歸因口徑。</li>
+                            <li><b><code>dim_devices_geo</code></b>：抽象出國家與裝置特徵（如德語區 <code>is_dach_region</code> 核心旗標），供跨事實表聯合篩選。</li>
+                            <li><b><code>dim_feature_catalog</code></b>：解耦業務語義，將前端 30+ 埋點打標映射為 <b>AARRR 階段</b>、<b>Aha! 關鍵時刻</b> 與 <b>組件代碼路徑</b>，分析師無需在 SQL 重複編寫冗長的 CASE WHEN。</li>
+                        </ul>
+                    </div>
+                    """ if not is_en else """
+                    <div style="background:var(--secondary-background-color, #ffffff); border:1px solid rgba(226, 232, 240, 0.9); border-radius:12px; padding:1.2rem; height:100%;">
+                        <div style="font-weight:700; font-size:1.05rem; color:#059669; margin-bottom:0.6rem;">
+                            2️⃣ Why 3 Conformed Dimension Tables?
+                        </div>
+                        <p style="font-size:0.9rem; line-height:1.6; color:#475569; margin-bottom:0.5rem;">
+                            <b>Normalization & Kimball Conformed Dimensions:</b>
+                        </p>
+                        <ul style="font-size:0.875rem; line-height:1.6; color:#475569; padding-left:1.2rem;">
+                            <li><b><code>dim_channels</code></b>: Classifies fragmented UTMs into unified acquisition strategies (Viral Referral, pSEO, Organic Social) across teams.</li>
+                            <li><b><code>dim_devices_geo</code></b>: Abstracts geo-device attributes (e.g. <code>is_dach_region</code> core flag) for conformed cross-fact slicing.</li>
+                            <li><b><code>dim_feature_catalog</code></b>: Decouples business semantics from telemetry, mapping 30+ raw events to <b>AARRR stages</b>, <b>Aha! moments</b>, and <b>source code components</b> without query-time CASE statements.</li>
+                        </ul>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
         else:  # bronze
             st.subheader("Bronze Raw Telemetry Streams (Zero Fan-Out)" if is_en else "銅牌層原始埋點串流（防膨脹分流）")

@@ -520,6 +520,22 @@ def load_gold_dataframe(table_name: str):
     if table_name == "dim_feature_catalog":
         return df_meta
 
+    if table_name == "dim_channels":
+        ch = df_traffic_raw[["channel_group", "source_medium"]].drop_duplicates().reset_index(drop=True)
+        ch["channel_key"] = ch["channel_group"].str.lower().str.replace(" ", "_") + "__" + ch["source_medium"].str.lower().str.replace(" ", "").str.replace("/", "_")
+        ch["acquisition_type"] = ch["channel_group"].map({
+            "Organic Search": "pSEO / Organic Search",
+            "Referral": "Viral Referral Loop",
+            "Organic Social": "Community / Social",
+        }).fillna("Direct / Bookmark")
+        return ch[["channel_key", "channel_group", "source_medium", "acquisition_type"]]
+
+    if table_name == "dim_devices_geo":
+        dg = df_traffic_raw[["device_category", "country"]].drop_duplicates().reset_index(drop=True)
+        dg["device_geo_key"] = dg["device_category"].str.lower() + "__" + dg["country"].str.lower().str.replace(" ", "_")
+        dg["is_dach_region"] = dg["country"].isin(["Germany", "Austria", "Switzerland"])
+        return dg[["device_geo_key", "device_category", "country", "is_dach_region"]]
+
     if table_name == "fct_feature_events":
         fe_merged = pd.merge(df_events_raw, df_meta, on="event_name", how="left")
         fe_merged["events_per_user"] = (fe_merged["event_count"] / fe_merged["total_users"].clip(lower=1)).round(2)
