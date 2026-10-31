@@ -33,6 +33,10 @@ def sanitize_dataset_access(dataset_name: str) -> str:
     return clean_name
 
 
+_BIGQUERY_LIVE_CACHE: bool | None = None
+_BIGQUERY_LIVE_CACHE_TIME: float = 0.0
+
+
 def _get_bigquery_client():
     """Lazily instantiate BigQuery client if credentials are configured (local key or Streamlit Cloud Secrets)."""
     try:
@@ -62,27 +66,42 @@ def _get_bigquery_client():
             pass
 
         # 2. Local service account JSON file or env var
-        if "GOOGLE_APPLICATION_CREDENTIALS" not in os.environ and os.path.exists(
-            "gcp-key.json"
-        ):
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath(
-                "gcp-key.json"
-            )
-        return bigquery.Client()
+        if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and os.path.exists(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]):
+            return bigquery.Client()
+
+        if os.path.exists("gcp-key.json"):
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("gcp-key.json")
+            return bigquery.Client()
+
+        # Pre-flight short circuit: no credentials present anywhere -> return None immediately without ADC network timeout
+        return None
     except Exception:  # noqa: BLE001
         return None
 
 
 def is_bigquery_live() -> bool:
-    """Test if BigQuery is live and reachable."""
+    """Test if BigQuery is live and reachable (with 5-minute memory cache)."""
+    global _BIGQUERY_LIVE_CACHE, _BIGQUERY_LIVE_CACHE_TIME
+    import time
+
+    now = time.time()
+    if _BIGQUERY_LIVE_CACHE is not None and (now - _BIGQUERY_LIVE_CACHE_TIME < 300):
+        return _BIGQUERY_LIVE_CACHE
+
     client = _get_bigquery_client()
     if not client:
+        _BIGQUERY_LIVE_CACHE = False
+        _BIGQUERY_LIVE_CACHE_TIME = now
         return False
     try:
         proj = os.getenv("GCP_PROJECT_ID", client.project or "de-consulting-508822")
         client.query(f"SELECT 1 FROM `{proj}.readcall_gold.gold_daily_growth_kpi` LIMIT 1").result()
+        _BIGQUERY_LIVE_CACHE = True
+        _BIGQUERY_LIVE_CACHE_TIME = now
         return True
     except Exception:  # noqa: BLE001
+        _BIGQUERY_LIVE_CACHE = False
+        _BIGQUERY_LIVE_CACHE_TIME = now
         return False
 
 

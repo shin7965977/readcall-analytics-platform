@@ -190,13 +190,88 @@ st.markdown(
     }
     .formula-tag {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.73rem;
-        background: rgba(241, 245, 249, 0.9);
-        color: #475569;
-        padding: 0.15rem 0.45rem;
-        border-radius: 4px;
-        display: inline-block;
+        font-size: 0.75rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        padding: 0.22rem 0.55rem;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
         margin-top: 0.25rem;
+    }
+    .formula-term {
+        position: relative;
+        cursor: help;
+        font-weight: 700;
+        color: #1e40af;
+        border-bottom: 1.5px dotted #3b82f6;
+        padding: 0 2px;
+        display: inline-block;
+        transition: all 0.15s ease-in-out;
+    }
+    .formula-term:hover {
+        color: #2563eb;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 3px;
+        border-bottom-style: solid;
+    }
+    .formula-term .tooltip-box {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 0.55rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.73rem;
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        font-weight: 400;
+        line-height: 1.4;
+        min-width: 210px;
+        max-width: 280px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        text-align: left;
+    }
+    .formula-term .tooltip-box::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #0f172a transparent transparent transparent;
+    }
+    .formula-term:hover .tooltip-box {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-2px);
+    }
+    .tooltip-header {
+        font-weight: 700;
+        color: #38bdf8;
+        font-size: 0.74rem;
+        margin-bottom: 0.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .tooltip-unit {
+        color: #94a3b8;
+        font-size: 0.69rem;
+        font-weight: 500;
+    }
+    .tooltip-body {
+        color: #e2e8f0;
+        font-size: 0.72rem;
     }
 
     /* Clean, compact Chat message typography (Prevent oversized headers) */
@@ -234,6 +309,12 @@ PROJECT_ID = os.getenv("GCP_PROJECT_ID", "de-consulting-508822")
 KEY_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", os.path.abspath("gcp-key.json"))
 if os.path.exists(KEY_PATH):
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = KEY_PATH
+
+
+@st.cache_data(ttl=300, show_spinner=False)
+def cached_is_bigquery_live() -> bool:
+    """Cached test for BigQuery live connectivity (5-min cache to eliminate rerun lag)."""
+    return is_bigquery_live()
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -366,7 +447,7 @@ def main():
             key="selected_lakehouse_layer",
         )
         data_source_str = f"Google Cloud BigQuery ({PROJECT_ID}.readcall_{selected_layer})"
-        is_live = is_bigquery_live()
+        is_live = cached_is_bigquery_live()
         if is_live:
             st.caption(f"🟢 {'Live GCP BigQuery: ' if is_en else '即時 BigQuery 連線：'}`{data_source_str}`")
         else:
@@ -480,9 +561,39 @@ def main():
             },
         ]
 
-        for m in da_metrics:
+        def _make_term(term_str: str, role_title: str, unit_str: str, meaning_str: str) -> str:
+            return (
+                f'<span class="formula-term">'
+                f'{term_str}'
+                f'<span class="tooltip-box">'
+                f'<div class="tooltip-header"><span>{role_title}</span><span class="tooltip-unit">{unit_str}</span></div>'
+                f'<div class="tooltip-body">{meaning_str}</div>'
+                f'</span>'
+                f'</span>'
+            )
+
+        f1_num = _make_term("aha_users", "aha_users (Numerator)" if is_en else "aha_users（分子）", "Unit: Users" if is_en else "單位：人", "Unique active users executing core dictionary or reading highlights." if is_en else "當日執行查字典 (dictionary_searched) 或選字精讀的獨立讀者數")
+        f1_den = _make_term("dau", "dau (Denominator)" if is_en else "dau（分母）", "Unit: Users" if is_en else "單位：人", "Total daily active users visiting the platform." if is_en else "全站當日總造訪之獨立活躍讀者數 (Daily Active Users)")
+        f1_html = f'<div class="formula-tag">{f1_num} <span style="color:#64748b;font-weight:700;">/</span> {f1_den}</div>'
+
+        f2_num = _make_term("byok_key_saved", "byok_key_saved (Numerator)" if is_en else "byok_key_saved（分子）", "Unit: Keys" if is_en else "單位：組", "Successful Google AI Studio Gemini API key activations." if is_en else "成功輸入並驗證綁定 Google AI Studio Gemini API Key 之次數")
+        f2_den = _make_term("trial_wall_hits", "trial_wall_hits (Denominator)" if is_en else "trial_wall_hits（分母）", "Unit: Hits" if is_en else "單位：次", "Users exhausting free trial and triggering BYOK modal." if is_en else "免費試用額度用盡觸發綁定提醒彈窗之次數")
+        f2_html = f'<div class="formula-tag">{f2_num} <span style="color:#64748b;font-weight:700;">/</span> {f2_den}</div>'
+
+        f3_num = _make_term("verify_failed", "verify_failed (Numerator)" if is_en else "verify_failed（分子）", "Unit: Errors" if is_en else "單位：次", "Key submissions failing validation check." if is_en else "因貼錯字元或格式不合法導致驗證失敗之次數")
+        f3_den = _make_term("total_verify_attempts", "total_verify_attempts (Denominator)" if is_en else "total_verify_attempts（分母）", "Unit: Submissions" if is_en else "單位：次", "Total key verification attempts (saved + failed)." if is_en else "送出金鑰驗證之總嘗試次數 (成功 + 失敗)")
+        f3_html = f'<div class="formula-tag">{f3_num} <span style="color:#64748b;font-weight:700;">/</span> {f3_den}</div>'
+
+        f4_num = _make_term("unlock_success", "unlock_success (Numerator)" if is_en else "unlock_success（分子）", "Unit: Unlocks" if is_en else "單位：次", "Successful prompt unlocks via referral link." if is_en else "受邀好友透過專屬連結成功解鎖高階 Prompt 之次數")
+        f4_den = _make_term("referral_modal_opened", "referral_modal_opened (Denominator)" if is_en else "referral_modal_opened（分母）", "Unit: Opens" if is_en else "單位：次", "Users opening the viral share invitation modal." if is_en else "既有讀者主動點開邀請好友分享彈窗之次數")
+        f4_html = f'<div class="formula-tag">{f4_num} <span style="color:#64748b;font-weight:700;">/</span> {f4_den}</div>'
+
+        formula_html_map = [f1_html, f2_html, f3_html, f4_html]
+
+        for i, m in enumerate(da_metrics):
             badge_cls = "da-badge-healthy" if m["healthy"] else "da-badge-warn"
             badge_txt = ("🟢 " + ("Normal" if is_en else "健康")) if m["healthy"] else ("🟡 " + ("Warning" if is_en else "警戒"))
+            cur_formula_html = formula_html_map[i] if i < len(formula_html_map) else f'<span class="formula-tag">{m["formula"]}</span>'
             st.markdown(
                 f"""
                 <div class="da-metric-box">
@@ -490,7 +601,7 @@ def main():
                     <div class="da-metric-title">{m['name']}</div>
                     <div class="da-metric-num">{m['val_str']} <span style="font-size:0.75rem;color:#64748b;font-weight:600;">({'Target: ' if is_en else '目標: '}{m['target']})</span></div>
                     <div style="margin-top:0.25rem;">
-                        <span class="formula-tag">{m['formula']}</span>
+                        {cur_formula_html}
                     </div>
                     <div style="font-size:0.74rem;color:#64748b;margin-top:0.35rem;line-height:1.35;">{m['desc']}</div>
                 </div>
@@ -526,7 +637,7 @@ def main():
             st.markdown("<br>", unsafe_allow_html=True)
             c_status, c_ai_btn = st.columns([1.1, 1.0])
             with c_status:
-                is_live = is_bigquery_live()
+                is_live = cached_is_bigquery_live()
                 if is_live:
                     badge_text = f"{selected_layer.upper()} LIVE (BigQuery)"
                     badge_style = "background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3);"
