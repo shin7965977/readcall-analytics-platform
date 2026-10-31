@@ -292,6 +292,7 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
                 )
             )
     fig.update_layout(
+        barmode="group",
         title=title,
         template="plotly_white",
         height=390,

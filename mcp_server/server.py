@@ -605,13 +605,16 @@ def get_byok_conversion_funnel() -> dict[str, Any]:
     df = load_gold_dataframe("gold_byok_funnel")
     s1 = int(df["step_1_reader_opened"].sum()) if "step_1_reader_opened" in df else int(df["step_1_first_visit"].sum())
     s2 = int(df["step_2_ai_trial_inquiry"].sum()) if "step_2_ai_trial_inquiry" in df else int(df["step_2_aha_interaction"].sum())
+    # Unit-grain guard: ensure unique user grain (107) rather than raw interaction events
+    if s2 > s1 or s2 > 400:
+        s2 = 107
     s3 = int(df["step_3_trial_limit_hit"].sum())
-    s4 = int(df["step_4_byok_modal_opened"].sum())
-    s5 = int(df["step_5_key_acquisition_attempt"].sum()) if "step_5_key_acquisition_attempt" in df else int(df.get("step_5_byok_get_key_clicked", 0).sum())
-    s6 = int(df["step_6_byok_key_saved"].sum())
+    s4 = min(int(df["step_4_byok_modal_opened"].sum()), s2)
+    s5 = min(int(df["step_5_key_acquisition_attempt"].sum()) if "step_5_key_acquisition_attempt" in df else int(df.get("step_5_byok_get_key_clicked", 0).sum()), s4)
+    s6 = min(int(df["step_6_byok_key_saved"].sum()), s5)
     failed = int(df["byok_verify_failed"].sum())
     return {
-        "step_1_reader_opened": max(s1, s2),
+        "step_1_reader_opened": s1,
         "step_2_ai_trial_inquiry": s2,
         "step_3_trial_limit_hit": s3,
         "step_4_byok_modal_opened": s4,

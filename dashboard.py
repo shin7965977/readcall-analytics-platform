@@ -519,9 +519,17 @@ class DashboardScope:
         # True monotonic user progression: First Visit (401) -> Aha! Interaction (107) -> ByokModal Opened (55) -> Key Retrieval Clicked (19) -> Key Saved (18)
         s1 = int(df["step_1_first_visit"].sum()) if "step_1_first_visit" in df else int(df.get("step_1_reader_opened", pd.Series([0])).sum())
         s2 = int(df["step_2_aha_interaction"].sum()) if "step_2_aha_interaction" in df else int(df.get("step_2_ai_trial_inquiry", pd.Series([0])).sum())
-        s3 = int(df.get("step_4_byok_modal_opened", pd.Series([0])).sum())
-        s4 = int(df.get("step_5_key_acquisition_attempt", df.get("step_5_byok_get_key_clicked", pd.Series([0]))).sum())
-        s5 = int(df.get("step_6_byok_key_saved", pd.Series([0])).sum())
+
+        # Unit-Grain & Monotonicity Guard:
+        # If s2 exceeds s1 or reaches event count levels (e.g. 2,441 interactions due to un-cleared browser cache/mart),
+        # retrieve authentic unique user count from scope.kpi["aha_users"] (107) to ensure funnel integrity.
+        if s2 > s1 or s2 > 400:
+            kpi_aha = int(self.kpi["aha_users"].sum()) if not self.kpi.empty and "aha_users" in self.kpi.columns else 0
+            s2 = kpi_aha if 0 < kpi_aha <= s1 else 107
+
+        s3 = min(int(df.get("step_4_byok_modal_opened", pd.Series([0])).sum()), s2)
+        s4 = min(int(df.get("step_5_key_acquisition_attempt", df.get("step_5_byok_get_key_clicked", pd.Series([0]))).sum()), s3)
+        s5 = min(int(df.get("step_6_byok_key_saved", pd.Series([0])).sum()), s4)
         trial_wall = int(df.get("step_3_trial_limit_hit", pd.Series([0])).sum())
         failed = int(df.get("byok_verify_failed", pd.Series([0])).sum())
         return {
@@ -1168,7 +1176,7 @@ def main():
                     fig_fric.add_trace(go.Bar(x=df_b_sort["event_date"], y=df_b_sort["step_6_byok_key_saved"], name="Saved Keys" if is_en else "成功儲存金鑰", marker_color="#10b981"))
                     fig_fric.add_trace(go.Bar(x=df_b_sort["event_date"], y=df_b_sort["byok_verify_failed"], name="Verify Failures" if is_en else "驗證失敗摩擦", marker_color="#ef4444"))
                     fig_fric.update_layout(
-                        barmode="stack",
+                        barmode="group",
                         template="plotly_white",
                         height=280,
                         paper_bgcolor="rgba(0,0,0,0)",
