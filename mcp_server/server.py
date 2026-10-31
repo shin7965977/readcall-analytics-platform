@@ -52,25 +52,43 @@ def _get_bigquery_client():
                     import json
 
                     raw_info = json.loads(st.secrets["GCP_SERVICE_ACCOUNT_JSON"])
-                    creds = service_account.Credentials.from_service_account_info(raw_info)
-                    proj = raw_info.get("project_id", os.getenv("GCP_PROJECT_ID", "de-consulting-508822"))
+                    creds = service_account.Credentials.from_service_account_info(
+                        raw_info
+                    )
+                    proj = raw_info.get(
+                        "project_id",
+                        os.getenv("GCP_PROJECT_ID", "de-consulting-508822"),
+                    )
                     return bigquery.Client(credentials=creds, project=proj)
                 if "gcp_service_account" in st.secrets:
                     creds_info = dict(st.secrets["gcp_service_account"])
-                    if "private_key" in creds_info and isinstance(creds_info["private_key"], str):
-                        creds_info["private_key"] = creds_info["private_key"].replace("\\n", "\n")
-                    creds = service_account.Credentials.from_service_account_info(creds_info)
-                    proj = creds_info.get("project_id", os.getenv("GCP_PROJECT_ID", "de-consulting-508822"))
+                    if "private_key" in creds_info and isinstance(
+                        creds_info["private_key"], str
+                    ):
+                        creds_info["private_key"] = creds_info["private_key"].replace(
+                            "\\n", "\n"
+                        )
+                    creds = service_account.Credentials.from_service_account_info(
+                        creds_info
+                    )
+                    proj = creds_info.get(
+                        "project_id",
+                        os.getenv("GCP_PROJECT_ID", "de-consulting-508822"),
+                    )
                     return bigquery.Client(credentials=creds, project=proj)
         except Exception:  # noqa: BLE001
             pass
 
         # 2. Local service account JSON file or env var
-        if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and os.path.exists(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]):
+        if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ and os.path.exists(
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+        ):
             return bigquery.Client()
 
         if os.path.exists("gcp-key.json"):
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("gcp-key.json")
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath(
+                "gcp-key.json"
+            )
             return bigquery.Client()
 
         # Pre-flight short circuit: no credentials present anywhere -> return None immediately without ADC network timeout
@@ -95,7 +113,9 @@ def is_bigquery_live() -> bool:
         return False
     try:
         proj = os.getenv("GCP_PROJECT_ID", client.project or "de-consulting-508822")
-        client.query(f"SELECT 1 FROM `{proj}.readcall_gold.gold_daily_growth_kpi` LIMIT 1").result()
+        client.query(
+            f"SELECT 1 FROM `{proj}.readcall_gold.gold_daily_growth_kpi` LIMIT 1"
+        ).result()
         _BIGQUERY_LIVE_CACHE = True
         _BIGQUERY_LIVE_CACHE_TIME = now
         return True
@@ -129,8 +149,7 @@ def _execute_gold_query(
             job_config = bigquery.QueryJobConfig(maximum_bytes_billed=MAX_BYTES_BILLED)
             query_job = client.query(query, job_config=job_config)
             rows = [
-                {k: _clean_val(v) for k, v in row.items()}
-                for row in query_job.result()
+                {k: _clean_val(v) for k, v in row.items()} for row in query_job.result()
             ]
             if rows:
                 return rows
@@ -436,7 +455,7 @@ def load_gold_dataframe(table_name: str):
     import pandas as pd
 
     from ingestion.sources.ga4_adapter import (
-         GA4TelemetryConfig,
+        GA4TelemetryConfig,
         READCALL_EMPIRICAL_EVENT_WEIGHTS,
         ReadCallGA4Adapter,
     )
@@ -448,7 +467,11 @@ def load_gold_dataframe(table_name: str):
             import duckdb
 
             con = duckdb.connect(db_path, read_only=True)
-            schema = "readcall_silver" if table_name.startswith("fct_") or table_name.startswith("dim_") else "readcall_gold"
+            schema = (
+                "readcall_silver"
+                if table_name.startswith("fct_") or table_name.startswith("dim_")
+                else "readcall_gold"
+            )
             df = con.execute(f"SELECT * FROM {schema}.{table_name}").df()
             con.close()
             if not df.empty:
@@ -460,8 +483,14 @@ def load_gold_dataframe(table_name: str):
     client = _get_bigquery_client()
     if client:
         try:
-            project_id = os.getenv("GCP_PROJECT_ID", client.project or "de-consulting-508822")
-            schema = "readcall_silver" if table_name.startswith("fct_") or table_name.startswith("dim_") else "readcall_gold"
+            project_id = os.getenv(
+                "GCP_PROJECT_ID", client.project or "de-consulting-508822"
+            )
+            schema = (
+                "readcall_silver"
+                if table_name.startswith("fct_") or table_name.startswith("dim_")
+                else "readcall_gold"
+            )
             query = f"SELECT * FROM `{project_id}.{schema}.{table_name}`"
             df = client.query(query).to_dataframe()
             if not df.empty:
@@ -494,16 +523,53 @@ def load_gold_dataframe(table_name: str):
     }
     meta_rows = []
     for ev in READCALL_EMPIRICAL_EVENT_WEIGHTS:
-        if ev in ("page_view", "session_start", "first_visit", "user_engagement", "scroll", "click"):
-            mod, stage, comp = "1_Acquisition_Onboarding", "Acquisition", "src/app/layout.tsx"
-        elif ev.startswith("reader_") or ev.startswith("verb_") or ev.startswith("starter_") or ev.startswith("sample_"):
-            mod, stage, comp = "2_Core_Reader_Morphology", "Activation", "src/app/reader/[id]/page.tsx"
-        elif ev.startswith("dictionary_") or ev.startswith("quiz_") or ev.startswith("flashcard") or ev.startswith("favorite"):
-            mod, stage, comp = "3_Dictionary_Vocab_Quiz", "Activation", "src/app/dictionary/page.tsx"
+        if ev in (
+            "page_view",
+            "session_start",
+            "first_visit",
+            "user_engagement",
+            "scroll",
+            "click",
+        ):
+            mod, stage, comp = (
+                "1_Acquisition_Onboarding",
+                "Acquisition",
+                "src/app/layout.tsx",
+            )
+        elif (
+            ev.startswith("reader_")
+            or ev.startswith("verb_")
+            or ev.startswith("starter_")
+            or ev.startswith("sample_")
+        ):
+            mod, stage, comp = (
+                "2_Core_Reader_Morphology",
+                "Activation",
+                "src/app/reader/[id]/page.tsx",
+            )
+        elif (
+            ev.startswith("dictionary_")
+            or ev.startswith("quiz_")
+            or ev.startswith("flashcard")
+            or ev.startswith("favorite")
+        ):
+            mod, stage, comp = (
+                "3_Dictionary_Vocab_Quiz",
+                "Activation",
+                "src/app/dictionary/page.tsx",
+            )
         elif ev.startswith("byok_") or ev.startswith("trial_"):
-            mod, stage, comp = "4_BYOK_Monetization", "Revenue_BYOK", "src/components/ByokModal.tsx"
+            mod, stage, comp = (
+                "4_BYOK_Monetization",
+                "Revenue_BYOK",
+                "src/components/ByokModal.tsx",
+            )
         else:
-            mod, stage, comp = "5_Referral_Retention", "Referral", "src/components/reader/TutorCustomPromptModal.tsx"
+            mod, stage, comp = (
+                "5_Referral_Retention",
+                "Referral",
+                "src/components/reader/TutorCustomPromptModal.tsx",
+            )
         meta_rows.append(
             {
                 "event_name": ev,
@@ -511,7 +577,13 @@ def load_gold_dataframe(table_name: str):
                 "aarrr_stage": stage,
                 "source_component": comp,
                 "is_aha_moment": ev in ("reader_text_selected", "dictionary_searched"),
-                "is_ai_inference_event": ev in ("reader_ai_Analyze", "reader_ai_explain", "quiz_generated", "tutor_question_sent"),
+                "is_ai_inference_event": ev
+                in (
+                    "reader_ai_Analyze",
+                    "reader_ai_explain",
+                    "quiz_generated",
+                    "tutor_question_sent",
+                ),
                 "funnel_step_order": funnel_step_map.get(ev, 0),
             }
         )
@@ -521,55 +593,132 @@ def load_gold_dataframe(table_name: str):
         return df_meta
 
     if table_name == "dim_channels":
-        ch = df_traffic_raw[["channel_group", "source_medium"]].drop_duplicates().reset_index(drop=True)
-        ch["channel_key"] = ch["channel_group"].str.lower().str.replace(" ", "_") + "__" + ch["source_medium"].str.lower().str.replace(" ", "").str.replace("/", "_")
-        ch["acquisition_type"] = ch["channel_group"].map({
-            "Organic Search": "pSEO / Organic Search",
-            "Referral": "Viral Referral Loop",
-            "Organic Social": "Community / Social",
-        }).fillna("Direct / Bookmark")
+        ch = (
+            df_traffic_raw[["channel_group", "source_medium"]]
+            .drop_duplicates()
+            .reset_index(drop=True)
+        )
+        ch["channel_key"] = (
+            ch["channel_group"].str.lower().str.replace(" ", "_")
+            + "__"
+            + ch["source_medium"].str.lower().str.replace(" ", "").str.replace("/", "_")
+        )
+        ch["acquisition_type"] = (
+            ch["channel_group"]
+            .map(
+                {
+                    "Organic Search": "pSEO / Organic Search",
+                    "Referral": "Viral Referral Loop",
+                    "Organic Social": "Community / Social",
+                }
+            )
+            .fillna("Direct / Bookmark")
+        )
         return ch[["channel_key", "channel_group", "source_medium", "acquisition_type"]]
 
     if table_name == "dim_devices_geo":
-        dg = df_traffic_raw[["device_category", "country"]].drop_duplicates().reset_index(drop=True)
-        dg["device_geo_key"] = dg["device_category"].str.lower() + "__" + dg["country"].str.lower().str.replace(" ", "_")
+        dg = (
+            df_traffic_raw[["device_category", "country"]]
+            .drop_duplicates()
+            .reset_index(drop=True)
+        )
+        dg["device_geo_key"] = (
+            dg["device_category"].str.lower()
+            + "__"
+            + dg["country"].str.lower().str.replace(" ", "_")
+        )
         dg["is_dach_region"] = dg["country"].isin(["Germany", "Austria", "Switzerland"])
         return dg[["device_geo_key", "device_category", "country", "is_dach_region"]]
 
     if table_name == "fct_feature_events":
-        df_events_raw["events_per_user"] = (df_events_raw["event_count"] / df_events_raw["total_users"].clip(lower=1)).round(2)
-        fact_cols = ["event_record_id", "event_date", "event_name", "device_category", "channel_group", "event_count", "total_users", "events_per_user", "updated_at"]
-        return df_events_raw[[c for c in fact_cols if c in df_events_raw.columns]].sort_values(["event_date", "event_count"], ascending=[False, False]).reset_index(drop=True)
+        df_events_raw["events_per_user"] = (
+            df_events_raw["event_count"] / df_events_raw["total_users"].clip(lower=1)
+        ).round(2)
+        fact_cols = [
+            "event_record_id",
+            "event_date",
+            "event_name",
+            "device_category",
+            "channel_group",
+            "event_count",
+            "total_users",
+            "events_per_user",
+            "updated_at",
+        ]
+        return (
+            df_events_raw[[c for c in fact_cols if c in df_events_raw.columns]]
+            .sort_values(["event_date", "event_count"], ascending=[False, False])
+            .reset_index(drop=True)
+        )
 
     if table_name == "fct_daily_traffic":
-        df_traffic_raw["session_default_channel_group"] = df_traffic_raw["channel_group"]
-        df_traffic_raw["is_dach_region"] = df_traffic_raw["country"].isin(["Germany", "Austria", "Switzerland"])
-        df_traffic_raw["channel_key"] = df_traffic_raw["channel_group"].str.lower().str.replace(" ", "_") + "__" + df_traffic_raw["source_medium"].str.lower().str.replace(" ", "").str.replace("/", "_")
-        df_traffic_raw["device_geo_key"] = df_traffic_raw["device_category"].str.lower() + "__" + df_traffic_raw["country"].str.lower().str.replace(" ", "_")
-        df_traffic_raw["returning_users"] = (df_traffic_raw["active_users"] - df_traffic_raw["new_users"]).clip(lower=0)
-        df_traffic_raw["engagement_rate"] = (df_traffic_raw["engaged_sessions"] / df_traffic_raw["sessions"].clip(lower=1)).round(4)
-        return df_traffic_raw.sort_values(["event_date", "sessions"], ascending=[False, False]).reset_index(drop=True)
+        df_traffic_raw["session_default_channel_group"] = df_traffic_raw[
+            "channel_group"
+        ]
+        df_traffic_raw["is_dach_region"] = df_traffic_raw["country"].isin(
+            ["Germany", "Austria", "Switzerland"]
+        )
+        df_traffic_raw["channel_key"] = (
+            df_traffic_raw["channel_group"].str.lower().str.replace(" ", "_")
+            + "__"
+            + df_traffic_raw["source_medium"]
+            .str.lower()
+            .str.replace(" ", "")
+            .str.replace("/", "_")
+        )
+        df_traffic_raw["device_geo_key"] = (
+            df_traffic_raw["device_category"].str.lower()
+            + "__"
+            + df_traffic_raw["country"].str.lower().str.replace(" ", "_")
+        )
+        df_traffic_raw["returning_users"] = (
+            df_traffic_raw["active_users"] - df_traffic_raw["new_users"]
+        ).clip(lower=0)
+        df_traffic_raw["engagement_rate"] = (
+            df_traffic_raw["engaged_sessions"]
+            / df_traffic_raw["sessions"].clip(lower=1)
+        ).round(4)
+        return df_traffic_raw.sort_values(
+            ["event_date", "sessions"], ascending=[False, False]
+        ).reset_index(drop=True)
 
     if table_name == "gold_feature_adoption":
-        agg = (
-            df_events_raw.groupby("event_name", as_index=False)
-            .agg(
-                total_event_count=("event_count", "sum"),
-                total_active_user_days=("total_users", "sum"),
-                last_active_date=("event_date", "max"),
-            )
+        agg = df_events_raw.groupby("event_name", as_index=False).agg(
+            total_event_count=("event_count", "sum"),
+            total_active_user_days=("total_users", "sum"),
+            last_active_date=("event_date", "max"),
         )
-        merged = pd.merge(df_meta, agg, on="event_name", how="left").fillna({"total_event_count": 1, "total_active_user_days": 1})
+        merged = pd.merge(df_meta, agg, on="event_name", how="left").fillna(
+            {"total_event_count": 1, "total_active_user_days": 1}
+        )
         total_sum = max(int(merged["total_event_count"].sum()), 1)
-        merged["avg_frequency_per_user"] = (merged["total_event_count"] / merged["total_active_user_days"].clip(lower=1)).round(2)
-        merged["event_share_pct"] = (merged["total_event_count"] / total_sum * 100.0).round(2)
+        merged["avg_frequency_per_user"] = (
+            merged["total_event_count"] / merged["total_active_user_days"].clip(lower=1)
+        ).round(2)
+        merged["event_share_pct"] = (
+            merged["total_event_count"] / total_sum * 100.0
+        ).round(2)
         merged["interaction_share_pct"] = merged["event_share_pct"]
-        return merged.sort_values("total_event_count", ascending=False).reset_index(drop=True)
+        return merged.sort_values("total_event_count", ascending=False).reset_index(
+            drop=True
+        )
 
     # Daily pivot for KPI, BYOK, and Referral
-    piv = df_events_raw.pivot_table(index="event_date", columns="event_name", values="event_count", aggfunc="sum", fill_value=0).reset_index()
+    piv = df_events_raw.pivot_table(
+        index="event_date",
+        columns="event_name",
+        values="event_count",
+        aggfunc="sum",
+        fill_value=0,
+    ).reset_index()
     piv_users = (
-        df_events_raw.pivot_table(index="event_date", columns="event_name", values="total_users", aggfunc="sum", fill_value=0).reset_index()
+        df_events_raw.pivot_table(
+            index="event_date",
+            columns="event_name",
+            values="total_users",
+            aggfunc="sum",
+            fill_value=0,
+        ).reset_index()
         if "total_users" in df_events_raw.columns
         else pd.DataFrame()
     )
@@ -583,43 +732,85 @@ def load_gold_dataframe(table_name: str):
 
     if table_name == "gold_daily_growth_kpi":
         daily["returning_users"] = (daily["dau"] - daily["new_users"]).clip(lower=0)
-        daily["engagement_rate"] = (daily["engaged_sessions"] / daily["total_sessions"].clip(lower=1)).round(4)
-        raw_aha = daily.get("reader_text_selected", 0) + daily.get("dictionary_searched", 0)
-        daily["aha_users"] = [
-            int(round(r["dau"] * 0.78)) if raw_aha.iloc[i] > r["dau"] else int(raw_aha.iloc[i])
-            for i, r in daily.iterrows()
-        ] if not daily.empty else pd.Series(dtype=int)
-        daily["aha_activation_rate"] = (daily["aha_users"] / daily["dau"].clip(lower=1)).round(4)
-        daily["core_reader_events"] = daily.get("reader_text_selected", 0) + daily.get("reader_opened", 0)
+        daily["engagement_rate"] = (
+            daily["engaged_sessions"] / daily["total_sessions"].clip(lower=1)
+        ).round(4)
+        raw_aha = daily.get("reader_text_selected", 0) + daily.get(
+            "dictionary_searched", 0
+        )
+        daily["aha_users"] = (
+            [
+                int(round(r["dau"] * 0.78))
+                if raw_aha.iloc[i] > r["dau"]
+                else int(raw_aha.iloc[i])
+                for i, r in daily.iterrows()
+            ]
+            if not daily.empty
+            else pd.Series(dtype=int)
+        )
+        daily["aha_activation_rate"] = (
+            daily["aha_users"] / daily["dau"].clip(lower=1)
+        ).round(4)
+        daily["core_reader_events"] = daily.get("reader_text_selected", 0) + daily.get(
+            "reader_opened", 0
+        )
         daily["dictionary_events"] = daily.get("dictionary_searched", 0)
-        daily["ai_inference_events"] = daily.get("reader_ai_Analyze", 0) + daily.get("reader_ai_explain", 0)
-        daily["ai_morphological_depth"] = (daily["ai_inference_events"] / daily["core_reader_events"].clip(lower=1)).round(4)
+        daily["ai_inference_events"] = daily.get("reader_ai_Analyze", 0) + daily.get(
+            "reader_ai_explain", 0
+        )
+        daily["ai_morphological_depth"] = (
+            daily["ai_inference_events"] / daily["core_reader_events"].clip(lower=1)
+        ).round(4)
         daily["byok_keys_saved"] = daily.get("byok_key_saved", 0)
         daily["referral_unlocks"] = daily.get("referral_unlock_success", 0)
-        daily["offloaded_ai_compute_usd"] = (daily["ai_inference_events"] * 0.0025 + daily["byok_keys_saved"] * 0.45).round(2)
+        daily["offloaded_ai_compute_usd"] = (
+            daily["ai_inference_events"] * 0.0025 + daily["byok_keys_saved"] * 0.45
+        ).round(2)
         return daily.sort_values("event_date", ascending=False).reset_index(drop=True)
 
     if table_name == "gold_byok_funnel":
         daily["step_1_first_visit"] = daily.get("first_visit", 0)
         daily["step_1_reader_opened"] = daily["step_1_first_visit"]
-        if not piv_users.empty and "reader_text_selected" in piv_users.columns and "dictionary_searched" in piv_users.columns:
+        if (
+            not piv_users.empty
+            and "reader_text_selected" in piv_users.columns
+            and "dictionary_searched" in piv_users.columns
+        ):
             u_daily = piv_users.set_index("event_date")
-            aha_u = (u_daily.get("reader_text_selected", 0) + u_daily.get("dictionary_searched", 0)).reset_index(name="aha_u")
-            daily = pd.merge(daily, aha_u, on="event_date", how="left").fillna({"aha_u": 0})
+            aha_u = (
+                u_daily.get("reader_text_selected", 0)
+                + u_daily.get("dictionary_searched", 0)
+            ).reset_index(name="aha_u")
+            daily = pd.merge(daily, aha_u, on="event_date", how="left").fillna(
+                {"aha_u": 0}
+            )
             daily["step_2_aha_interaction"] = daily["aha_u"].astype(int)
         else:
             daily["step_2_aha_interaction"] = daily.get("aha_users", 0)
         daily["step_2_ai_trial_inquiry"] = daily["step_2_aha_interaction"]
-        daily["step_3_trial_limit_hit"] = daily.get("trial_exhausted_viewed", 0) + daily.get("trial_banner_cta_clicked", 0)
+        daily["step_3_trial_limit_hit"] = daily.get(
+            "trial_exhausted_viewed", 0
+        ) + daily.get("trial_banner_cta_clicked", 0)
         daily["step_4_byok_modal_opened"] = daily.get("byok_modal_opened", 0)
-        daily["step_5_key_acquisition_attempt"] = daily.get("byok_get_key_click", 0) + daily.get("byok_manual_paste_clicked", 0)
+        daily["step_5_key_acquisition_attempt"] = daily.get(
+            "byok_get_key_click", 0
+        ) + daily.get("byok_manual_paste_clicked", 0)
         daily["step_5_byok_get_key_clicked"] = daily["step_5_key_acquisition_attempt"]
         daily["step_6_byok_key_saved"] = daily.get("byok_key_saved", 0)
         daily["byok_verify_failed"] = daily.get("byok_verify_failed", 0)
-        daily["byok_conversion_rate"] = (daily["step_6_byok_key_saved"] / daily["step_3_trial_limit_hit"].clip(lower=1)).round(4)
-        daily["byok_modal_completion_rate"] = (daily["step_6_byok_key_saved"] / daily["step_4_byok_modal_opened"].clip(lower=1)).round(4)
+        daily["byok_conversion_rate"] = (
+            daily["step_6_byok_key_saved"]
+            / daily["step_3_trial_limit_hit"].clip(lower=1)
+        ).round(4)
+        daily["byok_modal_completion_rate"] = (
+            daily["step_6_byok_key_saved"]
+            / daily["step_4_byok_modal_opened"].clip(lower=1)
+        ).round(4)
         daily["byok_verify_failure_rate"] = (
-            daily["byok_verify_failed"] / (daily["step_6_byok_key_saved"] + daily["byok_verify_failed"]).clip(lower=1)
+            daily["byok_verify_failed"]
+            / (daily["step_6_byok_key_saved"] + daily["byok_verify_failed"]).clip(
+                lower=1
+            )
         ).round(4)
         return daily.sort_values("event_date", ascending=False).reset_index(drop=True)
 
@@ -628,9 +819,14 @@ def load_gold_dataframe(table_name: str):
         daily["step_2_referral_link_copied"] = daily.get("referral_link_copied", 0)
         daily["step_3_referral_link_visited"] = daily.get("referral_link_visited", 0)
         daily["step_3_referral_banner_shown"] = daily["step_3_referral_link_visited"]
-        daily["step_4_referral_unlock_success"] = daily.get("referral_unlock_success", 0)
+        daily["step_4_referral_unlock_success"] = daily.get(
+            "referral_unlock_success", 0
+        )
         daily["step_5_custom_prompt_saved"] = daily.get("custom_prompt_saved", 0)
-        daily["viral_k_factor"] = (daily["step_4_referral_unlock_success"] / daily["step_1_referral_modal_opened"].clip(lower=1)).round(4)
+        daily["viral_k_factor"] = (
+            daily["step_4_referral_unlock_success"]
+            / daily["step_1_referral_modal_opened"].clip(lower=1)
+        ).round(4)
         return daily.sort_values("event_date", ascending=False).reset_index(drop=True)
 
     return df_traffic_raw
@@ -650,14 +846,27 @@ def get_feature_adoption_matrix() -> list[dict[str, Any]]:
 def get_byok_conversion_funnel() -> dict[str, Any]:
     """Aggregate 6-stage BYOK funnel totals and conversion rates for the cockpit."""
     df = load_gold_dataframe("gold_byok_funnel")
-    s1 = int(df["step_1_reader_opened"].sum()) if "step_1_reader_opened" in df else int(df["step_1_first_visit"].sum())
-    s2 = int(df["step_2_ai_trial_inquiry"].sum()) if "step_2_ai_trial_inquiry" in df else int(df["step_2_aha_interaction"].sum())
+    s1 = (
+        int(df["step_1_reader_opened"].sum())
+        if "step_1_reader_opened" in df
+        else int(df["step_1_first_visit"].sum())
+    )
+    s2 = (
+        int(df["step_2_ai_trial_inquiry"].sum())
+        if "step_2_ai_trial_inquiry" in df
+        else int(df["step_2_aha_interaction"].sum())
+    )
     # Unit-grain guard: ensure unique user grain (107) rather than raw interaction events
     if s2 > s1 or s2 > 400:
         s2 = 107
     s3 = int(df["step_3_trial_limit_hit"].sum())
     s4 = min(int(df["step_4_byok_modal_opened"].sum()), s2)
-    s5 = min(int(df["step_5_key_acquisition_attempt"].sum()) if "step_5_key_acquisition_attempt" in df else int(df.get("step_5_byok_get_key_clicked", 0).sum()), s4)
+    s5 = min(
+        int(df["step_5_key_acquisition_attempt"].sum())
+        if "step_5_key_acquisition_attempt" in df
+        else int(df.get("step_5_byok_get_key_clicked", 0).sum()),
+        s4,
+    )
     s6 = min(int(df["step_6_byok_key_saved"].sum()), s5)
     failed = int(df["byok_verify_failed"].sum())
     return {
@@ -678,7 +887,11 @@ def get_referral_viral_loop() -> dict[str, Any]:
     df = load_gold_dataframe("gold_referral_loop")
     r1 = int(df["step_1_referral_modal_opened"].sum())
     r2 = int(df["step_2_referral_link_copied"].sum())
-    r3 = int(df["step_3_referral_link_visited"].sum()) if "step_3_referral_link_visited" in df else int(df.get("step_3_referral_banner_shown", 0).sum())
+    r3 = (
+        int(df["step_3_referral_link_visited"].sum())
+        if "step_3_referral_link_visited" in df
+        else int(df.get("step_3_referral_banner_shown", 0).sum())
+    )
     r4 = int(df["step_4_referral_unlock_success"].sum())
     r5 = int(df["step_5_custom_prompt_saved"].sum())
     return {

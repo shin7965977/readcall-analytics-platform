@@ -75,7 +75,9 @@ def _get_data_dir() -> Path:
     cand2 = Path("ingestion/data").resolve()
     if cand2.exists():
         return cand2
-    return Path("c:/Users/shin7/Downloads/CV/readcall-analytics-platform/ingestion/data")
+    return Path(
+        "c:/Users/shin7/Downloads/CV/readcall-analytics-platform/ingestion/data"
+    )
 
 
 def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") -> str:
@@ -99,7 +101,6 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
     events_rows: list[dict[str, Any]] = []
     traffic_rows: list[dict[str, Any]] = []
     pages_rows: list[dict[str, Any]] = []
-    sources_rows: list[dict[str, Any]] = []
 
     f_ev = data_dir / "ga4_real_raw_events.json"
     if f_ev.exists():
@@ -129,7 +130,7 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
     if f_src.exists():
         try:
             with open(f_src, encoding="utf-8") as f:
-                sources_rows = json.load(f).get("rows", [])
+                _ = json.load(f).get("rows", [])
         except Exception:  # noqa: BLE001, S110
             pass
 
@@ -169,12 +170,16 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
     c_sorted = sorted(c_map.items(), key=lambda x: x[1][0], reverse=True)
 
     # Compute key metrics (with exact fallbacks if rows are sparse)
-    tot_users = ev_map.get("page_view", (0, 0))[1] or ev_map.get("session_start", (0, 0))[1] or 33
+    tot_users = (
+        ev_map.get("page_view", (0, 0))[1]
+        or ev_map.get("session_start", (0, 0))[1]
+        or 33
+    )
     new_users = ev_map.get("first_visit", (0, 0))[1] or 25
     new_pct = (new_users / max(tot_users, 1)) * 100.0
     page_views = ev_map.get("page_view", (0, 0))[0] or 86
     dict_cnt, dict_u = ev_map.get("dictionary_searched", (55, 6))
-    dict_per_user = (dict_cnt / max(dict_u, 1))
+    dict_per_user = dict_cnt / max(dict_u, 1)
 
     key_saved = ev_map.get("byok_key_saved", (0, 0))[0]
     modal_opened = ev_map.get("byok_modal_opened", (2, 2))[0]
@@ -187,7 +192,11 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
             "/library": "/library（書庫頁）",
             "/": "/（首頁）",
         }
-        for path, v, _ in (p_list[:4] if p_list else [("/dictionary", 79, 30), ("/library", 5, 1), ("/", 2, 2)]):
+        for path, v, _ in (
+            p_list[:4]
+            if p_list
+            else [("/dictionary", 79, 30), ("/library", 5, 1), ("/", 2, 2)]
+        ):
             lbl = page_labels.get(path, path)
             note = "（最受歡迎）" if path == "/dictionary" else ""
             page_lines.append(f"  * {lbl}：{v} 次瀏覽{note}")
@@ -206,7 +215,9 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
             for c_name, (u, _) in c_sorted[:5]:
                 lbl = country_flags.get(c_name, c_name)
                 if c_name == "Germany":
-                    c_lines.append(f"* {lbl}：12 位（瀏覽量高達 58 次！ 平均每位在德訪客瀏覽了近 5 頁，停留與使用非常深入）")
+                    c_lines.append(
+                        f"* {lbl}：12 位（瀏覽量高達 58 次！ 平均每位在德訪客瀏覽了近 5 頁，停留與使用非常深入）"
+                    )
                 elif c_name == "Taiwan":
                     c_lines.append(f"* {lbl}：16 位（瀏覽量 23 次）")
                 elif c_name == "Japan":
@@ -230,7 +241,11 @@ def get_daily_ga4_report(target_date_str: str = "20261029", lang: str = "zh") ->
         ]
         sources_str = "\n".join(sources_lines)
 
-        modal_note = "（共有 2 位訪客點開了視窗，但最後未完成貼上驗證）" if key_saved == 0 else ""
+        modal_note = (
+            "（共有 2 位訪客點開了視窗，但最後未完成貼上驗證）"
+            if key_saved == 0
+            else ""
+        )
 
         return f"""已透過 Google Analytics 4 為你撈出 {date_display}（整天 24 小時） 的完整流量與轉換報告：
 

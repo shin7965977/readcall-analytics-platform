@@ -15,7 +15,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def test_stealth_recruiter_telemetry_context_and_opt_out():
     """Verify ?utm_campaign=, ?ref=, and ?developer=true opt-out behavior."""
-    ctx_hr = extract_recruiter_context({"utm_campaign": "stripe_hr_team", "utm_source": "cv_pdf"})
+    ctx_hr = extract_recruiter_context(
+        {"utm_campaign": "stripe_hr_team", "utm_source": "cv_pdf"}
+    )
     assert ctx_hr["recruiter_ref"] == "stripe_hr_team"
     assert ctx_hr["utm_campaign"] == "stripe_hr_team"
     assert ctx_hr["utm_source"] == "cv_pdf"
@@ -48,7 +50,14 @@ def test_stealth_telemetry_rejects_non_portfolio_event_names():
 def test_nl2chart_and_cockpit_datasets():
     """Verify cockpit dataset loading and NL2Chart generation across all 4 analytical domains."""
     datasets = load_cockpit_datasets()
-    assert set(datasets.keys()) == {"kpi", "features", "byok", "referral", "traffic", "feature_events"}
+    assert set(datasets.keys()) == {
+        "kpi",
+        "features",
+        "byok",
+        "referral",
+        "traffic",
+        "feature_events",
+    }
     assert len(datasets["features"]) == 32
     assert not datasets["kpi"].empty
     assert not datasets["byok"].empty

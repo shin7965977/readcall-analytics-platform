@@ -13,10 +13,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import os
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -216,7 +215,7 @@ class ReadCallGA4Adapter:
         self, config: GA4TelemetryConfig | None = None
     ) -> dict[str, list[dict[str, Any]]]:
         """Extract genuine ReadCall GA4 telemetry without any artificial weighting."""
-        cfg = config or self.config
+        _ = config or self.config
         now_iso = datetime.now(UTC).isoformat()
 
         # Load real GA4 dump extracted directly from GA4 Property 559361789
@@ -240,7 +239,12 @@ class ReadCallGA4Adapter:
                 if len(dims) < 4 or len(mets) < 6:
                     continue
 
-                raw_date, ch_grp, dev_cat, country = dims[0], dims[1], dims[2].lower(), dims[3]
+                raw_date, ch_grp, dev_cat, country = (
+                    dims[0],
+                    dims[1],
+                    dims[2].lower(),
+                    dims[3],
+                )
                 # Format date string: "20261019" -> "2026-10-19"
                 if len(raw_date) == 8 and raw_date.isdigit():
                     date_str = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"

@@ -31,7 +31,18 @@ def generate_chart_from_nl(
     # 1. BYOK Funnel & Key Verification queries
     if any(
         kw in clean_prompt
-        for kw in ["byok", "key", "金鑰", "綁定", "試用", "trial", "funnel", "漏斗", "verify", "驗證"]
+        for kw in [
+            "byok",
+            "key",
+            "金鑰",
+            "綁定",
+            "試用",
+            "trial",
+            "funnel",
+            "漏斗",
+            "verify",
+            "驗證",
+        ]
     ):
         title = (
             "ReadCall 6-Stage BYOK API Key Conversion Funnel"
@@ -71,7 +82,16 @@ def generate_chart_from_nl(
                 y=out_df["stage"],
                 x=out_df["count"],
                 textinfo="value+percent initial+percent previous",
-                marker={"color": ["#3b82f6", "#2563eb", "#f59e0b", "#8b5cf6", "#6366f1", "#10b981"]},
+                marker={
+                    "color": [
+                        "#3b82f6",
+                        "#2563eb",
+                        "#f59e0b",
+                        "#8b5cf6",
+                        "#6366f1",
+                        "#10b981",
+                    ]
+                },
             )
         )
         fig.update_layout(title=title, height=420, template="plotly_white")
@@ -83,10 +103,24 @@ def generate_chart_from_nl(
         return fig, title, insight, out_df
 
     # 2. Referral Viral Loop queries
-    if any(
-        kw in clean_prompt
-        for kw in ["referral", "viral", "推薦", "裂變", "分享", "unlock", "解鎖", "tutor", "prompt"]
-    ) and df_referral is not None and not df_referral.empty:
+    if (
+        any(
+            kw in clean_prompt
+            for kw in [
+                "referral",
+                "viral",
+                "推薦",
+                "裂變",
+                "分享",
+                "unlock",
+                "解鎖",
+                "tutor",
+                "prompt",
+            ]
+        )
+        and df_referral is not None
+        and not df_referral.empty
+    ):
         title = (
             "Viral Referral Loop & Custom AI Tutor Prompt Unlocks"
             if is_en
@@ -138,14 +172,31 @@ def generate_chart_from_nl(
     # 3. Feature Adoption / Event Ranking queries
     if any(
         kw in clean_prompt
-        for kw in ["feature", "event", "功能", "事件", "排行", "字典", "閱讀", "reader", "dictionary", "pareto", "動詞", "verb"]
+        for kw in [
+            "feature",
+            "event",
+            "功能",
+            "事件",
+            "排行",
+            "字典",
+            "閱讀",
+            "reader",
+            "dictionary",
+            "pareto",
+            "動詞",
+            "verb",
+        ]
     ):
         title = (
             "Top 12 ReadCall Product Telemetry Events by Volume"
             if is_en
             else "ReadCall 核心產品功能事件觸發排行 (Top 12)"
         )
-        out_df = df_features.sort_values("total_event_count", ascending=False).head(12).copy()
+        out_df = (
+            df_features.sort_values("total_event_count", ascending=False)
+            .head(12)
+            .copy()
+        )
         fig = px.bar(
             out_df,
             x="total_event_count",
@@ -220,7 +271,10 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
             "title": "ReadCall Viral Referral Link Copies & Unlocks Trend",
             "query": query,
         }
-    if any(k in q for k in ["feature", "功能", "排行", "埋點", "pareto", "字典", "event", "top"]):
+    if any(
+        k in q
+        for k in ["feature", "功能", "排行", "埋點", "pareto", "字典", "event", "top"]
+    ):
         return {
             "dataset": "features",
             "chart_type": "horizontal_bar",
@@ -280,7 +334,14 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
     colors = ["#2563eb", "#10b981", "#f59e0b", "#ef4444"]
     for idx, col in enumerate(avail_y):
         if ctype == "bar":
-            fig.add_trace(go.Bar(x=sub[x_col], y=sub[col], name=col, marker_color=colors[idx % len(colors)]))
+            fig.add_trace(
+                go.Bar(
+                    x=sub[x_col],
+                    y=sub[col],
+                    name=col,
+                    marker_color=colors[idx % len(colors)],
+                )
+            )
         else:
             fig.add_trace(
                 go.Scatter(
@@ -288,7 +349,11 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
                     y=sub[col],
                     mode="lines+markers",
                     name=col,
-                    line={"color": colors[idx % len(colors)], "width": 2.5, "shape": "spline"},
+                    line={
+                        "color": colors[idx % len(colors)],
+                        "width": 2.5,
+                        "shape": "spline",
+                    },
                 )
             )
     fig.update_layout(

@@ -13,15 +13,16 @@ with daily_traffic as (
 
 daily_events as (
     select
-        event_date,
-        sum(case when is_aha_moment then total_users else 0 end) as raw_aha_users,
-        sum(case when module_category = '2_Core_Reader_Morphology' then event_count else 0 end) as core_reader_events,
-        sum(case when module_category = '3_Dictionary_Vocab_Quiz' then event_count else 0 end) as dictionary_events,
-        sum(case when is_ai_inference_event then event_count else 0 end) as ai_inference_events,
-        sum(case when event_name = 'byok_key_saved' then event_count else 0 end) as byok_keys_saved,
-        sum(case when event_name = 'referral_unlock_success' then event_count else 0 end) as referral_unlocks
-    from {{ ref('fct_feature_events') }}
-    group by event_date
+        e.event_date,
+        sum(case when c.is_aha_moment then e.total_users else 0 end) as raw_aha_users,
+        sum(case when c.module_category = '2_Core_Reader_Morphology' then e.event_count else 0 end) as core_reader_events,
+        sum(case when c.module_category = '3_Dictionary_Vocab_Quiz' then e.event_count else 0 end) as dictionary_events,
+        sum(case when c.is_ai_inference_event then e.event_count else 0 end) as ai_inference_events,
+        sum(case when e.event_name = 'byok_key_saved' then e.event_count else 0 end) as byok_keys_saved,
+        sum(case when e.event_name = 'referral_unlock_success' then e.event_count else 0 end) as referral_unlocks
+    from {{ ref('fct_feature_events') }} e
+    left join {{ ref('dim_feature_catalog') }} c on e.event_name = c.event_name
+    group by e.event_date
 )
 
 select

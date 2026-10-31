@@ -35,7 +35,9 @@ def _first_val(val: Any, default: str = "") -> str:
     return str(val)
 
 
-def extract_recruiter_context(query_params: Mapping[str, Any] | None = None) -> dict[str, Any]:
+def extract_recruiter_context(
+    query_params: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Parse URL query parameters (`?utm_campaign=`, `?ref=`, `?developer=`) into telemetry context."""
     params = query_params or {}
     dev_raw = _first_val(params.get("developer"), "").strip().lower()
@@ -64,13 +66,17 @@ def build_stealth_ga4_snippet(
 ) -> str:
     """Build a 0x0px hidden GA4 gtag.js HTML snippet for recruiter open tracking."""
     if not event_name.startswith("portfolio_"):
-        raise ValueError(f"Stealth telemetry events must start with 'portfolio_': got {event_name}")
+        raise ValueError(
+            f"Stealth telemetry events must start with 'portfolio_': got {event_name}"
+        )
 
     ctx = dict(context or extract_recruiter_context({}))
     if ctx.get("is_opted_out"):
         return ""
 
-    measurement_id = (ga_id or os.getenv("PORTFOLIO_TRACKER_GA_ID", DEFAULT_PORTFOLIO_GA_ID)).strip()
+    measurement_id = (
+        ga_id or os.getenv("PORTFOLIO_TRACKER_GA_ID", DEFAULT_PORTFOLIO_GA_ID)
+    ).strip()
     if not measurement_id:
         return ""
 

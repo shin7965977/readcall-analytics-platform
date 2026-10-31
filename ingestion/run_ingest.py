@@ -101,9 +101,12 @@ def run_pipeline(
         db_path = os.getenv("DUCKDB_DATABASE", "local_warehouse.duckdb")
         kwargs["destination"] = dlt.destinations.duckdb(credentials=db_path)
     elif destination == "bigquery":
-        key_file = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", os.path.abspath("gcp-key.json"))
+        key_file = os.getenv(
+            "GOOGLE_APPLICATION_CREDENTIALS", os.path.abspath("gcp-key.json")
+        )
         if os.path.exists(key_file):
             import json
+
             with open(key_file, "r", encoding="utf-8") as kf:
                 key_dict = json.load(kf)
             kwargs["destination"] = dlt.destinations.bigquery(credentials=key_dict)
