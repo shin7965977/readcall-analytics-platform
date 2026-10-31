@@ -222,8 +222,6 @@ st.markdown(
         opacity: 0;
         position: absolute;
         bottom: calc(100% + 8px);
-        left: 50%;
-        transform: translateX(-50%);
         background: #0f172a;
         color: #f8fafc;
         padding: 0.55rem 0.75rem;
@@ -232,20 +230,42 @@ st.markdown(
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
         font-weight: 400;
         line-height: 1.4;
-        min-width: 210px;
-        max-width: 280px;
+        width: 240px;
+        max-width: 260px;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
         z-index: 9999;
-        pointer-events: none;
+        pointer-events: none !important;
         transition: opacity 0.2s ease, transform 0.2s ease;
         text-align: left;
+        white-space: normal;
+        word-break: break-word;
     }
-    .formula-term .tooltip-box::after {
+    /* Numerator anchors to left: 0 so it never clips off the left screen edge */
+    .formula-term.term-num .tooltip-box {
+        left: 0;
+        right: auto;
+        transform: translateY(0);
+    }
+    .formula-term.term-num .tooltip-box::after {
         content: "";
         position: absolute;
         top: 100%;
-        left: 50%;
-        margin-left: -5px;
+        left: 18px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #0f172a transparent transparent transparent;
+    }
+    /* Denominator anchors to right: 0 so it stays within card */
+    .formula-term.term-den .tooltip-box {
+        right: 0;
+        left: auto;
+        transform: translateY(0);
+    }
+    .formula-term.term-den .tooltip-box::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        right: 18px;
         border-width: 5px;
         border-style: solid;
         border-color: #0f172a transparent transparent transparent;
@@ -253,7 +273,7 @@ st.markdown(
     .formula-term:hover .tooltip-box {
         visibility: visible;
         opacity: 1;
-        transform: translateX(-50%) translateY(-2px);
+        transform: translateY(-2px);
     }
     .tooltip-header {
         font-weight: 700;
@@ -372,6 +392,32 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
             "raw_traffic": pd.DataFrame(raw["raw_ga4_daily_traffic"]),
             "raw_events": pd.DataFrame(raw["raw_ga4_events"]),
         }
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def check_gemini_key_validity(key_to_test: str) -> tuple[bool, str]:
+    """Validate Gemini API key format and test ping with Google AI Studio."""
+    if not key_to_test:
+        return False, "empty"
+    k = key_to_test.strip()
+    if k.startswith("sk-"):
+        return False, "openai_key"
+    if not k.startswith("AIzaSy"):
+        return False, "invalid_prefix"
+    if len(k) < 35:
+        return False, "too_short"
+    try:
+        from google import genai
+
+        client = genai.Client(api_key=k)
+        for _ in client.models.list(config={"page_size": 1}):
+            break
+        return True, "valid"
+    except Exception as e:  # noqa: BLE001
+        err = str(e)
+        if "API_KEY_INVALID" in err or "PERMISSION_DENIED" in err or "unregistered" in err.lower():
+            return False, "rejected"
+        return True, "valid"
 
 
 def main():
@@ -561,9 +607,10 @@ def main():
             },
         ]
 
-        def _make_term(term_str: str, role_title: str, unit_str: str, meaning_str: str) -> str:
+        def _make_term(term_str: str, role_title: str, unit_str: str, meaning_str: str, is_numerator: bool = True) -> str:
+            cls_name = "term-num" if is_numerator else "term-den"
             return (
-                f'<span class="formula-term">'
+                f'<span class="formula-term {cls_name}">'
                 f'{term_str}'
                 f'<span class="tooltip-box">'
                 f'<div class="tooltip-header"><span>{role_title}</span><span class="tooltip-unit">{unit_str}</span></div>'
@@ -573,19 +620,23 @@ def main():
             )
 
         f1_num = _make_term("aha_users", "aha_users (Numerator)" if is_en else "aha_users（分子）", "Unit: Users" if is_en else "單位：人", "Unique active users executing core dictionary or reading highlights." if is_en else "當日執行查字典 (dictionary_searched) 或選字精讀的獨立讀者數")
-        f1_den = _make_term("dau", "dau (Denominator)" if is_en else "dau（分母）", "Unit: Users" if is_en else "單位：人", "Total daily active users visiting the platform." if is_en else "全站當日總造訪之獨立活躍讀者數 (Daily Active Users)")
+        f1_den = _make_term("dau", "dau (Denominator)", unit_str="Unit: Users" if is_en else "單位：人", meaning_str="Total daily active users visiting the platform." if is_en else "全站當日總造訪之獨立活躍讀者數 (Daily Active Users)", is_numerator=False)
+        # f1_den_old =  if is_en else "dau（分母）", "Unit: Users" if is_en else "單位：人", "Total daily active users visiting the platform." if is_en else "全站當日總造訪之獨立活躍讀者數 (Daily Active Users)")
         f1_html = f'<div class="formula-tag">{f1_num} <span style="color:#64748b;font-weight:700;">/</span> {f1_den}</div>'
 
         f2_num = _make_term("byok_key_saved", "byok_key_saved (Numerator)" if is_en else "byok_key_saved（分子）", "Unit: Keys" if is_en else "單位：組", "Successful Google AI Studio Gemini API key activations." if is_en else "成功輸入並驗證綁定 Google AI Studio Gemini API Key 之次數")
-        f2_den = _make_term("trial_wall_hits", "trial_wall_hits (Denominator)" if is_en else "trial_wall_hits（分母）", "Unit: Hits" if is_en else "單位：次", "Users exhausting free trial and triggering BYOK modal." if is_en else "免費試用額度用盡觸發綁定提醒彈窗之次數")
+        f2_den = _make_term("trial_wall_hits", "trial_wall_hits (Denominator)", unit_str="Unit: Hits" if is_en else "單位：次", meaning_str="Users exhausting free trial and triggering BYOK modal." if is_en else "免費試用額度用盡觸發綁定提醒彈窗之次數", is_numerator=False)
+        # f2_den_old =  if is_en else "trial_wall_hits（分母）", "Unit: Hits" if is_en else "單位：次", "Users exhausting free trial and triggering BYOK modal." if is_en else "免費試用額度用盡觸發綁定提醒彈窗之次數")
         f2_html = f'<div class="formula-tag">{f2_num} <span style="color:#64748b;font-weight:700;">/</span> {f2_den}</div>'
 
         f3_num = _make_term("verify_failed", "verify_failed (Numerator)" if is_en else "verify_failed（分子）", "Unit: Errors" if is_en else "單位：次", "Key submissions failing validation check." if is_en else "因貼錯字元或格式不合法導致驗證失敗之次數")
-        f3_den = _make_term("total_verify_attempts", "total_verify_attempts (Denominator)" if is_en else "total_verify_attempts（分母）", "Unit: Submissions" if is_en else "單位：次", "Total key verification attempts (saved + failed)." if is_en else "送出金鑰驗證之總嘗試次數 (成功 + 失敗)")
+        f3_den = _make_term("total_verify_attempts", "total_verify_attempts (Denominator)", unit_str="Unit: Submissions" if is_en else "單位：次", meaning_str="Total key verification attempts (saved + failed)." if is_en else "送出金鑰驗證之總嘗試次數 (成功 + 失敗)", is_numerator=False)
+        # f3_den_old =  if is_en else "total_verify_attempts（分母）", "Unit: Submissions" if is_en else "單位：次", "Total key verification attempts (saved + failed)." if is_en else "送出金鑰驗證之總嘗試次數 (成功 + 失敗)")
         f3_html = f'<div class="formula-tag">{f3_num} <span style="color:#64748b;font-weight:700;">/</span> {f3_den}</div>'
 
         f4_num = _make_term("unlock_success", "unlock_success (Numerator)" if is_en else "unlock_success（分子）", "Unit: Unlocks" if is_en else "單位：次", "Successful prompt unlocks via referral link." if is_en else "受邀好友透過專屬連結成功解鎖高階 Prompt 之次數")
-        f4_den = _make_term("referral_modal_opened", "referral_modal_opened (Denominator)" if is_en else "referral_modal_opened（分母）", "Unit: Opens" if is_en else "單位：次", "Users opening the viral share invitation modal." if is_en else "既有讀者主動點開邀請好友分享彈窗之次數")
+        f4_den = _make_term("referral_modal_opened", "referral_modal_opened (Denominator)", unit_str="Unit: Opens" if is_en else "單位：次", meaning_str="Users opening the viral share invitation modal." if is_en else "既有讀者主動點開邀請好友分享彈窗之次數", is_numerator=False)
+        # f4_den_old =  if is_en else "referral_modal_opened（分母）", "Unit: Opens" if is_en else "單位：次", "Users opening the viral share invitation modal." if is_en else "既有讀者主動點開邀請好友分享彈窗之次數")
         f4_html = f'<div class="formula-tag">{f4_num} <span style="color:#64748b;font-weight:700;">/</span> {f4_den}</div>'
 
         formula_html_map = [f1_html, f2_html, f3_html, f4_html]
@@ -1051,39 +1102,73 @@ def main():
             )
 
             raw_key_clean = user_gemini_key.strip()
-            is_key_valid = bool(raw_key_clean and raw_key_clean.startswith("AIzaSy") and len(raw_key_clean) >= 30)
-            effective_gemini_key = raw_key_clean if is_key_valid else ""
+            if raw_key_clean:
+                is_valid_res, key_reason = check_gemini_key_validity(raw_key_clean)
+                is_key_valid = is_valid_res
+                effective_gemini_key = raw_key_clean if is_valid_res else ""
+            else:
+                is_key_valid = False
+                key_reason = "empty"
+                effective_gemini_key = ""
 
             badge_html = (
-                """
-                <span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GEMINI LIVE</span>
-                <span style="font-size:0.7rem; font-weight:700; background:rgba(99,102,241,0.15); color:#6366f1; padding:0.15rem 0.45rem; border-radius:4px;">GA4 AUTHENTIC</span>
-                """
+                '<span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GEMINI LIVE</span>'
+                '<span style="font-size:0.7rem; font-weight:700; background:rgba(99,102,241,0.15); color:#6366f1; padding:0.15rem 0.45rem; border-radius:4px;">GA4 AUTHENTIC</span>'
                 if is_key_valid
-                else """
-                <span style="font-size:0.7rem; font-weight:700; background:rgba(239,68,68,0.15); color:#ef4444; padding:0.15rem 0.45rem; border-radius:4px;">🔒 KEY REQUIRED</span>
-                """
+                else '<span style="font-size:0.7rem; font-weight:700; background:rgba(239,68,68,0.15); color:#ef4444; padding:0.15rem 0.45rem; border-radius:4px;">🔒 KEY REQUIRED</span>'
             )
 
+            copilot_title = "GA4 Analytics Copilot" if is_en else "GA4 產品數據助理"
             st.markdown(
-                f"""
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                    <div style="font-weight:800; font-size:1.15rem; color:var(--text-color, #0f172a);">
-                        📊 {'GA4 Analytics Copilot' if is_en else 'GA4 產品數據助理'}
-                    </div>
-                    <div style="display:flex; gap:0.35rem;">
-                        {badge_html}
-                    </div>
-                </div>
-                """,
+                f'<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">'
+                f'<div style="font-weight:800; font-size:1.15rem; color:var(--text-color, #0f172a);">📊 {copilot_title}</div>'
+                f'<div style="display:flex; gap:0.35rem;">{badge_html}</div>'
+                f'</div>',
                 unsafe_allow_html=True,
             )
 
-            if not is_key_valid:
+            if not raw_key_clean:
                 st.warning(
                     "🔒 **API Key Required**: Please enter a valid Google AI Studio API Key (`AIzaSy...`) above to unlock the AI Copilot. FastMCP guess mode is strictly disabled."
                     if is_en
                     else "🔒 **強制綁定 API Key**：請先在上方輸入有效的 Gemini API Key（格式為 `AIzaSy...`）以解鎖 AI 助理對話。系統已強制關閉 FastMCP 猜測模式以確保數據分析精準。"
+                )
+            elif not is_key_valid:
+                if key_reason == "openai_key":
+                    st.error(
+                        "❌ **OpenAI Key Detected**: The entered key starts with `sk-`, which is an OpenAI API Key. Please use a Google AI Studio Gemini Key (starts with `AIzaSy...`)."
+                        if is_en
+                        else "❌ **偵測到 OpenAI 金鑰**：您輸入的金鑰以 `sk-` 開頭，這是 OpenAI 的金鑰。本系統需要 Google AI Studio 的 Gemini API Key（以 `AIzaSy...` 開頭）。"
+                    )
+                elif key_reason == "invalid_prefix":
+                    st.error(
+                        f"❌ **Invalid Key Format**: Google AI Studio Gemini keys must start with `AIzaSy` (yours begins with `{raw_key_clean[:6]}...`)."
+                        if is_en
+                        else f"❌ **金鑰格式錯誤**：Google AI Studio Gemini 金鑰必須以 `AIzaSy` 開頭（您輸入的開頭為 `{raw_key_clean[:6]}...`）。"
+                    )
+                elif key_reason == "too_short":
+                    st.warning(
+                        "⚠️ **Key Too Short**: Standard Gemini API keys are 39 characters. Please make sure the full key was pasted."
+                        if is_en
+                        else "⚠️ **金鑰字數過短**：標準 Gemini API Key 為 39 個字元，請確認是否完整複製。"
+                    )
+                elif key_reason == "rejected":
+                    st.error(
+                        "❌ **Key Rejected by Google**: Google AI Studio reported `API_KEY_INVALID`. Please verify that the key is active and not revoked."
+                        if is_en
+                        else "❌ **Google 官方拒絕此金鑰**：Google AI Studio 回報 `API_KEY_INVALID`（無效金鑰）。請確認金鑰是否有效或已被撤銷。"
+                    )
+                else:
+                    st.error(
+                        "❌ **Invalid Key**: Could not authenticate key with Google AI Studio."
+                        if is_en
+                        else "❌ **無效金鑰**：無法通過 Google AI Studio 授權檢驗。"
+                    )
+            else:
+                st.success(
+                    "✅ **Gemini API Key Verified**: Authenticated successfully with Google AI Studio. Live AI reasoning unlocked!"
+                    if is_en
+                    else "✅ **Gemini API Key 驗證通過**：已成功通過 Google AI Studio 授權檢驗，即時 AI 數據推論已解鎖！"
                 )
 
             st.caption(
