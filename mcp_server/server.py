@@ -475,10 +475,64 @@ def load_gold_dataframe(table_name: str):
     df_traffic_raw = pd.DataFrame(extracted["raw_ga4_daily_traffic"])
     df_events_raw = pd.DataFrame(extracted["raw_ga4_events"])
 
+    # Build standard 32-event Feature Catalog Dimension
+    funnel_step_map = {
+        "first_visit": 1,
+        "reader_text_selected": 2,
+        "dictionary_searched": 2,
+        "trial_banner_cta_clicked": 3,
+        "trial_exhausted_viewed": 3,
+        "byok_modal_opened": 4,
+        "byok_get_key_click": 5,
+        "byok_manual_paste_clicked": 5,
+        "byok_key_saved": 6,
+        "referral_modal_opened": 1,
+        "referral_link_copied": 2,
+        "referral_link_visited": 3,
+        "referral_unlock_success": 4,
+        "custom_prompt_saved": 5,
+    }
+    meta_rows = []
+    for ev in READCALL_EMPIRICAL_EVENT_WEIGHTS:
+        if ev in ("page_view", "session_start", "first_visit", "user_engagement", "scroll", "click"):
+            mod, stage, comp = "1_Acquisition_Onboarding", "Acquisition", "src/app/layout.tsx"
+        elif ev.startswith("reader_") or ev.startswith("verb_") or ev.startswith("starter_") or ev.startswith("sample_"):
+            mod, stage, comp = "2_Core_Reader_Morphology", "Activation", "src/app/reader/[id]/page.tsx"
+        elif ev.startswith("dictionary_") or ev.startswith("quiz_") or ev.startswith("flashcard") or ev.startswith("favorite"):
+            mod, stage, comp = "3_Dictionary_Vocab_Quiz", "Activation", "src/app/dictionary/page.tsx"
+        elif ev.startswith("byok_") or ev.startswith("trial_"):
+            mod, stage, comp = "4_BYOK_Monetization", "Revenue_BYOK", "src/components/ByokModal.tsx"
+        else:
+            mod, stage, comp = "5_Referral_Retention", "Referral", "src/components/reader/TutorCustomPromptModal.tsx"
+        meta_rows.append(
+            {
+                "event_name": ev,
+                "module_category": mod,
+                "aarrr_stage": stage,
+                "source_component": comp,
+                "is_aha_moment": ev in ("reader_text_selected", "dictionary_searched"),
+                "is_ai_inference_event": ev in ("reader_ai_Analyze", "reader_ai_explain", "quiz_generated", "tutor_question_sent"),
+                "funnel_step_order": funnel_step_map.get(ev, 0),
+            }
+        )
+    df_meta = pd.DataFrame(meta_rows)
+
+    if table_name == "dim_feature_catalog":
+        return df_meta
+
+    if table_name == "fct_feature_events":
+        fe_merged = pd.merge(df_events_raw, df_meta, on="event_name", how="left")
+        fe_merged["events_per_user"] = (fe_merged["event_count"] / fe_merged["total_users"].clip(lower=1)).round(2)
+        return fe_merged.sort_values(["event_date", "event_count"], ascending=[False, False]).reset_index(drop=True)
+
     if table_name == "fct_daily_traffic":
         df_traffic_raw["session_default_channel_group"] = df_traffic_raw["channel_group"]
         df_traffic_raw["is_dach_region"] = df_traffic_raw["country"].isin(["Germany", "Austria", "Switzerland"])
-        return df_traffic_raw
+        df_traffic_raw["channel_key"] = df_traffic_raw["channel_group"].str.lower().str.replace(" ", "_")
+        df_traffic_raw["device_geo_key"] = df_traffic_raw["device_category"].str.lower() + "__" + df_traffic_raw["country"].str.lower().str.replace(" ", "_")
+        df_traffic_raw["returning_users"] = (df_traffic_raw["active_users"] - df_traffic_raw["new_users"]).clip(lower=0)
+        df_traffic_raw["engagement_rate"] = (df_traffic_raw["engaged_sessions"] / df_traffic_raw["sessions"].clip(lower=1)).round(4)
+        return df_traffic_raw.sort_values(["event_date", "sessions"], ascending=[False, False]).reset_index(drop=True)
 
     if table_name == "gold_feature_adoption":
         agg = (
@@ -489,29 +543,6 @@ def load_gold_dataframe(table_name: str):
                 last_active_date=("event_date", "max"),
             )
         )
-        meta_rows = []
-        for ev in READCALL_EMPIRICAL_EVENT_WEIGHTS:
-            if ev in ("page_view", "session_start", "first_visit", "user_engagement", "scroll"):
-                mod, stage, comp = "1_Acquisition_Onboarding", "Acquisition", "src/app/layout.tsx"
-            elif ev.startswith("reader_") or ev.startswith("verb_") or ev.startswith("starter_") or ev.startswith("sample_"):
-                mod, stage, comp = "2_Core_Reader_Morphology", "Activation", "src/app/reader/[id]/page.tsx"
-            elif ev.startswith("dictionary_") or ev.startswith("quiz_") or ev.startswith("flashcard") or ev.startswith("favorite"):
-                mod, stage, comp = "3_Dictionary_Vocab_Quiz", "Activation", "src/app/dictionary/page.tsx"
-            elif ev.startswith("byok_") or ev.startswith("trial_"):
-                mod, stage, comp = "4_BYOK_Monetization", "Revenue_BYOK", "src/components/ByokModal.tsx"
-            else:
-                mod, stage, comp = "5_Referral_Retention", "Referral", "src/components/reader/TutorCustomPromptModal.tsx"
-            meta_rows.append(
-                {
-                    "event_name": ev,
-                    "module_category": mod,
-                    "aarrr_stage": stage,
-                    "source_component": comp,
-                    "is_aha_moment": ev in ("reader_text_selected", "dictionary_searched"),
-                    "is_ai_inference_event": ev in ("reader_ai_Analyze", "reader_ai_explain", "quiz_generated"),
-                }
-            )
-        df_meta = pd.DataFrame(meta_rows)
         merged = pd.merge(df_meta, agg, on="event_name", how="left").fillna({"total_event_count": 1, "total_active_user_days": 1})
         total_sum = max(int(merged["total_event_count"].sum()), 1)
         merged["avg_frequency_per_user"] = (merged["total_event_count"] / merged["total_active_user_days"].clip(lower=1)).round(2)
