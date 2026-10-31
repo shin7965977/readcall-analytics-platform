@@ -371,15 +371,24 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
         df_f = cached_load_gold_dataframe("gold_feature_adoption")
         df_byok = cached_load_gold_dataframe("gold_byok_funnel")
         df_ref = cached_load_gold_dataframe("gold_referral_loop")
+        df_fe = cached_load_gold_dataframe("fct_feature_events")
         if "event_date" in df_kpi.columns:
             df_kpi["event_date"] = pd.to_datetime(df_kpi["event_date"])
         if "event_date" in df_byok.columns:
             df_byok["event_date"] = pd.to_datetime(df_byok["event_date"])
         if "event_date" in df_ref.columns:
             df_ref["event_date"] = pd.to_datetime(df_ref["event_date"])
-        return {"kpi": df_kpi, "features": df_f, "byok": df_byok, "referral": df_ref}
+        if "event_date" in df_fe.columns:
+            df_fe["event_date"] = pd.to_datetime(df_fe["event_date"])
+        return {
+            "kpi": df_kpi,
+            "features": df_f,
+            "byok": df_byok,
+            "referral": df_ref,
+            "feature_events": df_fe,
+        }
     elif layer == "silver":
-        df_traffic = scope.traffic
+        df_traffic = cached_load_gold_dataframe("fct_daily_traffic")
         df_f_events = cached_load_gold_dataframe("fct_feature_events")
         df_catalog = cached_load_gold_dataframe("dim_feature_catalog")
         return {"traffic": df_traffic, "feature_events": df_f_events, "catalog": df_catalog}
@@ -456,8 +465,20 @@ class DashboardScope:
         df_ref = raw_dict.get("referral", pd.DataFrame())
         self.referral = self._filter_date(df_ref, "event_date", start_date, end_date)
 
-        # 5. Features (Pareto aggregate)
-        self.features = raw_dict.get("features", pd.DataFrame())
+        # 5. Features (Pareto aggregate dynamically sensitive to date range)
+        df_fe = raw_dict.get("feature_events", pd.DataFrame())
+        df_fe_filtered = self._filter_date(df_fe, "event_date", start_date, end_date)
+        if not df_fe_filtered.empty and "event_count" in df_fe_filtered.columns and "event_name" in df_fe_filtered.columns:
+            cols = [c for c in ["event_name", "module_category", "aarrr_stage", "source_component", "is_aha_moment", "is_ai_inference_event"] if c in df_fe_filtered.columns]
+            df_agg = (
+                df_fe_filtered.groupby(cols, as_index=False)
+                .agg(total_event_count=("event_count", "sum"))
+            )
+            tot = float(df_agg["total_event_count"].sum())
+            df_agg["event_share_pct"] = (df_agg["total_event_count"] / tot * 100.0).round(2) if tot > 0 else 0.0
+            self.features = df_agg
+        else:
+            self.features = raw_dict.get("features", pd.DataFrame())
 
     @staticmethod
     def _filter_date(
@@ -1055,8 +1076,8 @@ def main():
             # TAB 3: BYOK FUNNEL & REFERRAL LOOP
             with tab3:
                 st.subheader("6-Stage BYOK Gemini Key Funnel & 5-Stage Viral Referral Loop" if is_en else "6 階 BYOK 金鑰轉換漏斗與 5 階推薦裂變迴路")
-                byok_s = cached_byok_conversion_funnel()
-                ref_s = cached_referral_viral_loop()
+                byok_s = scope.byok_funnel
+                ref_s = scope.referral_loop
 
                 col_b1, col_b2 = st.columns(2)
                 with col_b1:
@@ -1167,20 +1188,38 @@ def main():
             # TAB 4: NL2CHART GENERATOR
             with tab4:
                 st.subheader("Natural Language AI Chart Generator" if is_en else "雙語自然語言 AI 智慧圖表生成")
-                p1, p2, p3 = st.columns(3)
-                chosen_preset = ""
-                if p1.button("📊 " + ("Top 12 Features" if is_en else "前 12 大功能排行"), use_container_width=True):
-                    chosen_preset = "Show top 12 product features by event count" if is_en else "顯示前 12 大產品功能埋點排行"
-                if p2.button("🔑 " + ("BYOK Daily Friction" if is_en else "每日 BYOK 驗證失敗趨勢"), use_container_width=True):
-                    chosen_preset = "Daily BYOK key saves vs verification failures" if is_en else "分析每日 BYOK 金鑰儲存與驗證失敗趨勢"
-                if p3.button("🌱 " + ("Referral Loop Trend" if is_en else "推薦裂變解鎖趨勢"), use_container_width=True):
-                    chosen_preset = "Referral link copies and unlock success trend" if is_en else "查看每日推薦連結複製與解鎖趨勢"
+                default_nl_q = "Show top 12 product features by event count" if is_en else "顯示前 12 大產品功能埋點排行"
+                if "nl2chart_query_box" not in st.session_state:
+                    st.session_state["nl2chart_query_box"] = default_nl_q
 
-                nl_q = st.text_input(
-                    "Enter chart request:" if is_en else "輸入圖表生成需求：",
-                    value=chosen_preset or ("Show top 12 product features by event count" if is_en else "顯示前 12 大產品功能埋點排行"),
-                    key="nl2chart_query_box",
-                )
+                p1, p2, p3 = st.columns(3)
+                if p1.button("📊 " + ("Top 12 Features" if is_en else "前 12 大功能排行"), use_container_width=True):
+                    st.session_state["nl2chart_query_box"] = "Show top 12 product features by event count" if is_en else "顯示前 12 大產品功能埋點排行"
+                    st.rerun()
+                if p2.button("🔑 " + ("BYOK Daily Friction" if is_en else "每日 BYOK 驗證失敗趨勢"), use_container_width=True):
+                    st.session_state["nl2chart_query_box"] = "Daily BYOK key saves vs verification failures" if is_en else "分析每日 BYOK 金鑰儲存與驗證失敗趨勢"
+                    st.rerun()
+                if p3.button("🌱 " + ("Referral Loop Trend" if is_en else "推薦裂變解鎖趨勢"), use_container_width=True):
+                    st.session_state["nl2chart_query_box"] = "Referral link copies and unlock success trend" if is_en else "查看每日推薦連結複製與解鎖趨勢"
+                    st.rerun()
+
+                st.markdown(f"**{'Enter chart request:' if is_en else '輸入圖表生成需求：'}**")
+                col_nl_in, col_nl_btn = st.columns([5, 1])
+                with col_nl_in:
+                    nl_q = st.text_input(
+                        "Enter chart request:" if is_en else "輸入圖表生成需求：",
+                        value=st.session_state["nl2chart_query_box"],
+                        key="nl2chart_query_box",
+                        label_visibility="collapsed",
+                    )
+                with col_nl_btn:
+                    btn_nl_submit = st.button(
+                        "⚡ " + ("Generate" if is_en else "生成圖表"),
+                        key="btn_nl2chart_submit",
+                        type="primary",
+                        use_container_width=True,
+                    )
+
                 if nl_q:
                     cfg = generate_chart_config(nl_q)
                     target_df = scope.features if cfg.get("dataset") == "features" else scope.kpi
@@ -1209,24 +1248,44 @@ def main():
     # ==============================================================================
     if ai_sidebar_col is not None:
         with ai_sidebar_col:
-            user_gemini_key = st.text_input(
-                "🔑 " + ("Gemini API Key (Mandatory)" if is_en else "Gemini API Key (強制綁定才能提問)"),
-                type="password",
-                placeholder="AIzaSy...",
-                help="Enter your Google AI Studio Gemini API Key to enable live AI reasoning; unauthenticated FastMCP guessing is strictly disabled."
-                if is_en
-                else "請輸入 Google AI Studio Gemini API Key 才能開啟即時 AI 提問；系統已嚴格關閉未驗證的 FastMCP 猜測模式以確保數據真實精準。",
+            st.markdown(
+                f"**🔑 {('Gemini API Key (Mandatory)' if is_en else 'Gemini API Key (強制綁定才能提問)')}** "
+                f"<span style='font-size:0.75rem; color:#64748b;'>{'(Instant Preflight)' if is_en else '(即時檢驗)'}</span>",
+                unsafe_allow_html=True,
             )
+            col_key_in, col_key_btn = st.columns([3, 1])
+            with col_key_in:
+                user_gemini_key = st.text_input(
+                    "Gemini API Key",
+                    type="password",
+                    placeholder="AIzaSy...",
+                    key="gemini_user_api_key_input",
+                    label_visibility="collapsed",
+                    help="Enter your Google AI Studio Gemini API Key to enable live AI reasoning; unauthenticated FastMCP guessing is strictly disabled."
+                    if is_en
+                    else "請輸入 Google AI Studio Gemini API Key 才能開啟即時 AI 提問；系統已嚴格關閉未驗證的 FastMCP 猜測模式以確保數據真實精準。",
+                )
+            with col_key_btn:
+                btn_apply_key = st.button(
+                    "💾 " + ("Save" if is_en else "套用"),
+                    key="btn_apply_gemini_key",
+                    type="primary",
+                    use_container_width=True,
+                )
 
             raw_key_clean = user_gemini_key.strip()
             if raw_key_clean:
                 is_valid_res, key_reason = check_gemini_key_validity(raw_key_clean)
                 is_key_valid = is_valid_res
                 effective_gemini_key = raw_key_clean if is_valid_res else ""
+                if btn_apply_key and is_key_valid:
+                    st.toast("✅ " + ("Gemini API Key verified & connected!" if is_en else "Gemini API Key 驗證成功並已套用！"))
             else:
                 is_key_valid = False
                 key_reason = "empty"
                 effective_gemini_key = ""
+                if btn_apply_key:
+                    st.toast("⚠️ " + ("Please enter a Gemini API Key first!" if is_en else "請先輸入有效的 Gemini API Key！"))
 
             badge_html = (
                 '<span style="font-size:0.7rem; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; padding:0.15rem 0.45rem; border-radius:4px;">GEMINI LIVE</span>'
