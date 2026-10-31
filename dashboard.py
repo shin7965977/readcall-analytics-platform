@@ -26,6 +26,7 @@ from fastmcp_diagnostic import (
 from mcp_server.server import (
     get_byok_conversion_funnel,
     get_referral_viral_loop,
+    is_bigquery_live,
     load_gold_dataframe,
 )
 from recruiter_telemetry import inject_stealth_telemetry
@@ -284,7 +285,7 @@ def load_lakehouse_data(layer: str) -> dict[str, pd.DataFrame]:
     else:  # bronze
         from ingestion.sources.ga4_adapter import GA4TelemetryConfig, ReadCallGA4Adapter
 
-        adapter = ReadCallGA4Adapter(GA4TelemetryConfig(days=30, raw_mode=False))
+        adapter = ReadCallGA4Adapter(GA4TelemetryConfig(days=30, raw_mode=True))
         raw = adapter.extract_telemetry()
         return {
             "raw_traffic": pd.DataFrame(raw["raw_ga4_daily_traffic"]),
@@ -365,7 +366,11 @@ def main():
             key="selected_lakehouse_layer",
         )
         data_source_str = f"Google Cloud BigQuery ({PROJECT_ID}.readcall_{selected_layer})"
-        st.caption(f"🔒 {'Connected: ' if is_en else '連線資料庫：'}`{data_source_str}`")
+        is_live = is_bigquery_live()
+        if is_live:
+            st.caption(f"🟢 {'Live GCP BigQuery: ' if is_en else '即時 BigQuery 連線：'}`{data_source_str}`")
+        else:
+            st.caption(f"📁 {'Authentic Telemetry Mirror: ' if is_en else '真實遙測緩存鏡像：'}`GA4 Property 559361789`")
 
         # Load layer data
         data_dict = load_lakehouse_data(selected_layer)
@@ -521,12 +526,21 @@ def main():
             st.markdown("<br>", unsafe_allow_html=True)
             c_status, c_ai_btn = st.columns([1.1, 1.0])
             with c_status:
+                is_live = is_bigquery_live()
+                if is_live:
+                    badge_text = f"{selected_layer.upper()} LIVE (BigQuery)"
+                    badge_style = "background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3);"
+                    dot_color = "#10b981"
+                else:
+                    badge_text = f"{selected_layer.upper()} (Local Mirror)"
+                    badge_style = "background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.3);"
+                    dot_color = "#3b82f6"
                 st.markdown(
                     f"""
                     <div style="text-align: right;">
-                        <div class="status-badge">
-                            <div class="pulse-dot"></div>
-                            {selected_layer.upper()} Connected
+                        <div class="status-badge" style="{badge_style}">
+                            <div class="pulse-dot" style="background: {dot_color};"></div>
+                            {badge_text}
                         </div>
                     </div>
                     """,

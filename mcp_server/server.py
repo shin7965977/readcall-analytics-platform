@@ -34,10 +34,34 @@ def sanitize_dataset_access(dataset_name: str) -> str:
 
 
 def _get_bigquery_client():
-    """Lazily instantiate BigQuery client if credentials are configured."""
+    """Lazily instantiate BigQuery client if credentials are configured (local key or Streamlit Cloud Secrets)."""
     try:
         from google.cloud import bigquery
+        from google.oauth2 import service_account
 
+        # 1. Streamlit Cloud Secrets support
+        try:
+            import streamlit as st
+
+            if hasattr(st, "secrets"):
+                if "GCP_SERVICE_ACCOUNT_JSON" in st.secrets:
+                    import json
+
+                    raw_info = json.loads(st.secrets["GCP_SERVICE_ACCOUNT_JSON"])
+                    creds = service_account.Credentials.from_service_account_info(raw_info)
+                    proj = raw_info.get("project_id", os.getenv("GCP_PROJECT_ID", "de-consulting-508822"))
+                    return bigquery.Client(credentials=creds, project=proj)
+                if "gcp_service_account" in st.secrets:
+                    creds_info = dict(st.secrets["gcp_service_account"])
+                    if "private_key" in creds_info and isinstance(creds_info["private_key"], str):
+                        creds_info["private_key"] = creds_info["private_key"].replace("\\n", "\n")
+                    creds = service_account.Credentials.from_service_account_info(creds_info)
+                    proj = creds_info.get("project_id", os.getenv("GCP_PROJECT_ID", "de-consulting-508822"))
+                    return bigquery.Client(credentials=creds, project=proj)
+        except Exception:  # noqa: BLE001
+            pass
+
+        # 2. Local service account JSON file or env var
         if "GOOGLE_APPLICATION_CREDENTIALS" not in os.environ and os.path.exists(
             "gcp-key.json"
         ):
@@ -47,6 +71,19 @@ def _get_bigquery_client():
         return bigquery.Client()
     except Exception:  # noqa: BLE001
         return None
+
+
+def is_bigquery_live() -> bool:
+    """Test if BigQuery is live and reachable."""
+    client = _get_bigquery_client()
+    if not client:
+        return False
+    try:
+        proj = os.getenv("GCP_PROJECT_ID", client.project or "de-consulting-508822")
+        client.query(f"SELECT 1 FROM `{proj}.readcall_gold.gold_daily_growth_kpi` LIMIT 1").result()
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
 def _clean_val(v: Any) -> Any:
@@ -414,7 +451,7 @@ def load_gold_dataframe(table_name: str):
             pass
 
     # 3. Deterministic 90-day calibrated in-memory fallback (so cold-start Streamlit Cloud never fails)
-    adapter = ReadCallGA4Adapter(GA4TelemetryConfig(days=30, raw_mode=False))
+    adapter = ReadCallGA4Adapter(GA4TelemetryConfig(days=30, raw_mode=True))
     extracted = adapter.extract_telemetry()
     df_traffic_raw = pd.DataFrame(extracted["raw_ga4_daily_traffic"])
     df_events_raw = pd.DataFrame(extracted["raw_ga4_events"])
