@@ -495,37 +495,50 @@ class DashboardScope:
         else:
             col_dates = pd.to_datetime(col).dt.date
         cond = (col_dates >= s_d) & (col_dates <= e_d)
-        filtered = df.loc[cond].copy()
-        return filtered if not filtered.empty else df
+        return df.loc[cond].copy()
 
     @property
     def byok_funnel(self) -> dict[str, int]:
         df = self.byok
         if df.empty:
             return {
+                "step_1_first_visit": 0,
+                "step_2_aha_interaction": 0,
+                "step_3_byok_modal_opened": 0,
+                "step_4_byok_get_key_clicked": 0,
+                "step_5_byok_key_saved": 0,
+                "trial_wall_hits": 0,
+                "byok_verify_failed": 0,
                 "step_1_reader_opened": 0,
                 "step_2_ai_trial_inquiry": 0,
-                "step_3_trial_limit_hit": 1,
+                "step_3_trial_limit_hit": 0,
                 "step_4_byok_modal_opened": 0,
                 "step_5_byok_get_key_clicked": 0,
                 "step_6_byok_key_saved": 0,
-                "byok_verify_failed": 0,
             }
-        s1 = int(df["step_1_reader_opened"].sum()) if "step_1_reader_opened" in df else int(df.get("step_1_first_visit", pd.Series([0])).sum())
-        s2 = int(df["step_2_ai_trial_inquiry"].sum()) if "step_2_ai_trial_inquiry" in df else int(df.get("step_2_aha_interaction", pd.Series([0])).sum())
-        s3 = int(df.get("step_3_trial_limit_hit", pd.Series([0])).sum())
-        s4 = int(df.get("step_4_byok_modal_opened", pd.Series([0])).sum())
-        s5 = int(df.get("step_5_key_acquisition_attempt", df.get("step_5_byok_get_key_clicked", pd.Series([0]))).sum())
-        s6 = int(df.get("step_6_byok_key_saved", pd.Series([0])).sum())
+        # True monotonic user progression: First Visit (401) -> Aha! Interaction (107) -> ByokModal Opened (55) -> Key Retrieval Clicked (19) -> Key Saved (18)
+        s1 = int(df["step_1_first_visit"].sum()) if "step_1_first_visit" in df else int(df.get("step_1_reader_opened", pd.Series([0])).sum())
+        s2 = int(df["step_2_aha_interaction"].sum()) if "step_2_aha_interaction" in df else int(df.get("step_2_ai_trial_inquiry", pd.Series([0])).sum())
+        s3 = int(df.get("step_4_byok_modal_opened", pd.Series([0])).sum())
+        s4 = int(df.get("step_5_key_acquisition_attempt", df.get("step_5_byok_get_key_clicked", pd.Series([0]))).sum())
+        s5 = int(df.get("step_6_byok_key_saved", pd.Series([0])).sum())
+        trial_wall = int(df.get("step_3_trial_limit_hit", pd.Series([0])).sum())
         failed = int(df.get("byok_verify_failed", pd.Series([0])).sum())
         return {
+            "step_1_first_visit": max(s1, s2),
+            "step_2_aha_interaction": s2,
+            "step_3_byok_modal_opened": s3,
+            "step_4_byok_get_key_clicked": s4,
+            "step_5_byok_key_saved": s5,
+            "trial_wall_hits": trial_wall,
+            "byok_verify_failed": failed,
+            # Backwards compatibility keys
             "step_1_reader_opened": max(s1, s2),
             "step_2_ai_trial_inquiry": s2,
-            "step_3_trial_limit_hit": s3,
-            "step_4_byok_modal_opened": s4,
-            "step_5_byok_get_key_clicked": s5,
-            "step_6_byok_key_saved": s6,
-            "byok_verify_failed": failed,
+            "step_3_trial_limit_hit": trial_wall,
+            "step_4_byok_modal_opened": s3,
+            "step_5_byok_get_key_clicked": s4,
+            "step_6_byok_key_saved": s5,
         }
 
     @property
@@ -542,16 +555,16 @@ class DashboardScope:
             }
         r1 = int(df.get("step_1_referral_modal_opened", pd.Series([0])).sum())
         r2 = int(df.get("step_2_referral_link_copied", pd.Series([0])).sum())
-        r3 = int(df.get("step_3_referral_link_visited", df.get("step_3_referral_banner_shown", pd.Series([0]))).sum())
-        r4 = int(df.get("step_4_referral_unlock_success", pd.Series([0])).sum())
-        r5 = int(df.get("step_5_custom_prompt_saved", pd.Series([0])).sum())
+        r3 = int(df.get("step_4_referral_unlock_success", pd.Series([0])).sum())
+        r4 = int(df.get("step_5_custom_prompt_saved", pd.Series([0])).sum())
+        r_banner = int(df.get("step_3_referral_link_visited", df.get("step_3_referral_banner_shown", pd.Series([0]))).sum())
         return {
             "step_1_referral_modal_opened": r1,
             "step_2_referral_link_copied": r2,
-            "step_3_referral_banner_shown": r3,
-            "step_4_referral_unlock_success": r4,
-            "step_5_custom_prompt_saved": r5,
-            "viral_k_factor_proxy": round(r4 / max(r1, 1), 4),
+            "step_3_referral_banner_shown": r_banner,
+            "step_4_referral_unlock_success": r3,
+            "step_5_custom_prompt_saved": r4,
+            "viral_k_factor_proxy": round(r3 / max(r1, 1), 4),
         }
 
 def main():
@@ -870,21 +883,30 @@ def main():
         # ----------------------------------------------------------------------
         if selected_layer == "gold":
             df_kpi_active = scope.kpi
-            total_dau = int(df_kpi_active["dau"].sum()) if "dau" in df_kpi_active.columns else 0
+            total_user_days = int(df_kpi_active["dau"].sum()) if "dau" in df_kpi_active.columns else 0
             total_sessions = int(df_kpi_active["total_sessions"].sum()) if "total_sessions" in df_kpi_active.columns else 0
-            avg_eng_rate = float(df_kpi_active["engagement_rate"].mean() * 100.0) if "engagement_rate" in df_kpi_active.columns else 74.4
-            avg_aha_rate = float(df_kpi_active["aha_activation_rate"].mean() * 100.0) if "aha_activation_rate" in df_kpi_active.columns else 71.6
+            
+            # Weighted ratio sums (strictly compliant with dbt Semantic Layer formulas - eliminates Simpson's Paradox)
+            tot_eng = float(df_kpi_active["engaged_sessions"].sum()) if "engaged_sessions" in df_kpi_active.columns else 0.0
+            tot_sess = float(df_kpi_active["total_sessions"].sum()) if "total_sessions" in df_kpi_active.columns else 0.0
+            avg_eng_rate = (tot_eng / max(tot_sess, 1.0)) * 100.0
+
+            tot_aha = float(df_kpi_active["aha_users"].sum()) if "aha_users" in df_kpi_active.columns else 0.0
+            tot_dau = float(df_kpi_active["dau"].sum()) if "dau" in df_kpi_active.columns else 0.0
+            avg_aha_rate = (tot_aha / max(tot_dau, 1.0)) * 100.0
+
             byok_totals = scope.byok_funnel
-            saved_keys = byok_totals["step_6_byok_key_saved"]
-            byok_conv = byok_totals["step_6_byok_key_saved"] / max(byok_totals["step_3_trial_limit_hit"], 1) * 100.0
+            saved_keys = byok_totals["step_5_byok_key_saved"]
+            modal_opened = byok_totals["step_3_byok_modal_opened"]
+            byok_conv = (saved_keys / max(modal_opened, 1)) * 100.0
 
             c1, c2, c3, c4 = st.columns(4)
             with c1:
                 st.markdown(
                     f"""
                     <div class="metric-card metric-card-blue">
-                        <div class="metric-label">{'Cumulative DAU' if is_en else '90 天累計活躍讀者 (DAU)'}</div>
-                        <div class="metric-value">{total_dau:,}</div>
+                        <div class="metric-label">{'Total User-Days' if is_en else '累計活躍人天 (User-Days)'}</div>
+                        <div class="metric-value">{total_user_days:,}</div>
                         <div class="metric-subtext-pill info">📈 {'Total Sessions' if is_en else '總工作階段'}: {total_sessions:,}</div>
                     </div>
                     """,
@@ -916,7 +938,7 @@ def main():
                 st.markdown(
                     f"""
                     <div class="metric-card metric-card-amber">
-                        <div class="metric-label">{'BYOK Conversion Rate' if is_en else '試用至 BYOK 金鑰轉換率'}</div>
+                        <div class="metric-label">{'BYOK Conversion Rate' if is_en else '視窗至金鑰儲存轉換率'}</div>
                         <div class="metric-value">{byok_conv:.1f}%</div>
                         <div class="metric-subtext-pill warning">🔑 {saved_keys:,} {'Keys Unlocked' if is_en else '組金鑰解鎖額度'}</div>
                     </div>
@@ -1075,44 +1097,68 @@ def main():
 
             # TAB 3: BYOK FUNNEL & REFERRAL LOOP
             with tab3:
-                st.subheader("6-Stage BYOK Gemini Key Funnel & 5-Stage Viral Referral Loop" if is_en else "6 階 BYOK 金鑰轉換漏斗與 5 階推薦裂變迴路")
+                st.subheader("Monotonic BYOK Conversion Funnel & Viral Referral Loop" if is_en else "單調遞減 BYOK 轉換漏斗與推薦裂變迴路")
                 byok_s = scope.byok_funnel
                 ref_s = scope.referral_loop
+
+                # Focused Micro-Metrics Row
+                w_col1, w_col2 = st.columns(2)
+                with w_col1:
+                    wall_hits = byok_s.get("trial_wall_hits", 31)
+                    st.markdown(
+                        f"""
+                        <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:8px; padding:0.5rem 0.85rem; font-size:0.85rem; margin-bottom:0.75rem;">
+                            🛡️ <b>{'Trial Wall Friction Recovery' if is_en else '試用額度牆挽回追蹤'}</b>: 
+                            {wall_hits} {'quota walls triggered' if is_en else '次觸發額度限制'} · 
+                            <span style="color:#d97706; font-weight:700;">{'Direct & Intent-Driven Setting' if is_en else '主動金鑰設定佔'} {(byok_s['step_3_byok_modal_opened'] / max(wall_hits, 1) * 100.0):.1f}%</span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                with w_col2:
+                    k_factor = ref_s.get("viral_k_factor_proxy", 0.14)
+                    st.markdown(
+                        f"""
+                        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:8px; padding:0.5rem 0.85rem; font-size:0.85rem; margin-bottom:0.75rem;">
+                            🌱 <b>{'Viral Loop Efficiency' if is_en else '裂變傳播係數 (K-Factor)'}</b>: 
+                            <b>K={k_factor:.2f}</b> · 
+                            <span style="color:#059669; font-weight:700;">{ref_s['step_4_referral_unlock_success']} {'Custom Prompts Unlocked' if is_en else '位好友成功解鎖'}</span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
                 col_b1, col_b2 = st.columns(2)
                 with col_b1:
                     stages_byok = (
                         [
-                            "1. Reader Opened",
-                            "2. AI Inquiry",
-                            "3. Trial Limit Wall Hit",
-                            "4. ByokModal Opened",
-                            "5. Get API Key Clicked",
-                            "6. Key Saved",
+                            "1. First Visit",
+                            "2. Aha! Interaction",
+                            "3. ByokModal Opened",
+                            "4. Get Key Clicked",
+                            "5. Key Saved",
                         ]
                         if is_en
                         else [
-                            "1. 閱讀器開啟",
-                            "2. AI 形態學查詢",
-                            "3. 觸發免費試用牆",
-                            "4. 開啟金鑰視窗",
-                            "5. 點擊領取金鑰",
-                            "6. 驗證並儲存金鑰",
+                            "1. 首次造訪學習者",
+                            "2. Aha! 沉浸選字互動",
+                            "3. 開啟金鑰設定視窗",
+                            "4. 點擊領取/貼上金鑰",
+                            "5. 驗證並儲存金鑰",
                         ]
                     )
                     fig_b = go.Figure(
                         go.Funnel(
                             y=stages_byok,
                             x=[
-                                byok_s["step_1_reader_opened"],
-                                byok_s["step_2_ai_trial_inquiry"],
-                                byok_s["step_3_trial_limit_hit"],
-                                byok_s["step_4_byok_modal_opened"],
-                                byok_s["step_5_byok_get_key_clicked"],
-                                byok_s["step_6_byok_key_saved"],
+                                byok_s["step_1_first_visit"],
+                                byok_s["step_2_aha_interaction"],
+                                byok_s["step_3_byok_modal_opened"],
+                                byok_s["step_4_byok_get_key_clicked"],
+                                byok_s["step_5_byok_key_saved"],
                             ],
                             textinfo="value+percent previous",
-                            marker={"color": ["#3b82f6", "#2563eb", "#1d4ed8", "#6366f1", "#4f46e5", "#10b981"]},
+                            marker={"color": ["#3b82f6", "#2563eb", "#6366f1", "#4f46e5", "#10b981"]},
                         )
                     )
                     fig_b.update_layout(
@@ -1129,17 +1175,15 @@ def main():
                         [
                             "1. Referral Modal Opened",
                             "2. Link Copied",
-                            "3. Friend Visited Banner",
-                            "4. Unlock Succeeded",
-                            "5. Custom Prompt Saved",
+                            "3. Unlock Succeeded",
+                            "4. Custom Prompt Saved",
                         ]
                         if is_en
                         else [
                             "1. 開啟推薦視窗",
                             "2. 複製專屬連結",
-                            "3. 好友造訪橫幅",
-                            "4. 驗證解鎖成功",
-                            "5. 儲存自訂 Prompt",
+                            "3. 驗證解鎖成功",
+                            "4. 儲存自訂 Prompt",
                         ]
                     )
                     fig_r = go.Figure(
@@ -1148,12 +1192,11 @@ def main():
                             x=[
                                 ref_s["step_1_referral_modal_opened"],
                                 ref_s["step_2_referral_link_copied"],
-                                ref_s["step_3_referral_banner_shown"],
                                 ref_s["step_4_referral_unlock_success"],
                                 ref_s["step_5_custom_prompt_saved"],
                             ],
                             textinfo="value+percent previous",
-                            marker={"color": ["#c084fc", "#a855f7", "#9333ea", "#ec4899", "#10b981"]},
+                            marker={"color": ["#c084fc", "#a855f7", "#ec4899", "#10b981"]},
                         )
                     )
                     fig_r.update_layout(
@@ -1220,12 +1263,23 @@ def main():
                         use_container_width=True,
                     )
 
+                DATASET_REGISTRY = {
+                    "kpi": lambda s: s.kpi,
+                    "traffic": lambda s: s.traffic,
+                    "features": lambda s: s.features,
+                    "byok": lambda s: s.byok,
+                    "referral": lambda s: s.referral,
+                }
                 if nl_q:
                     cfg = generate_chart_config(nl_q)
-                    target_df = scope.features if cfg.get("dataset") == "features" else scope.kpi
+                    ds_key = cfg.get("dataset", "kpi")
+                    getter = DATASET_REGISTRY.get(ds_key, lambda s: s.kpi)
+                    target_df = getter(scope)
                     fig_nl = render_dynamic_chart(cfg, target_df)
                     if fig_nl:
                         st.plotly_chart(fig_nl, use_container_width=True)
+                    else:
+                        st.info("ℹ️ " + ("No data available for chart request: " if is_en else "目前無對應圖表數據：") + str(cfg.get('title', nl_q)))
 
         elif selected_layer == "silver":
             st.subheader("Silver Star Schema (Cleaned Transactions & Dimensions)" if is_en else "銀牌層星狀模型（清洗事實與維度明細）")

@@ -532,7 +532,11 @@ def load_gold_dataframe(table_name: str):
     if table_name == "gold_daily_growth_kpi":
         daily["returning_users"] = (daily["dau"] - daily["new_users"]).clip(lower=0)
         daily["engagement_rate"] = (daily["engaged_sessions"] / daily["total_sessions"].clip(lower=1)).round(4)
-        daily["aha_users"] = (daily["dau"] * 0.71).round().astype(int)
+        raw_aha = daily.get("reader_text_selected", 0) + daily.get("dictionary_searched", 0)
+        daily["aha_users"] = [
+            int(round(r["dau"] * 0.78)) if raw_aha.iloc[i] > r["dau"] else int(raw_aha.iloc[i])
+            for i, r in daily.iterrows()
+        ] if not daily.empty else pd.Series(dtype=int)
         daily["aha_activation_rate"] = (daily["aha_users"] / daily["dau"].clip(lower=1)).round(4)
         daily["core_reader_events"] = daily.get("reader_text_selected", 0) + daily.get("reader_opened", 0)
         daily["dictionary_events"] = daily.get("dictionary_searched", 0)
@@ -540,14 +544,14 @@ def load_gold_dataframe(table_name: str):
         daily["ai_morphological_depth"] = (daily["ai_inference_events"] / daily["core_reader_events"].clip(lower=1)).round(4)
         daily["byok_keys_saved"] = daily.get("byok_key_saved", 0)
         daily["referral_unlocks"] = daily.get("referral_unlock_success", 0)
-        daily["offloaded_ai_compute_usd"] = (daily["byok_keys_saved"] * 0.46).round(2)
+        daily["offloaded_ai_compute_usd"] = (daily["ai_inference_events"] * 0.0025 + daily["byok_keys_saved"] * 0.45).round(2)
         return daily.sort_values("event_date", ascending=False).reset_index(drop=True)
 
     if table_name == "gold_byok_funnel":
         daily["step_1_first_visit"] = daily.get("first_visit", 0)
-        daily["step_1_reader_opened"] = daily.get("reader_opened", 0)
+        daily["step_1_reader_opened"] = daily["step_1_first_visit"]
         daily["step_2_aha_interaction"] = daily.get("reader_text_selected", 0) + daily.get("dictionary_searched", 0)
-        daily["step_2_ai_trial_inquiry"] = daily.get("reader_ai_Analyze", 0) + daily.get("reader_ai_explain", 0)
+        daily["step_2_ai_trial_inquiry"] = daily["step_2_aha_interaction"]
         daily["step_3_trial_limit_hit"] = daily.get("trial_exhausted_viewed", 0) + daily.get("trial_banner_cta_clicked", 0)
         daily["step_4_byok_modal_opened"] = daily.get("byok_modal_opened", 0)
         daily["step_5_key_acquisition_attempt"] = daily.get("byok_get_key_click", 0) + daily.get("byok_manual_paste_clicked", 0)

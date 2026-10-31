@@ -4,10 +4,10 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Eliminate zero-value lookup on `step_1_reader_opened` and `step_2_ai_trial_inquiry` in `DashboardScope.byok_funnel`.
-- [ ] Connect Stage 1 to `step_1_first_visit` (401) and Stage 2 to `step_2_aha_interaction` (107).
-- [ ] Standardize Funnel stages in `dashboard.py` to ensure $S_1 \ge S_2 \ge S_3 \ge S_4 \ge S_5$.
-- [ ] Establish dedicated Trial Wall recovery card ($\text{Wall Hit} \to \text{Modal Opened} \to \text{Key Saved}$).
-- [ ] Synchronize Referral loop stages to eliminate cross-device event inversion (visited < unlocks).
+- [x] Eliminate zero-value lookup on `step_1_reader_opened` and `step_2_ai_trial_inquiry` in `DashboardScope.byok_funnel`.
+- [x] Connect Stage 1 to `step_1_first_visit` (401) and Stage 2 to `step_2_aha_interaction` (107).
+- [x] Standardize Funnel stages in `dashboard.py` to ensure $S_1 \ge S_2 \ge S_3 \ge S_4 \ge S_5$.
+- [x] Establish dedicated Trial Wall recovery card ($\text{Wall Hit} \to \text{Modal Opened} \to \text{Key Saved}$).
+- [x] Synchronize Referral loop stages to eliminate cross-device event inversion (visited < unlocks).

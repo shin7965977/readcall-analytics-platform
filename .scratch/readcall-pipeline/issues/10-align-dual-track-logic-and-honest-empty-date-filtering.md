@@ -4,9 +4,9 @@
 
 **Blocked by:** None
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Update `aha_users` in `server.py` to mirror `gold_daily_growth_kpi.sql` logic instead of flat 0.71 multiplier.
-- [ ] Update `offloaded_ai_compute_usd` in `server.py` to compute `ai_inference_events * 0.0025 + byok_keys_saved * 0.45`.
-- [ ] Remove `return filtered if not filtered.empty else df` in `DashboardScope._filter_date`.
-- [ ] Add empty-state UI guards in `dashboard.py` showing "No activity recorded in selected date range".
+- [x] Update `aha_users` in `server.py` to mirror `gold_daily_growth_kpi.sql` logic instead of flat 0.71 multiplier.
+- [x] Update `offloaded_ai_compute_usd` in `server.py` to compute `ai_inference_events * 0.0025 + byok_keys_saved * 0.45`.
+- [x] Remove `return filtered if not filtered.empty else df` in `DashboardScope._filter_date`.
+- [x] Add empty-state UI guards in `dashboard.py` showing "No activity recorded in selected date range".

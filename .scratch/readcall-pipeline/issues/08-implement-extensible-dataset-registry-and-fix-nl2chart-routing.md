@@ -4,10 +4,10 @@
 
 **Blocked by:** Issue 07
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Implement `DATASET_REGISTRY` dictionary in `dashboard.py`.
-- [ ] Connect `"referral"` dataset intent to `scope.referral` with `event_date`, `step_2_referral_link_copied`, and `step_4_referral_unlock_success`.
-- [ ] Connect `"byok"` dataset intent to `scope.byok` with `event_date`, `step_6_byok_key_saved`, and `byok_verify_failed`.
-- [ ] Add graceful fallback with informative warning if an unrecognized dataset is encountered.
-- [ ] Verify that clicking `🌱 Referral Loop Trend` immediately draws the dual-line trend chart.
+- [x] Implement `DATASET_REGISTRY` dictionary in `dashboard.py`.
+- [x] Connect `"referral"` dataset intent to `scope.referral` with `event_date`, `step_2_referral_link_copied`, and `step_4_referral_unlock_success`.
+- [x] Connect `"byok"` dataset intent to `scope.byok` with `event_date`, `step_6_byok_key_saved`, and `byok_verify_failed`.
+- [x] Add graceful fallback with informative warning if an unrecognized dataset is encountered.
+- [x] Verify that clicking `🌱 Referral Loop Trend` immediately draws the dual-line trend chart.

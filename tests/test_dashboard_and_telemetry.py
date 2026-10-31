@@ -48,7 +48,7 @@ def test_stealth_telemetry_rejects_non_portfolio_event_names():
 def test_nl2chart_and_cockpit_datasets():
     """Verify cockpit dataset loading and NL2Chart generation across all 4 analytical domains."""
     datasets = load_cockpit_datasets()
-    assert set(datasets.keys()) == {"kpi", "features", "byok", "referral", "traffic"}
+    assert set(datasets.keys()) == {"kpi", "features", "byok", "referral", "traffic", "feature_events"}
     assert len(datasets["features"]) == 32
     assert not datasets["kpi"].empty
     assert not datasets["byok"].empty
