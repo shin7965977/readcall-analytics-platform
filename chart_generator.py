@@ -479,10 +479,11 @@ def _readcall_fallback_chart_config(query: str) -> dict:
 
 
 def generate_chart_config(query: str, api_key: str | None = None) -> dict:
-    """Delegate NL2Chart generation to shared lakehouse-cockpit-core Gemini engine."""
+    """Delegate NL2Chart generation to shared cockpit_core submodule Gemini engine."""
     try:
-        from components.text_to_chart import generate_ai_chart_config
+        from cockpit_loader import load_ai_chart_engine
 
+        generate_ai_chart_config, _ = load_ai_chart_engine()
         return generate_ai_chart_config(
             query=query,
             dataset_schemas=DATASET_SCHEMAS,
@@ -494,7 +495,7 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
             ),
             fallback_fn=_readcall_fallback_chart_config,
         )
-    except ImportError:
+    except Exception:  # noqa: BLE001
         eff_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
         if eff_key:
             ai_cfg = _generate_chart_config_with_gemini(query, eff_key)
@@ -504,12 +505,13 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
 
 
 def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
-    """Delegate Plotly rendering to shared lakehouse-cockpit-core renderer (with local fallback)."""
+    """Delegate Plotly rendering to shared cockpit_core submodule renderer (with local fallback)."""
     try:
-        from components.text_to_chart import render_ai_dynamic_chart
+        from cockpit_loader import load_ai_chart_engine
 
+        _, render_ai_dynamic_chart = load_ai_chart_engine()
         return render_ai_dynamic_chart(config, df)
-    except ImportError:
+    except Exception:  # noqa: BLE001
         pass
     if df is None or df.empty or not config:
         return None

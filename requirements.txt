@@ -18,7 +18,6 @@ fastmcp>=0.1.0
 google-genai>=0.1.0
 
 # BI & Dashboard Visualization
-lakehouse-cockpit-core @ git+https://github.com/shin7965977/lakehouse-cockpit-core.git
 streamlit>=1.35.0
 plotly>=5.20.0
 pygwalker>=0.4.0
