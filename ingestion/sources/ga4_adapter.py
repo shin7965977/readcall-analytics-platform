@@ -95,6 +95,7 @@ class GA4TelemetryConfig:
     scale_multiplier: float = 1.0
     since_timestamp: datetime | None = None
     seed: int = 42
+    use_live_api: bool = True
 
 
 class ReadCallGA4Adapter:
@@ -106,7 +107,14 @@ class ReadCallGA4Adapter:
             "true",
             "yes",
         )
-        self.config = config or GA4TelemetryConfig(raw_mode=env_raw)
+        env_live = os.getenv("READCALL_LIVE_GA4", "true").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        self.config = config or GA4TelemetryConfig(
+            raw_mode=env_raw, use_live_api=env_live
+        )
 
     @staticmethod
     def _make_id(*parts: str) -> str:
@@ -211,26 +219,219 @@ class ReadCallGA4Adapter:
             val = 0.0
         return max(int(round(val)), 0)
 
+    @staticmethod
+    def _serialize_ga4_response(response: Any) -> dict[str, Any]:
+        """Normalize a BetaAnalyticsDataClient RunReportResponse into the JSON dump row shape."""
+        rows: list[dict[str, Any]] = []
+        for row in getattr(response, "rows", []):
+            rows.append(
+                {
+                    "dimension_values": [
+                        {"value": str(dv.value)} for dv in row.dimension_values
+                    ],
+                    "metric_values": [
+                        {"value": str(mv.value)} for mv in row.metric_values
+                    ],
+                }
+            )
+        return {"rows": rows}
+
+    def _fetch_live_ga4_reports(
+        self, property_id: str, days: int
+    ) -> tuple[dict[str, Any], dict[str, Any]] | None:
+        """Fetch live traffic and event reports from Google Analytics Data API v1beta.
+
+        Returns `(traffic_data, events_data)` on success, or `None` if credentials/API are unavailable.
+        """
+        try:
+            from google.analytics.data_v1beta import BetaAnalyticsDataClient
+            from google.analytics.data_v1beta.types import (
+                DateRange,
+                Dimension,
+                Metric,
+                RunReportRequest,
+            )
+        except ImportError:
+            return None
+
+        credentials = None
+        # 1. Streamlit Cloud Secrets support (GCP_SERVICE_ACCOUNT_JSON or gcp_service_account)
+        try:
+            import streamlit as st
+            from google.oauth2 import service_account
+
+            if hasattr(st, "secrets"):
+                if "GCP_SERVICE_ACCOUNT_JSON" in st.secrets:
+                    raw_info = json.loads(st.secrets["GCP_SERVICE_ACCOUNT_JSON"])
+                    credentials = (
+                        service_account.Credentials.from_service_account_info(raw_info)
+                    )
+                elif "gcp_service_account" in st.secrets:
+                    creds_info = dict(st.secrets["gcp_service_account"])
+                    if "private_key" in creds_info and isinstance(
+                        creds_info["private_key"], str
+                    ):
+                        creds_info["private_key"] = creds_info["private_key"].replace(
+                            "\\n", "\n"
+                        )
+                    credentials = (
+                        service_account.Credentials.from_service_account_info(
+                            creds_info
+                        )
+                    )
+        except Exception:  # noqa: BLE001
+            pass
+
+        # 2. Local service account JSON file or env var
+        if credentials is None:
+            repo_root = Path(__file__).resolve().parent.parent.parent
+            default_key = repo_root / "gcp-key.json"
+            if not os.getenv("GOOGLE_APPLICATION_CREDENTIALS") and default_key.exists():
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(default_key)
+
+            if not os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
+                return None
+
+        try:
+            client = (
+                BetaAnalyticsDataClient(credentials=credentials)
+                if credentials is not None
+                else BetaAnalyticsDataClient()
+            )
+            date_range = DateRange(
+                start_date=f"{max(int(days), 1)}daysAgo", end_date="today"
+            )
+            prop_path = (
+                property_id
+                if property_id.startswith("properties/")
+                else f"properties/{property_id}"
+            )
+
+            traffic_req = RunReportRequest(
+                property=prop_path,
+                dimensions=[
+                    Dimension(name="date"),
+                    Dimension(name="sessionDefaultChannelGroup"),
+                    Dimension(name="deviceCategory"),
+                    Dimension(name="country"),
+                ],
+                metrics=[
+                    Metric(name="sessions"),
+                    Metric(name="activeUsers"),
+                    Metric(name="newUsers"),
+                    Metric(name="engagedSessions"),
+                    Metric(name="averageSessionDuration"),
+                    Metric(name="eventCount"),
+                ],
+                date_ranges=[date_range],
+                limit=10000,
+            )
+            events_req = RunReportRequest(
+                property=prop_path,
+                dimensions=[
+                    Dimension(name="date"),
+                    Dimension(name="eventName"),
+                ],
+                metrics=[
+                    Metric(name="eventCount"),
+                    Metric(name="totalUsers"),
+                ],
+                date_ranges=[date_range],
+                limit=10000,
+            )
+
+            tr_resp = client.run_report(traffic_req)
+            ev_resp = client.run_report(events_req)
+            return (
+                self._serialize_ga4_response(tr_resp),
+                self._serialize_ga4_response(ev_resp),
+            )
+        except Exception as exc:  # noqa: BLE001
+            print(
+                f"[ReadCallGA4Adapter] Live GA4 API unavailable ({type(exc).__name__}); "
+                "falling back to local authentic GA4 snapshot."
+            )
+            return None
+
+    def sync_live_ga4_snapshot(self, days: int | None = None) -> dict[str, Any]:
+        """Pull fresh Live GA4 reports, persist snapshot JSON if writable, and return sync summary."""
+        lookback = days if days is not None else self.config.days
+        live_result = self._fetch_live_ga4_reports(self.config.property_id, lookback)
+        if live_result is None:
+            return {
+                "live_synced": False,
+                "message": "Live GA4 API unavailable (missing GCP credentials or API access).",
+            }
+
+        tr_data, ev_data = live_result
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+        try:
+            data_dir.mkdir(parents=True, exist_ok=True)
+            with open(
+                data_dir / "ga4_real_raw_traffic.json", "w", encoding="utf-8"
+            ) as f:
+                json.dump(tr_data, f, ensure_ascii=False, indent=2)
+            with open(
+                data_dir / "ga4_real_raw_events.json", "w", encoding="utf-8"
+            ) as f:
+                json.dump(ev_data, f, ensure_ascii=False, indent=2)
+        except OSError:
+            pass
+
+        dates = sorted(
+            {
+                r["dimension_values"][0]["value"]
+                for r in tr_data.get("rows", [])
+                if r.get("dimension_values")
+            }
+        )
+        def _fmt(d: str) -> str:
+            return f"{d[:4]}-{d[4:6]}-{d[6:]}" if len(d) == 8 and d.isdigit() else d
+
+        total_sessions = sum(
+            int(float(r["metric_values"][0]["value"]))
+            for r in tr_data.get("rows", [])
+            if r.get("metric_values")
+        )
+        return {
+            "live_synced": True,
+            "min_date": _fmt(dates[0]) if dates else "",
+            "max_date": _fmt(dates[-1]) if dates else "",
+            "traffic_rows": len(tr_data.get("rows", [])),
+            "event_rows": len(ev_data.get("rows", [])),
+            "total_sessions": total_sessions,
+        }
+
     def extract_telemetry(
         self, config: GA4TelemetryConfig | None = None
     ) -> dict[str, list[dict[str, Any]]]:
-        """Extract genuine ReadCall GA4 telemetry without any artificial weighting."""
-        _ = config or self.config
+        """Extract genuine ReadCall GA4 telemetry from Live GA4 API or local snapshot."""
+        cfg = config or self.config
         now_iso = datetime.now(UTC).isoformat()
 
-        # Load real GA4 dump extracted directly from GA4 Property 559361789
-        data_dir = Path(__file__).resolve().parent.parent / "data"
-        ev_file = data_dir / "ga4_real_raw_events.json"
-        tr_file = data_dir / "ga4_real_raw_traffic.json"
+        tr_data: dict[str, Any] | None = None
+        ev_data: dict[str, Any] | None = None
+
+        if cfg.use_live_api:
+            live_result = self._fetch_live_ga4_reports(cfg.property_id, cfg.days)
+            if live_result is not None:
+                tr_data, ev_data = live_result
+
+        if tr_data is None or ev_data is None:
+            # Fallback: Load real GA4 dump extracted directly from GA4 Property 559361789
+            data_dir = Path(__file__).resolve().parent.parent / "data"
+            ev_file = data_dir / "ga4_real_raw_events.json"
+            tr_file = data_dir / "ga4_real_raw_traffic.json"
+            if ev_file.exists() and tr_file.exists():
+                with open(ev_file, "r", encoding="utf-8") as f:
+                    ev_data = json.load(f)
+                with open(tr_file, "r", encoding="utf-8") as f:
+                    tr_data = json.load(f)
 
         traffic_raw: list[dict[str, Any]] = []
         events_raw: list[dict[str, Any]] = []
 
-        if ev_file.exists() and tr_file.exists():
-            with open(ev_file, "r", encoding="utf-8") as f:
-                ev_data = json.load(f)
-            with open(tr_file, "r", encoding="utf-8") as f:
-                tr_data = json.load(f)
+        if tr_data is not None and ev_data is not None:
 
             # 1. Process 100% authentic traffic records
             for row in tr_data.get("rows", []):

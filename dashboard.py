@@ -794,15 +794,73 @@ def main():
             use_container_width=True,
             key="btn_trigger_pipeline",
         ):
-            with st.spinner("Executing Ingest ➔ Transform ➔ Test in BigQuery..."):
-                st.success(
-                    "🎉 "
-                    + (
-                        "ELT Pipeline synchronized with BigQuery!"
-                        if is_en
-                        else "已成功同步 BigQuery 湖倉數據！"
-                    )
+            with st.spinner(
+                "Fetching Live GA4 Property 559361789 ➔ Refreshing Lakehouse..."
+                if is_en
+                else "正在連線 GA4 Property 559361789 拉取最新數據並刷新湖倉..."
+            ):
+                from ingestion.sources.ga4_adapter import (
+                    GA4TelemetryConfig,
+                    ReadCallGA4Adapter,
                 )
+
+                adapter = ReadCallGA4Adapter(
+                    config=GA4TelemetryConfig(days=90, use_live_api=True)
+                )
+                sync_res = adapter.sync_live_ga4_snapshot(days=90)
+
+                if sync_res.get("live_synced"):
+                    # Optionally refresh local DuckDB / BigQuery warehouse if present
+                    bq_live = is_bigquery_live()
+                    db_file = os.getenv("DUCKDB_DATABASE", "readcall_pipeline.duckdb")
+                    target_dest = (
+                        "bigquery"
+                        if bq_live
+                        else ("duckdb" if os.path.exists(db_file) else None)
+                    )
+                    if target_dest:
+                        try:
+                            from pipeline_runner import run_pipeline_orchestrator
+
+                            run_pipeline_orchestrator(
+                                target="all",
+                                destination=target_dest,
+                                dataset="readcall_bronze",
+                                days=90,
+                                raw_mode=True,
+                            )
+                        except Exception:  # noqa: BLE001
+                            # Live snapshot is already persisted & cached mirror will reflect fresh GA4 data
+                            pass
+
+                    st.cache_data.clear()
+                    st.session_state["last_elt_sync_status"] = (
+                        "success",
+                        (
+                            f"Synced Live GA4 ({sync_res['min_date']} ~ {sync_res['max_date']}, "
+                            f"{sync_res['total_sessions']} Sessions)!"
+                            if is_en
+                            else f"已成功從 Live GA4 同步最新數據（{sync_res['min_date']} ~ {sync_res['max_date']}，共 {sync_res['total_sessions']} Sessions）！"
+                        ),
+                    )
+                    st.rerun()
+                else:
+                    st.cache_data.clear()
+                    st.session_state["last_elt_sync_status"] = (
+                        "warning",
+                        (
+                            "Live GA4 API unavailable (no GCP credentials in local gcp-key.json or Streamlit Secrets). Showing local snapshot."
+                            if is_en
+                            else "無法連線 Live GA4 API（未偵測到本機 gcp-key.json 或 Streamlit Cloud Secrets 憑證），目前維持顯示本地快照。"
+                        ),
+                    )
+
+        if "last_elt_sync_status" in st.session_state:
+            lvl, msg = st.session_state["last_elt_sync_status"]
+            if lvl == "success":
+                st.success("🎉 " + msg)
+            else:
+                st.warning("⚠️ " + msg)
 
         # Date Range Filter for Gold Layer
         s_d, e_d = None, None

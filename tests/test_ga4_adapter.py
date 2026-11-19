@@ -168,3 +168,64 @@ def test_dlt_duckdb_ingestion_end_to_end(tmp_path: Path):
             os.environ["DUCKDB_DATABASE"] = old_db
         else:
             os.environ.pop("DUCKDB_DATABASE", None)
+
+
+def test_live_ga4_api_serialization_and_fallback(monkeypatch):
+    """Verify Live GA4 API response serialization and graceful fallback to local snapshot."""
+    from types import SimpleNamespace
+
+    fake_tr_resp = SimpleNamespace(
+        rows=[
+            SimpleNamespace(
+                dimension_values=[
+                    SimpleNamespace(value="20261118"),
+                    SimpleNamespace(value="Organic Search"),
+                    SimpleNamespace(value="desktop"),
+                    SimpleNamespace(value="Germany"),
+                ],
+                metric_values=[
+                    SimpleNamespace(value="12"),
+                    SimpleNamespace(value="10"),
+                    SimpleNamespace(value="8"),
+                    SimpleNamespace(value="9"),
+                    SimpleNamespace(value="145.5"),
+                    SimpleNamespace(value="60"),
+                ],
+            )
+        ]
+    )
+    fake_ev_resp = SimpleNamespace(
+        rows=[
+            SimpleNamespace(
+                dimension_values=[
+                    SimpleNamespace(value="20261118"),
+                    SimpleNamespace(value="byok_key_saved"),
+                ],
+                metric_values=[
+                    SimpleNamespace(value="3"),
+                    SimpleNamespace(value="3"),
+                ],
+            )
+        ]
+    )
+
+    adapter = ReadCallGA4Adapter(config=GA4TelemetryConfig(use_live_api=True))
+    monkeypatch.setattr(
+        adapter,
+        "_fetch_live_ga4_reports",
+        lambda prop_id, days: (
+            adapter._serialize_ga4_response(fake_tr_resp),
+            adapter._serialize_ga4_response(fake_ev_resp),
+        ),
+    )
+    payload = adapter.extract_telemetry()
+    assert payload["raw_ga4_daily_traffic"][0]["event_date"] == "2026-11-18"
+    assert payload["raw_ga4_daily_traffic"][0]["sessions"] == 12
+    assert payload["raw_ga4_events"][0]["event_date"] == "2026-11-18"
+    assert payload["raw_ga4_events"][0]["event_name"] == "byok_key_saved"
+
+    # When live API returns None, it must fall back to local snapshot cleanly
+    monkeypatch.setattr(adapter, "_fetch_live_ga4_reports", lambda prop_id, days: None)
+    fallback_payload = adapter.extract_telemetry()
+    assert len(fallback_payload["raw_ga4_daily_traffic"]) > 0
+    assert len(fallback_payload["raw_ga4_events"]) > 0
