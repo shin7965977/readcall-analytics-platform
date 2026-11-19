@@ -863,13 +863,15 @@ def main():
                                 days=90,
                                 raw_mode=True,
                             )
-                            run_pipeline_orchestrator(
+                            ret_transform = run_pipeline_orchestrator(
                                 target="transform",
                                 destination=target_dest,
                                 dataset="readcall_bronze",
                                 days=90,
                                 raw_mode=True,
                             )
+                            if ret_transform != 0:
+                                elt_err = f"dbt transform exited with code {ret_transform}"
                         except Exception as _elt_ex:  # noqa: BLE001
                             elt_err = f"{type(_elt_ex).__name__}: {_elt_ex}"
 

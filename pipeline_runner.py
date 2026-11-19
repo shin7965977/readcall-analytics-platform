@@ -93,6 +93,25 @@ def run_transformation_step(
     target = dbt_target or os.getenv("DBT_TARGET", "bigquery")
     env = {**dict(os.environ), "DBT_TARGET": target}
 
+    # Ensure dbt packages (e.g. elementary) are installed on fresh cloud containers
+    packages_dir = os.path.join(project_dir, "dbt_packages")
+    if not os.path.isdir(packages_dir) or not os.listdir(packages_dir):
+        print("[dbt] dbt_packages missing; running dbt deps first...")
+        cmd_deps = [
+            sys.executable,
+            "-m",
+            "dbt.cli.main",
+            "deps",
+            "--project-dir",
+            project_dir,
+            "--profiles-dir",
+            profiles_dir,
+        ]
+        res_deps = subprocess.run(cmd_deps, env=env, check=False)  # noqa: S603
+        if res_deps.returncode != 0:
+            print("[dbt] dbt deps failed!")
+            return res_deps.returncode
+
     cmd_run = [
         sys.executable,
         "-m",
