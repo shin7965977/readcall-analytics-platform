@@ -928,7 +928,8 @@ def main():
                     "Filter Date Range:" if is_en else "選擇日期範圍：",
                     value=(min_date, max_date),
                     min_value=min_date - timedelta(days=90),
-                    max_value=date.today() + timedelta(days=1),
+                    max_value=max(max_date, date.today()) + timedelta(days=1),
+                    key=f"date_range_{min_date}_{max_date}",
                 )
                 if (
                     isinstance(selected_dates, (list, tuple))
