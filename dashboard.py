@@ -810,7 +810,40 @@ def main():
                 sync_res = adapter.sync_live_ga4_snapshot(days=90)
 
                 if sync_res.get("live_synced"):
-                    # Optionally refresh local DuckDB / BigQuery warehouse if present
+                    # Materialize Streamlit Secrets to a temp keyfile so dlt & dbt CLI can write to BigQuery
+                    if not (
+                        os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+                        and os.path.exists(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+                    ):
+                        try:
+                            import json as _json
+                            import tempfile as _tempfile
+
+                            sa_payload = None
+                            if hasattr(st, "secrets"):
+                                if "GCP_SERVICE_ACCOUNT_JSON" in st.secrets:
+                                    sa_payload = st.secrets["GCP_SERVICE_ACCOUNT_JSON"]
+                                elif "gcp_service_account" in st.secrets:
+                                    sa_dict = dict(st.secrets["gcp_service_account"])
+                                    if "private_key" in sa_dict and isinstance(
+                                        sa_dict["private_key"], str
+                                    ):
+                                        sa_dict["private_key"] = sa_dict[
+                                            "private_key"
+                                        ].replace("\\n", "\n")
+                                    sa_payload = _json.dumps(sa_dict)
+                            if sa_payload:
+                                tmp_key = os.path.join(
+                                    _tempfile.gettempdir(), "readcall_gcp_sa.json"
+                                )
+                                with open(tmp_key, "w", encoding="utf-8") as _kf:
+                                    _kf.write(sa_payload)
+                                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = tmp_key
+                                os.environ["GCP_KEYFILE"] = tmp_key
+                        except Exception:  # noqa: BLE001
+                            pass
+
+                    # Refresh BigQuery or local DuckDB warehouse (ingest + transform)
                     bq_live = is_bigquery_live()
                     db_file = os.getenv("DUCKDB_DATABASE", "readcall_pipeline.duckdb")
                     target_dest = (
@@ -818,31 +851,49 @@ def main():
                         if bq_live
                         else ("duckdb" if os.path.exists(db_file) else None)
                     )
+                    elt_err: str | None = None
                     if target_dest:
                         try:
                             from pipeline_runner import run_pipeline_orchestrator
 
                             run_pipeline_orchestrator(
-                                target="all",
+                                target="ingest",
                                 destination=target_dest,
                                 dataset="readcall_bronze",
                                 days=90,
                                 raw_mode=True,
                             )
-                        except Exception:  # noqa: BLE001
-                            # Live snapshot is already persisted & cached mirror will reflect fresh GA4 data
-                            pass
+                            run_pipeline_orchestrator(
+                                target="transform",
+                                destination=target_dest,
+                                dataset="readcall_bronze",
+                                days=90,
+                                raw_mode=True,
+                            )
+                        except Exception as _elt_ex:  # noqa: BLE001
+                            elt_err = f"{type(_elt_ex).__name__}: {_elt_ex}"
 
                     st.cache_data.clear()
-                    st.session_state["last_elt_sync_status"] = (
-                        "success",
-                        (
-                            f"Synced Live GA4 ({sync_res['min_date']} ~ {sync_res['max_date']}, "
-                            f"{sync_res['total_sessions']} Sessions)!"
-                            if is_en
-                            else f"已成功從 Live GA4 同步最新數據（{sync_res['min_date']} ~ {sync_res['max_date']}，共 {sync_res['total_sessions']} Sessions）！"
-                        ),
-                    )
+                    if elt_err:
+                        st.session_state["last_elt_sync_status"] = (
+                            "warning",
+                            (
+                                f"Fetched Live GA4 ({sync_res['min_date']} ~ {sync_res['max_date']}, {sync_res['total_sessions']} Sessions), "
+                                f"but {target_dest} ELT failed: {elt_err}"
+                                if is_en
+                                else f"已抓到 Live GA4（{sync_res['min_date']} ~ {sync_res['max_date']}，{sync_res['total_sessions']} Sessions），但寫入 {target_dest} 失敗：{elt_err}"
+                            ),
+                        )
+                    else:
+                        st.session_state["last_elt_sync_status"] = (
+                            "success",
+                            (
+                                f"Synced Live GA4 & {target_dest or 'Mirror'} ({sync_res['min_date']} ~ {sync_res['max_date']}, "
+                                f"{sync_res['total_sessions']} Sessions)!"
+                                if is_en
+                                else f"已成功從 Live GA4 同步至 {target_dest or 'Mirror'}（{sync_res['min_date']} ~ {sync_res['max_date']}，共 {sync_res['total_sessions']} Sessions）！"
+                            ),
+                        )
                     st.rerun()
                 else:
                     st.cache_data.clear()
