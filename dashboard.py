@@ -17,7 +17,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-from chart_generator import generate_chart_config, render_dynamic_chart
 from fastmcp_diagnostic import (
     DEFAULT_SYSTEM_PROMPT_EN,
     DEFAULT_SYSTEM_PROMPT_ZH,
@@ -2547,120 +2546,65 @@ ORDER BY event_date ASC;""",
                     if is_en
                     else "雙語自然語言 AI 智慧圖表生成"
                 )
-                default_nl_q = (
-                    "Show top 12 product features by event count"
-                    if is_en
-                    else "顯示前 12 大產品功能埋點排行"
+                from chart_generator import (
+                    DATASET_SCHEMAS,
+                    _readcall_fallback_chart_config,
                 )
-                if "nl2chart_query_box" not in st.session_state:
-                    st.session_state["nl2chart_query_box"] = default_nl_q
-
-                p1, p2, p3 = st.columns(3)
-                if p1.button(
-                    "📊 " + ("Top 12 Features" if is_en else "前 12 大功能排行"),
-                    use_container_width=True,
-                ):
-                    st.session_state["nl2chart_query_box"] = (
-                        "Show top 12 product features by event count"
-                        if is_en
-                        else "顯示前 12 大產品功能埋點排行"
-                    )
-                    st.rerun()
-                if p2.button(
-                    "🔑 "
-                    + ("BYOK Daily Friction" if is_en else "每日 BYOK 驗證失敗趨勢"),
-                    use_container_width=True,
-                ):
-                    st.session_state["nl2chart_query_box"] = (
-                        "Daily BYOK key saves vs verification failures"
-                        if is_en
-                        else "分析每日 BYOK 金鑰儲存與驗證失敗趨勢"
-                    )
-                    st.rerun()
-                if p3.button(
-                    "🌱 " + ("Referral Loop Trend" if is_en else "推薦裂變解鎖趨勢"),
-                    use_container_width=True,
-                ):
-                    st.session_state["nl2chart_query_box"] = (
-                        "Referral link copies and unlock success trend"
-                        if is_en
-                        else "查看每日推薦連結複製與解鎖趨勢"
-                    )
-                    st.rerun()
-
-                st.markdown(
-                    f"**{'Enter chart request:' if is_en else '輸入圖表生成需求：'}**"
-                )
-                col_nl_in, col_nl_btn = st.columns([5, 1])
-                with col_nl_in:
-                    nl_q = st.text_input(
-                        "Enter chart request:" if is_en else "輸入圖表生成需求：",
-                        value=st.session_state["nl2chart_query_box"],
-                        key="nl2chart_query_box",
-                        label_visibility="collapsed",
-                    )
-                with col_nl_btn:
-                    st.button(
-                        "⚡ " + ("Generate" if is_en else "生成圖表"),
-                        key="btn_nl2chart_submit",
-                        type="primary",
-                        use_container_width=True,
-                    )
+                from cockpit_loader import load_interactive_nl2chart_studio
 
                 DATASET_REGISTRY = {
-                    "kpi": lambda s: s.kpi,
-                    "traffic": lambda s: s.traffic,
-                    "features": lambda s: s.features,
-                    "byok": lambda s: s.byok,
-                    "referral": lambda s: s.referral,
+                    "kpi": lambda: scope.kpi,
+                    "traffic": lambda: scope.traffic,
+                    "features": lambda: scope.features,
+                    "byok": lambda: scope.byok,
+                    "referral": lambda: scope.referral,
                 }
-                if nl_q:
-                    active_gemini_key = (
-                        st.session_state.get("gemini_user_api_key_input", "")
-                        or os.getenv("GEMINI_API_KEY", "")
-                    ).strip()
-                    with st.spinner(
-                        "🤖 Generating chart spec via Gemini AI..."
-                        if active_gemini_key and is_en
-                        else (
-                            "🤖 正在透過 Gemini AI 解析需求並生成圖表..."
-                            if active_gemini_key
-                            else "Rendering chart..."
-                        )
-                    ):
-                        cfg = generate_chart_config(nl_q, api_key=active_gemini_key)
-                    ds_key = cfg.get("dataset", "kpi")
-                    getter = DATASET_REGISTRY.get(ds_key, lambda s: s.kpi)
-                    target_df = getter(scope)
-                    fig_nl = render_dynamic_chart(cfg, target_df)
-                    gen_by = cfg.get("generated_by", "fallback_rules")
-                    if gen_by.startswith("gemini:"):
-                        model_tag = gen_by.split(":", 1)[1]
-                        st.caption(
-                            f"✨ **AI-Generated Chart** (`{model_tag}` via `lakehouse-cockpit-core`) · Dataset: `{ds_key}` · Metrics: `{cfg.get('y')}`"
+                nl_presets = [
+                    {
+                        "label": "📊 " + ("Top 12 Features" if is_en else "前 12 大功能排行"),
+                        "query": (
+                            "Show top 12 product features by event count"
                             if is_en
-                            else f"✨ **Gemini AI 即時生成**（`{model_tag}` · 由 `lakehouse-cockpit-core` 驅動）· 資料集：`{ds_key}` · 指標：`{cfg.get('y')}`"
-                        )
-                    else:
-                        st.caption(
-                            "ℹ️ **Rule-based preview** (bind your Gemini API Key in the right panel to unlock full AI chart generation)."
+                            else "顯示前 12 大產品功能埋點排行"
+                        ),
+                    },
+                    {
+                        "label": "🔑 "
+                        + ("BYOK Daily Friction" if is_en else "每日 BYOK 驗證失敗趨勢"),
+                        "query": (
+                            "Daily BYOK key saves vs verification failures"
                             if is_en
-                            else "ℹ️ **離線規則預覽**（於右側輸入您的 Gemini API Key 即可解鎖完整 AI 自然語言圖表生成）。"
-                        )
-                    if cfg.get("takeaway"):
-                        st.info(f"💡 **AI Takeaway**: {cfg['takeaway']}")
-                    if fig_nl:
-                        st.plotly_chart(fig_nl, use_container_width=True)
-                    else:
-                        st.info(
-                            "ℹ️ "
-                            + (
-                                "No data available for chart request: "
-                                if is_en
-                                else "目前無對應圖表數據："
-                            )
-                            + str(cfg.get("title", nl_q))
-                        )
+                            else "分析每日 BYOK 金鑰儲存與驗證失敗趨勢"
+                        ),
+                    },
+                    {
+                        "label": "🌱 " + ("Referral Loop Trend" if is_en else "推薦裂變解鎖趨勢"),
+                        "query": (
+                            "Referral link copies and unlock success trend"
+                            if is_en
+                            else "查看每日推薦連結複製與解鎖趨勢"
+                        ),
+                    },
+                ]
+                active_gemini_key = (
+                    st.session_state.get("gemini_user_api_key_input", "")
+                    or os.getenv("GEMINI_API_KEY", "")
+                ).strip()
+                render_hitl_studio = load_interactive_nl2chart_studio()
+                render_hitl_studio(
+                    dataset_schemas=DATASET_SCHEMAS,
+                    dataset_getters=DATASET_REGISTRY,
+                    api_key=active_gemini_key,
+                    domain_context=(
+                        "Product: ReadCall (German AI reading app with BYOK Gemini API keys & viral referrals). "
+                        "Map API key / password / BYOK questions to dataset='byok'; "
+                        "AI compute savings / engagement / DAU / new vs returning users to dataset='kpi'."
+                    ),
+                    presets=nl_presets,
+                    fallback_fn=_readcall_fallback_chart_config,
+                    is_en=is_en,
+                    state_prefix="readcall_nl2chart_hitl",
+                )
 
         elif selected_layer == "silver":
             st.subheader(

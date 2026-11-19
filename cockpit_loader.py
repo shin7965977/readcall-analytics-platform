@@ -50,3 +50,11 @@ def load_ai_chart_engine() -> tuple[Any, Any]:
     )
 
     return generate_ai_chart_config, render_ai_dynamic_chart
+
+
+def load_interactive_nl2chart_studio() -> Any:
+    """Return fragment-isolated 2-step HITL NL2Chart Studio from `cockpit_core`."""
+    ensure_cockpit_core_on_path()
+    from cockpit_core.components.text_to_chart import render_interactive_nl2chart_studio
+
+    return render_interactive_nl2chart_studio
