@@ -2637,9 +2637,9 @@ ORDER BY event_date ASC;""",
                     if gen_by.startswith("gemini:"):
                         model_tag = gen_by.split(":", 1)[1]
                         st.caption(
-                            f"✨ **AI-Generated Chart** (`{model_tag}`) · Dataset: `{ds_key}` · Metrics: `{cfg.get('y')}`"
+                            f"✨ **AI-Generated Chart** (`{model_tag}` via `lakehouse-cockpit-core`) · Dataset: `{ds_key}` · Metrics: `{cfg.get('y')}`"
                             if is_en
-                            else f"✨ **Gemini AI 即時生成**（`{model_tag}`）· 資料集：`{ds_key}` · 指標：`{cfg.get('y')}`"
+                            else f"✨ **Gemini AI 即時生成**（`{model_tag}` · 由 `lakehouse-cockpit-core` 驅動）· 資料集：`{ds_key}` · 指標：`{cfg.get('y')}`"
                         )
                     else:
                         st.caption(
@@ -2647,6 +2647,8 @@ ORDER BY event_date ASC;""",
                             if is_en
                             else "ℹ️ **離線規則預覽**（於右側輸入您的 Gemini API Key 即可解鎖完整 AI 自然語言圖表生成）。"
                         )
+                    if cfg.get("takeaway"):
+                        st.info(f"💡 **AI Takeaway**: {cfg['takeaway']}")
                     if fig_nl:
                         st.plotly_chart(fig_nl, use_container_width=True)
                     else:

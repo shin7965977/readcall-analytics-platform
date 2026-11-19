@@ -405,14 +405,8 @@ def _generate_chart_config_with_gemini(query: str, api_key: str) -> dict | None:
     return None
 
 
-def generate_chart_config(query: str, api_key: str | None = None) -> dict:
-    """Return structured NL2Chart configuration dictionary via Gemini AI (with deterministic fallback)."""
-    eff_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
-    if eff_key:
-        ai_cfg = _generate_chart_config_with_gemini(query, eff_key)
-        if ai_cfg is not None:
-            return ai_cfg
-
+def _readcall_fallback_chart_config(query: str) -> dict:
+    """Deterministic ReadCall rule-based fallback when Gemini API key is absent."""
     q = (query or "").strip().lower()
     if any(
         k in q
@@ -484,8 +478,39 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
     }
 
 
+def generate_chart_config(query: str, api_key: str | None = None) -> dict:
+    """Delegate NL2Chart generation to shared lakehouse-cockpit-core Gemini engine."""
+    try:
+        from components.text_to_chart import generate_ai_chart_config
+
+        return generate_ai_chart_config(
+            query=query,
+            dataset_schemas=DATASET_SCHEMAS,
+            api_key=api_key,
+            domain_context=(
+                "Product: ReadCall (German AI reading app with BYOK Gemini API keys & viral referrals). "
+                "Map API key / password / BYOK questions to dataset='byok'; "
+                "AI compute savings / engagement / DAU / new vs returning users to dataset='kpi'."
+            ),
+            fallback_fn=_readcall_fallback_chart_config,
+        )
+    except ImportError:
+        eff_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
+        if eff_key:
+            ai_cfg = _generate_chart_config_with_gemini(query, eff_key)
+            if ai_cfg is not None:
+                return ai_cfg
+        return _readcall_fallback_chart_config(query)
+
+
 def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
-    """Render an interactive Plotly Figure from a structured chart configuration and DataFrame."""
+    """Delegate Plotly rendering to shared lakehouse-cockpit-core renderer (with local fallback)."""
+    try:
+        from components.text_to_chart import render_ai_dynamic_chart
+
+        return render_ai_dynamic_chart(config, df)
+    except ImportError:
+        pass
     if df is None or df.empty or not config:
         return None
 
