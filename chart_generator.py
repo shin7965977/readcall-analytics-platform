@@ -9,9 +9,62 @@ Supports bilingual prompts (Traditional Chinese & English) across ReadCall's 4 G
 
 from __future__ import annotations
 
+import json
+import os
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+
+# Canonical schema whitelist for ReadCall's 4 Gold Marts (prevents LLM column hallucinations)
+DATASET_SCHEMAS: dict[str, dict[str, str]] = {
+    "kpi": {
+        "event_date": "Daily date (x-axis for time-series)",
+        "dau": "Daily Active Users",
+        "new_users": "New users",
+        "returning_users": "Returning users",
+        "total_sessions": "Total sessions",
+        "engaged_sessions": "Engaged sessions",
+        "engagement_rate": "Session engagement rate (0-1)",
+        "avg_session_duration_sec": "Average session duration in seconds",
+        "aha_users": "Users who triggered Aha! core feature (text select or dictionary)",
+        "aha_activation_rate": "Aha! activation rate (aha_users / dau)",
+        "core_reader_events": "Core German reader events count",
+        "dictionary_events": "Dictionary search events count",
+        "ai_inference_events": "AI morphological explanation & tutor events count",
+        "byok_keys_saved": "Daily BYOK Gemini API keys saved",
+        "referral_unlocks": "Daily viral referral unlocks",
+        "offloaded_ai_compute_usd": "Estimated AI inference compute cost saved via BYOK (USD)",
+    },
+    "byok": {
+        "event_date": "Daily date (x-axis)",
+        "step_1_first_visit": "Stage 1: First visits",
+        "step_2_aha_interaction": "Stage 2: Aha! interactions",
+        "step_3_trial_limit_hit": "Stage 3: Free trial quota exhausted hits",
+        "step_4_byok_modal_opened": "Stage 4: ByokModal opened",
+        "step_5_key_acquisition_attempt": "Stage 5: Clicked Get/Paste Gemini API Key",
+        "step_6_byok_key_saved": "Stage 6: Gemini API key verified & saved successfully",
+        "byok_verify_failed": "API key verification failures (friction)",
+        "byok_conversion_rate": "Trial-to-BYOK key conversion rate",
+        "byok_modal_completion_rate": "ByokModal open-to-save completion rate",
+        "byok_verify_failure_rate": "API key verification failure rate",
+    },
+    "referral": {
+        "event_date": "Daily date (x-axis)",
+        "step_1_referral_modal_opened": "Referral modal opened",
+        "step_2_referral_link_copied": "Referral links copied",
+        "step_3_referral_link_visited": "Referral links visited by friends",
+        "step_4_referral_unlock_success": "Custom AI Tutor Prompt unlocks succeeded",
+        "step_5_custom_prompt_saved": "Custom AI Tutor prompts saved",
+        "viral_k_factor": "Viral referral K-factor proxy",
+    },
+    "features": {
+        "event_name": "GA4 product event name (y-axis for horizontal_bar)",
+        "total_event_count": "Total event triggers count (x-axis for horizontal_bar)",
+        "unique_users": "Unique users triggering this event",
+        "module_category": "Product module pillar (color grouping)",
+    },
+}
 
 
 def generate_chart_from_nl(
@@ -250,10 +303,132 @@ def generate_chart_from_nl(
     return fig, title, insight, out_df
 
 
+def _generate_chart_config_with_gemini(query: str, api_key: str) -> dict | None:
+    """Use native Google Gemini SDK with strict JSON output & schema whitelist to generate chart config."""
+    clean_key = (api_key or "").strip()
+    if not clean_key:
+        return None
+    try:
+        from google import genai
+        from google.genai import types
+
+        from fastmcp_diagnostic import get_gemini_candidate_models
+
+        client = genai.Client(api_key=clean_key)
+        candidates = get_gemini_candidate_models(client)
+
+        schema_doc = json.dumps(DATASET_SCHEMAS, ensure_ascii=False, indent=2)
+        system_prompt = (
+            "You are a Product Analytics NL2Chart engine for ReadCall (a German AI reading app using BYOK Gemini API keys).\n"
+            "Given a user's chart request in Chinese or English, return ONLY a valid JSON object matching this exact contract:\n"
+            "{\n"
+            '  "dataset": "kpi" | "byok" | "referral" | "features",\n'
+            '  "chart_type": "line" | "bar" | "horizontal_bar",\n'
+            '  "x": "<exact column name from chosen dataset>",\n'
+            '  "y": ["<exact column name(s) from chosen dataset>"],\n'
+            '  "title": "<concise chart title matching the user language>",\n'
+            '  "limit": 12\n'
+            "}\n\n"
+            "Rules:\n"
+            "1. Use ONLY exact column names from the chosen dataset in DATASET_SCHEMAS below. Never invent column names.\n"
+            "2. For time-series datasets ('kpi', 'byok', 'referral'), 'x' MUST be 'event_date' and 'y' MUST be a non-empty list of 1-3 numeric columns.\n"
+            "3. For 'features' rankings/top events, set chart_type='horizontal_bar', x='total_event_count', y=['event_name'], and set 'limit' to the requested top-N (default 12).\n"
+            "4. If the user asks about Gemini API key / password / BYOK success, failure, conversion, or modal friction, pick dataset='byok'.\n"
+            "5. If the user asks about AI compute cost savings (USD), engagement rate, sessions, DAU, new vs returning users, pick dataset='kpi'.\n\n"
+            f"DATASET_SCHEMAS:\n{schema_doc}"
+        )
+
+        for model_name in candidates:
+            try:
+                resp = client.models.generate_content(
+                    model=model_name,
+                    contents=f"User chart request: {query}",
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_prompt,
+                        temperature=0.0,
+                        response_mime_type="application/json",
+                    ),
+                )
+                if not resp or not resp.text:
+                    continue
+                parsed = json.loads(resp.text.strip())
+                ds = str(parsed.get("dataset", "")).strip().lower()
+                if ds not in DATASET_SCHEMAS:
+                    continue
+
+                valid_cols = set(DATASET_SCHEMAS[ds].keys())
+                ctype = str(parsed.get("chart_type", "line")).strip().lower()
+                if ctype not in ("line", "bar", "horizontal_bar"):
+                    ctype = "horizontal_bar" if ds == "features" else "line"
+
+                if ds == "features" or ctype == "horizontal_bar":
+                    limit_val = max(1, min(int(parsed.get("limit", 12)), 32))
+                    return {
+                        "dataset": "features",
+                        "chart_type": "horizontal_bar",
+                        "x": "total_event_count",
+                        "y": "event_name",
+                        "color": "module_category",
+                        "title": str(
+                            parsed.get("title")
+                            or f"ReadCall Top {limit_val} Product Telemetry Events"
+                        ),
+                        "limit": limit_val,
+                        "query": query,
+                        "generated_by": f"gemini:{model_name}",
+                    }
+
+                x_col = str(parsed.get("x", "event_date")).strip()
+                if x_col not in valid_cols:
+                    x_col = "event_date"
+
+                raw_y = parsed.get("y", [])
+                if isinstance(raw_y, str):
+                    raw_y = [raw_y]
+                y_cols = [c for c in raw_y if isinstance(c, str) and c in valid_cols and c != x_col]
+                if not y_cols:
+                    continue
+
+                return {
+                    "dataset": ds,
+                    "chart_type": ctype,
+                    "x": x_col,
+                    "y": y_cols[:3],
+                    "title": str(parsed.get("title") or query),
+                    "query": query,
+                    "generated_by": f"gemini:{model_name}",
+                }
+            except Exception:  # noqa: BLE001
+                continue
+    except Exception:  # noqa: BLE001
+        return None
+    return None
+
+
 def generate_chart_config(query: str, api_key: str | None = None) -> dict:
-    """Return structured NL2Chart configuration dictionary mapping query intent to dataset & chart spec."""
+    """Return structured NL2Chart configuration dictionary via Gemini AI (with deterministic fallback)."""
+    eff_key = (api_key or os.getenv("GEMINI_API_KEY", "")).strip()
+    if eff_key:
+        ai_cfg = _generate_chart_config_with_gemini(query, eff_key)
+        if ai_cfg is not None:
+            return ai_cfg
+
     q = (query or "").strip().lower()
-    if any(k in q for k in ["byok", "key", "金鑰", "綁定", "試用", "驗證", "verify"]):
+    if any(
+        k in q
+        for k in [
+            "byok",
+            "key",
+            "金鑰",
+            "密碼",
+            "api",
+            "綁定",
+            "試用",
+            "驗證",
+            "verify",
+            "modal",
+        ]
+    ):
         return {
             "dataset": "byok",
             "chart_type": "bar",
@@ -261,6 +436,7 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
             "y": ["step_6_byok_key_saved", "byok_verify_failed"],
             "title": "ReadCall Daily BYOK Key Saves vs. Verification Failures",
             "query": query,
+            "generated_by": "fallback_rules",
         }
     if any(k in q for k in ["referral", "推薦", "裂變", "分享", "解鎖", "unlock"]):
         return {
@@ -270,6 +446,7 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
             "y": ["step_2_referral_link_copied", "step_4_referral_unlock_success"],
             "title": "ReadCall Viral Referral Link Copies & Unlocks Trend",
             "query": query,
+            "generated_by": "fallback_rules",
         }
     if any(
         k in q
@@ -282,7 +459,19 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
             "y": "event_name",
             "color": "module_category",
             "title": "ReadCall Top 12 Product Telemetry Events by Volume",
+            "limit": 12,
             "query": query,
+            "generated_by": "fallback_rules",
+        }
+    if any(k in q for k in ["cost", "usd", "省", "費用", "成本", "算力", "offload"]):
+        return {
+            "dataset": "kpi",
+            "chart_type": "line",
+            "x": "event_date",
+            "y": ["offloaded_ai_compute_usd"],
+            "title": "ReadCall Daily Offloaded AI Compute Savings (USD)",
+            "query": query,
+            "generated_by": "fallback_rules",
         }
     return {
         "dataset": "kpi",
@@ -291,6 +480,7 @@ def generate_chart_config(query: str, api_key: str | None = None) -> dict:
         "y": ["dau", "aha_users"],
         "title": "ReadCall Daily Active Users (DAU) & Aha! Activated Readers",
         "query": query,
+        "generated_by": "fallback_rules",
     }
 
 
@@ -303,7 +493,8 @@ def render_dynamic_chart(config: dict, df: pd.DataFrame) -> go.Figure | None:
     title = config.get("title", "ReadCall NL2Chart")
 
     if ctype == "horizontal_bar" and "event_name" in df.columns:
-        sub = df.sort_values("total_event_count", ascending=False).head(12).copy()
+        limit_n = max(1, min(int(config.get("limit", 12)), 32))
+        sub = df.sort_values("total_event_count", ascending=False).head(limit_n).copy()
         fig = px.bar(
             sub,
             x="total_event_count",

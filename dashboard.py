@@ -2615,11 +2615,38 @@ ORDER BY event_date ASC;""",
                     "referral": lambda s: s.referral,
                 }
                 if nl_q:
-                    cfg = generate_chart_config(nl_q)
+                    active_gemini_key = (
+                        st.session_state.get("gemini_user_api_key_input", "")
+                        or os.getenv("GEMINI_API_KEY", "")
+                    ).strip()
+                    with st.spinner(
+                        "🤖 Generating chart spec via Gemini AI..."
+                        if active_gemini_key and is_en
+                        else (
+                            "🤖 正在透過 Gemini AI 解析需求並生成圖表..."
+                            if active_gemini_key
+                            else "Rendering chart..."
+                        )
+                    ):
+                        cfg = generate_chart_config(nl_q, api_key=active_gemini_key)
                     ds_key = cfg.get("dataset", "kpi")
                     getter = DATASET_REGISTRY.get(ds_key, lambda s: s.kpi)
                     target_df = getter(scope)
                     fig_nl = render_dynamic_chart(cfg, target_df)
+                    gen_by = cfg.get("generated_by", "fallback_rules")
+                    if gen_by.startswith("gemini:"):
+                        model_tag = gen_by.split(":", 1)[1]
+                        st.caption(
+                            f"✨ **AI-Generated Chart** (`{model_tag}`) · Dataset: `{ds_key}` · Metrics: `{cfg.get('y')}`"
+                            if is_en
+                            else f"✨ **Gemini AI 即時生成**（`{model_tag}`）· 資料集：`{ds_key}` · 指標：`{cfg.get('y')}`"
+                        )
+                    else:
+                        st.caption(
+                            "ℹ️ **Rule-based preview** (bind your Gemini API Key in the right panel to unlock full AI chart generation)."
+                            if is_en
+                            else "ℹ️ **離線規則預覽**（於右側輸入您的 Gemini API Key 即可解鎖完整 AI 自然語言圖表生成）。"
+                        )
                     if fig_nl:
                         st.plotly_chart(fig_nl, use_container_width=True)
                     else:
